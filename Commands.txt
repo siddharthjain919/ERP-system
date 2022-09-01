@@ -1,0 +1,6 @@
+createsuperuser-creates admin account 
+runserver- runs server
+check- checks for errors
+makemigrations- stages model changes
+migrate- makes staged changes 
+dbshell- opens database(requires installation of sqlite3) 

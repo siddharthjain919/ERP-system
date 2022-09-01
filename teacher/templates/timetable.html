@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+	<title>Time Table</title>
+	<!-- Favicon icon -->
+	<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
+	<link rel="stylesheet" href={% static 'css/style.css' %}>
+	<link rel="stylesheet" href={% static "css/skin-3.css" %}>
+	<link rel="stylesheet" href={% static "button.css" %}>
+
+</head>
+
+<body>
+	<div id="main-wrapper">
+		<div class="nav-header">
+			<a href="dashboard.html" class="brand-logo">
+				<img class="logo-abbr" src={% static "images/logo-white-3.png"%} alt="">
+				<img class="logo-compact" src={% static "images/logo-text-white.png"%} alt="">
+				<img class="brand-title" src={% static "images/logo-text-white.png"%} alt="">
+			</a>
+
+			<div class="nav-control">
+				<div class="hamburger">
+					<span class="line"></span><span class="line"></span><span class="line"></span>
+				</div>
+			</div>
+		</div>
+		<div class="header">
+			<div class="header-content">
+				<nav class="navbar navbar-expand">
+					<div class="collapse navbar-collapse justify-content-between">
+						<div class="header-left">
+							<div class="search_bar dropdown">
+
+								<div class="dropdown-menu p-0 m-0">
+									{% csrf_token %}
+									<form>
+										<input class="form-control" type="search" placeholder="Search" aria-label="Search">
+									</form>
+								</div>
+								<span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+									<i class="mdi mdi-magnify"></i>
+								</span>
+							</div>
+						</div>
+
+						<ul class="navbar-nav header-right">
+							<li class="nav-item dropdown notification_dropdown">
+								<a class="nav-link bell ai-icon" href="#" role="button" data-toggle="dropdown">
+									<svg id="icon-user" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+										class="feather feather-bell">
+										<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+										<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+									</svg>
+									<div class="pulse-css"></div>
+								</a>
+								<div class="dropdown-menu dropdown-menu-right">
+									<ul class="list-unstyled">
+									</ul>
+									<a class="all-notification" href="#">See all notifications <i class="ti-arrow-right"></i></a>
+								</div>
+								<div>
+									<a href="/teacher"><button type="submit" class="btn btn-danger">Logout</button></a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+
+		<!--**********************************
+Sidebar start
+***********************************-->
+		<div class="dlabnav">
+			<div class="dlabnav-scroll">
+				<ul class="metismenu" id="menu">
+					<li class="nav-label first">Main Menu</li>
+					<li><a class="has-arrow" href="/teacher/login" aria-expanded="false">
+							<i class="la la-home"></i>
+							<span class="nav-text">Dashboard</span>
+						</a>
+					</li>
+					<li><a class="ai-icon" href="/teacher/timetable" aria-expanded="false">
+							<i class="la la-calendar"></i>
+							<span class="nav-text">Time Table</span>
+						</a>
+					</li>
+					<li><a class="has-arrow" href="#" aria-expanded="false">
+							<i class="la la-user"></i>
+							<span class="nav-text">Professors</span>
+						</a>
+
+					</li>
+					<li><a class="has-arrow" href="#" aria-expanded="false">
+							<i class="la la-users"></i>
+							<span class="nav-text">Students</span>
+						</a>
+
+					</li>
+					<li><a class="has-arrow" href="/teacher/subject" aria-expanded="false">
+							<i class="la la-graduation-cap"></i>
+							<span class="nav-text">Subjects</span>
+						</a>
+					</li>
+					<li><a class="has-arrow" href="http://117.55.241.174/" aria-expanded="false">
+							<i class="la la-book"></i>
+							<span class="nav-text">Library</span>
+						</a>
+
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!--**********************************
+Sidebar end
+***********************************-->
+
+		<!--**********************************
+Content body start
+***********************************-->
+		<div class="content-body">
+			<!-- row -->
+			<div class="container-fluid">
+
+				<div class="row">
+					<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+						<div class="card">
+							<div class="card-header">
+								<h2 class="card-title"><b>Time Table</b></h2>
+							</div>
+							<br>
+							<div class="card-body">
+								<h6>Lunch Time:</h6>
+								<form action=views.slot method="post">
+									<select>
+										<option value="12:20-01:10">12:20-01:10</option>
+										<option value="01:10-02:00">01:10-02:00</option>
+										<input type="submit" class="smallbutton"/>
+									</select>
+								</form>
+							</div>
+
+							<div class="card-body">
+								<div class="table-responsive recentOrderTable">
+									<form method="post" action="/teacher/update/">
+										{% csrf_token %}
+										<table border="7" cellspacing="0" align="center">
+											<tr>
+												<td align="center" height="40" width="100"><br>
+													<b>Day/Period</b></br>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>1<br>8:50-9:40</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>2<br>9:40-10:30</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>10:30-10:40</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>3<br>10:40-11:30</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>4<br>11:30-12:20</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>5<br>12:20-1:10</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>1:10-2:00</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>6<br>2:00-2:50</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>7<br>2:50-3:40</b>
+												</td>
+												<td align="center" height="40" width="100">
+													<b>8<br>3:40-4:30</b>
+												</td>
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Monday</b>
+												</td>
+												<td align="center" height="40">
+													<input list="mon_lec1" name="mon_lec1" placeholder="{{timetable_list.mon_lec1}}">
+													<datalist id="mon_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40">
+													<input list="mon_lec2" name="mon_lec2" placeholder="{{timetable_list.mon_lec2}}">
+													<datalist id="mon_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td rowspan="6" align="center" height="40">
+													<h5>B<br>R<br>E<br>A<br>K</h5>
+												<td align="center" height="40">
+													<input list="mon_lec3" name="mon_lec3" placeholder="{{timetable_list.mon_lec3}}">
+													<datalist id="mon_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40">
+													<input list="mon_lec4" name="mon_lec4" placeholder="{{timetable_list.mon_lec4}}">
+													<datalist id="mon_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+
+												</td>
+												<td align="center" height="40">
+													<input list="mon_lec5" name="mon_lec5" placeholder="{{timetable_list.mon_lec5}}">
+													<datalist id="mon_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td rowspan="6" align="center" height="40" width="60">
+													<h5>L<br>U<br>N<br>C<br>H</h5>
+												</td>
+												<td align="center" height="40">
+													<input list="mon_lec6" name="mon_lec6" placeholder="{{timetable_list.mon_lec6}}">
+													<datalist id="mon_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="mon_lec7" name="mon_lec7" placeholder="{{timetable_list.mon_lec7}}">
+													<datalist id="mon_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="mon_lec8" name="mon_lec8" placeholder="{{timetable_list.mon_lec8}}">
+													<datalist id="mon_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Tuesday</b>
+												</td>
+
+												<td align="center" height="40"><input list="tues_lec1" name="tues_lec1" placeholder="{{timetable_list.tues_lec1}}">
+													<datalist id="tues_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec2" name="tues_lec2" placeholder="{{timetable_list.tues_lec2}}">
+													<datalist id="tues_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec3" name="tues_lec3" placeholder="{{timetable_list.tues_lec3}}">
+													<datalist id="tues_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec4" name="tues_lec4" placeholder="{{timetable_list.tues_lec4}}">
+													<datalist id="tues_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec5" name="tues_lec5" placeholder="{{timetable_list.tues_lec5}}">
+													<datalist id="tues_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec6" name="tues_lec6" placeholder="{{timetable_list.tues_lec6}}">
+													<datalist id="tues_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec7" name="tues_lec7" placeholder="{{timetable_list.tues_lec7}}">
+													<datalist id="tues_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="tues_lec8" name="tues_lec8" placeholder="{{timetable_list.tues_lec8}}">
+													<datalist id="tues_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Wednesday</b>
+												</td>
+												<td align="center" height="40"><input list="wed_lec1" name="wed_lec1" placeholder="{{timetable_list.wed_lec1}}">
+													<datalist id="wed_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec2" name="wed_lec2" placeholder="{{timetable_list.wed_lec2}}">
+													<datalist id="wed_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec3" name="wed_lec3" placeholder="{{timetable_list.wed_lec3}}">
+													<datalist id="wed_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec4" name="wed_lec4" placeholder="{{timetable_list.wed_lec4}}">
+													<datalist id="wed_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec5" name="wed_lec5" placeholder="{{timetable_list.wed_lec5}}">
+													<datalist id="wed_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec6" name="wed_lec6" placeholder="{{timetable_list.wed_lec6}}">
+													<datalist id="wed_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec7" name="wed_lec7" placeholder="{{timetable_list.wed_lec7}}">
+													<datalist id="wed_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="wed_lec8" name="wed_lec8" placeholder="{{timetable_list.wed_lec8}}">
+													<datalist id="wed_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Thursday</b>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec1" name="thurs_lec1" placeholder="{{timetable_list.thurs_lec1}}">
+													<datalist id="thurs_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec2" name="thurs_lec2" placeholder="{{timetable_list.thurs_lec2}}">
+													<datalist id="thurs_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec3" name="thurs_lec3" placeholder="{{timetable_list.thurs_lec3}}">
+													<datalist id="thurs_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec4" name="thurs_lec4" placeholder="{{timetable_list.thurs_lec4}}">
+													<datalist id="thurs_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec5" name=thurs_lec5 placeholder="{{timetable_list.thurs_lec5}}">
+													<datalist id="thurs_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec6"name="thurs_lec6" placeholder="{{timetable_list.thurs_lec6}}">
+													<datalist id="thurs_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="thurs_lec7" name="thurs_lec7" placeholder="{{timetable_list.thurs_lec7}}">
+													<datalist id="thurs_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+
+												<td align="center" height="40"><input list="thurs_lec8" name="thurs_lec8" placeholder="{{timetable_list.thurs_lec8}}">
+													<datalist id="thurs_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Friday</b>
+												</td>
+
+												<td align="center" height="40"><input list="fri_lec1" name="fri_lec1" placeholder="{{timetable_list.fri_lec1}}">
+													<datalist id="fri_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec2" name="fri_lec2" placeholder="{{timetable_list.fri_lec2}}">
+													<datalist id="fri_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec3" name="fri_lec3" placeholder="{{timetable_list.fri_lec3}}">
+													<datalist id="fri_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec4" name="fri_lec4" placeholder="{{timetable_list.fri_lec4}}">
+													<datalist id="fri_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec5" name="fri_lec5" placeholder="{{timetable_list.fri_lec5}}">
+													<datalist id="fri_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec6" name="fri_lec6" placeholder="{{timetable_list.fri_lec6}}">
+													<datalist id="fri_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec7" name="fri_lec7" placeholder="{{timetable_list.fri_lec7}}">
+													<datalist id="fri_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="fri_lec8" name="fri_lec8" placeholder="{{timetable_list.fri_lec8}}">
+													<datalist id="fri_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+											</tr>
+											<tr>
+												<td align="center" height="40">
+													<b>Saturday</b>
+												</td>
+												<td align="center" height="40"><input list="sat_lec1" name="sat_lec1" placeholder="{{timetable_list.sat_lec1}}">
+													<datalist id="sat_lec1">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec2" name="sat_lec2" placeholder="{{timetable_list.sat_lec2}}">
+													<datalist id="sat_lec2">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec3" name="sat_lec3" placeholder="{{timetable_list.sat_lec3}}">
+													<datalist id="sat_lec3">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec4" name="sat_lec4" placeholder="{{timetable_list.sat_lec4}}">
+													<datalist id="sat_lec4">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec5" name="sat_lec5" placeholder="{{timetable_list.sat_lec5}}">
+													<datalist id="sat_lec5">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec6" name="sat_lec6" placeholder="{{timetable_list.sat_lec6}}">
+													<datalist id="sat_lec6">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+												<td align="center" height="40"><input list="sat_lec7" name="sat_lec7" placeholder="{{timetable_list.sat_lec7}}">
+													<datalist id="sat_lec7">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+
+												<td align="center" height="40"><input list="sat_lec8" name="sat_lec8" placeholder="{{timetable_list.sat_lec8}}">
+													<datalist id="sat_lec8">
+														{% for subject in subject_list %}
+														<option value="{{subject}}">
+															{%endfor%}
+													</datalist>
+												</td>
+											</tr>
+										</table>
+										<br>
+										<button align="right" class="buttondesign"type="submit" style="cursor:pointer;">Save</button>
+									</form>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!--**********************************
+Content body end
+***********************************-->
+
+
+
+
+	</div>
+	<!--**********************************
+Main wrapper end
+***********************************-->
+
+	<!--**********************************
+Scripts
+***********************************-->
+	<!-- Required vendors -->
+	<script src={% static "vendor/global/global.min.js"%}></script>
+	<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script>
+	<script src={% static "js/custom.min.js"%}></script>
+	<script src={% static "js/dlabnav-init.js"%}></script>
+
+	<!-- Chart sparkline plugin files -->
+	<script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js"%}></script>
+	<script src={% static "js/plugins-init/sparkline-init.js"%}></script>
+
+	<!-- Chart Morris plugin files -->
+	<script src={% static "vendor/raphael/raphael.min.js"%}></script>
+	<script src={% static "vendor/morris/morris.min.js"%}></script>
+
+	<!-- Init file -->
+	<script src={% static "js/plugins-init/widgets-script-init.js"%}></script>
+
+	<!-- Demo scripts -->
+	<script src={% static "js/dashboard/dashboard.js"%}></script>
+
+	<!-- Summernote -->
+	<script src={% static "vendor/summernote/js/summernote.min.js"%}></script>
+	<!-- Summernote init -->
+	<script src={% static "js/plugins-init/summernote-init.js"%}></script>
+
+	<!-- Svganimation scripts -->
+	<script src={% static "vendor/svganimation/vivus.min.js"%}></script>
+	<script src={% static "vendor/svganimation/svg.animation.js"%}></script>
+	<!--script src={% static "js/styleSwitcher.js"></script-->
+	<!--
+to import settings change name of settings.js to sytleSwitcher.js
+-->
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+body{
+  background: black url("images/m.jpg");
+}
+.navbar{
+  border-radius: 0;
+}
+.navbar-brand{
+  font-family:'Caveat', cursive;
+  font-weight: bold;
+}
