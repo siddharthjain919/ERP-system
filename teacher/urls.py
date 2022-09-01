@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/',views.logout,name='logout'),
     path('login/',views.login,name='login'),
     path('timetable/',views.timetable,name="timetable"),
+	path('attendance/',views.attendance,name="attendance"),
     re_path(r'^$',views.index,name="index"),
 	path('update/',views.update,name="update"),
     path('subject/add/',views.add,name="add"),

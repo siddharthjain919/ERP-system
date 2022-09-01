@@ -58,9 +58,7 @@ def update(request):
 def subject(request):
 	global branch
 	subject_list=list(subjects.sub_obj.all().values_list('subject'))
-	return render(request,'subjects.html',context={'subject_list':subject_list})
-
-
+	return render(request,'subjects.html',context={'subject_list':subject_list,'n':range(len(subject_list))})
 def add(request):
 	subject_list=list(subjects.sub_obj.all().values_list('subject'))
 	code=request.POST.get('code').upper()
@@ -75,3 +73,6 @@ def add(request):
 	else:
 		pass
 	return subject(request)
+
+def attendance(request):
+	return render(request,"attendance.html",{})
