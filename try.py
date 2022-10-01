@@ -1,21 +1,6 @@
-n=int(input())
-c=0
-for i in range(n):
-	s=input()
-	if len(s)<2:
-		continue
-	if s==s[::-1]:
-		c+=1
-	else:
-		temp=len(s)//2
-		temp=s[:temp]
-		print(temp)
-		if temp==temp[::-1]:
-			c+=1
-		else:
-			temp=-(-len(s)//2)
-			temp=s[temp:]
-			print(temp)
-			if temp==temp[::-1]:
-				c+=1
-print(c)
+import smtplib
+server=smtplib.SMTP("smtp.office365.com",587)
+server.starttls()
+server.login("abhinav.19b111050@abes.ac.in","Abhi.abes")
+server.sendmail("abhinav.19b111050@abes.ac.in","anand.19b111041@abes.ac.in","hii")
+print("sent")

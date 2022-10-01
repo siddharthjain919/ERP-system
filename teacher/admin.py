@@ -4,3 +4,5 @@ from django.contrib import admin
 from . models import teacherlogin
 
 admin.site.register(teacherlogin)
+class teacherloginAdmin(admin.ModelAdmin):
+	exclude=("teacherpwd",)

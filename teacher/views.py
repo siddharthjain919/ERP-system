@@ -6,12 +6,26 @@ from django.views.generic import View
 from .models import teacherlogin
 from branch.models import subjects,branch_detail
 from django.contrib import messages
-
+branch=None
 def index(request):
 	return render(request,'login.html')
-
-branch=None
 def login(request):
+	if request.method == 'POST':
+		username = request.POST.get('teacherid')
+		password = request.POST.get('teacherpwd')
+		try:
+			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
+			if user is not None:
+				return render(request, 'dash1.html', {})
+			else:
+				print("Someone tried to login and failed.")
+				print("They used username: {} and password: {}".format(username,password))
+				return redirect('/')
+		except Exception as identifier:
+			return redirect('/teacher')
+	else:
+		return render(request,'login.html')
+def coordinatorlogin(request):
 	if request.method == 'POST':
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
@@ -21,6 +35,8 @@ def login(request):
 				global branch
 				branch=teacherlogin.teach_obj.filter(teacherid=user)
 				branch=branch[0].cc_of_branch
+				if not branch:
+					return redirect('/teacher')
 				return render(request, 'dash1.html', {})
 			else:
 				print("Someone tried to login and failed.")
@@ -73,6 +89,5 @@ def add(request):
 	else:
 		pass
 	return subject(request)
-
 def attendance(request):
 	return render(request,"attendance.html",{})
