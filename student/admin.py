@@ -1,6 +1,8 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import studentlogin
+from import_export.admin import ImportExportModelAdmin
 
-admin.site.register(studentlogin)
+
+class studentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+	print(ImportExportModelAdmin)
+admin.site.register(studentlogin,studentloginAdmin)

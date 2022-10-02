@@ -26,8 +26,6 @@ SECRET_KEY = 'django-insecure-hb()-0^7!wo47zuzmlw-y5=^^=sr(eq!5qe!bgc=ekiehdy0cr
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,9 +39,11 @@ INSTALLED_APPS = [
     'teacher',
     'student',
     'branch',
-    
-]
+	'import_export',
 
+]
+IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
+IMPORT_EXPORT_USE_TRANSACTIONS = True 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

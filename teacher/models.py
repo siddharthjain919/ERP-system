@@ -3,11 +3,13 @@ from django.core.validators import MinLengthValidator
 from branch.models import branch_detail
 from django.db.models.signals import post_save
 import smtplib,secrets,string
-import win32com.client as win32
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 # Create your models here.
 class teacherlogin(models.Model):
-	teacherid=models.CharField(max_length=20)
+	teacherid=models.CharField(max_length=20,primary_key=True)
+	Name=models.CharField(max_length=40)
 	teacherpwd=models.CharField(max_length=15,editable=False,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
 	isactive=models.IntegerField(null=True,blank=True)
 	cc_of_branch=models.ForeignKey(branch_detail,null=True,blank=True,default=None,on_delete=models.CASCADE)
@@ -28,27 +30,24 @@ class teacherlogin(models.Model):
 			setattr(kwargs["instance"],'teacherpwd',pwd)
 			kwargs["instance"].save()
 
-			olApp=win32.Dispatch("Outlook.Application")
-			olNS=olApps.GetNameSpace('MAPI')
-			mail_item=olApps.CreateItem(0)
-			mail_item.Subject='Text Mail'
-			mail_item.Body='Hi, How arr you?'
-			mail_item.To='abhinavsinghal256@gmail.com'
-			mail_item.Sender='abhinav.19b111050@abes.ac.in'
-			mail_item._oleobj_.Invoke(*(64209,8,0,olNS.Accounts.Item('abhinav.19b111050@abes.ac.in')))
-			mail_item.Display()
-			mail_item.Save()
-			mail_item.Send()
-			'''
-			send_mail(
-			    'Subject here',
-			    'Here is the message.',
-			    'abhinav.19b111050@abes.ac.in',
-			    ['abhinavsinghal256@gmail.com'],
-			    fail_silently=False,
-				auth_user="abhinav.19b111050@abes.ac.in",
-				auth_password="Abhi.abes",
-
-			)'''
+			password="oqmdkyfhgkxeolfk"
+			sender="abhinavsinghal256@gmail.com"
+			receiver=kwargs["instance"].email
+			user=kwargs["instance"].Name
+			user=user.title()
+			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
+			message['Subject']="Regarding ERP password"
+			message['From']=sender
+			message['To']=receiver
+			try:
+				server=smtplib.SMTP('smtp.gmail.com:587')
+				server.ehlo()
+				server.starttls()
+				server.login(sender,password)
+				server.sendmail(sender,receiver,message.as_string())
+				server.quit()
+			except:
+				print("error")
 
 	post_save.connect(mail)
