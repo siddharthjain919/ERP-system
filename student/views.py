@@ -1,8 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.template import loader
-
-#for login
 from django.contrib.auth import login,authenticate
 from .models import studentlogin
 

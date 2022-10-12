@@ -1,16 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group
 from django.core.validators import MinLengthValidator
 from branch.models import branch_detail
 from django.db.models.signals import post_save
 import smtplib,secrets,string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from django.contrib.auth.models import User
 # Create your models here.
 class teacherlogin(models.Model):
 	teacherid=models.CharField(max_length=20,primary_key=True)
 	Name=models.CharField(max_length=40)
-	teacherpwd=models.CharField(max_length=15,editable=False,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
+	teacherpwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
 	isactive=models.IntegerField(null=True,blank=True)
 	cc_of_branch=models.ForeignKey(branch_detail,null=True,blank=True,default=None,on_delete=models.CASCADE)
 	email=models.EmailField(max_length=50)
@@ -30,6 +31,19 @@ class teacherlogin(models.Model):
 			setattr(kwargs["instance"],'teacherpwd',pwd)
 			kwargs["instance"].save()
 
+			#for adding user to group
+			fname=kwargs["instance"].Name
+			fname=fname.split()
+			try:
+				lname=fname[1]
+			except:
+				lname=''
+			fname=fname[0]
+			user = User.objects.create_user(username=kwargs["instance"].teacherid,email=kwargs["instance"].email,password=pwd,first_name=fname,last_name=lname)
+			user_group = Group.objects.get(name='teacher')
+			user.groups.add(user_group)
+
+			#sending mails
 			password="oqmdkyfhgkxeolfk"
 			sender="abhinavsinghal256@gmail.com"
 			receiver=kwargs["instance"].email
