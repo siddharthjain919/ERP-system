@@ -4,7 +4,7 @@ from django.template import loader
 from django.contrib.auth import authenticate
 from django.views.generic import View
 from .models import teacherlogin
-from branch.models import subjects,branch_detail
+from branch.models import branch_subjects,branch_detail
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.views.decorators.cache import cache_control

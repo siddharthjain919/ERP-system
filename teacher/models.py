@@ -16,7 +16,7 @@ class teacherlogin(models.Model):
 	cc_of_branch=models.ForeignKey(branch_detail,null=True,blank=True,default=None,on_delete=models.CASCADE)
 	email=models.EmailField(max_length=50)
 	def __str__(self):
-	    return self.teacherid
+		return self.teacherid
 	teach_obj = models.Manager()
 	def mail(**kwargs):
 		if kwargs["created"] and isinstance(kwargs["instance"],teacherlogin):
