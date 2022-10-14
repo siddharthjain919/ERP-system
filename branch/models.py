@@ -4,9 +4,10 @@ from django.db import models
 
 class branch_subjects(models.Model):
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
-	
+	subject_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE,default=None)
+	def __str__(self):
+	    return self.branch_subject.subject_name+"-"+self.subject_teacher.Name
 class branch_detail(models.Model):
-
 	name=models.CharField(max_length=25,primary_key=True)
 	batch=models.IntegerField()
 	def __str__(self):

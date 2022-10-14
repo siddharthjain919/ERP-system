@@ -1,15 +1,9 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.template import loader
 from django.contrib.auth import authenticate
-from django.views.generic import View
 from .models import teacherlogin
 from branch.models import branch_subjects,branch_detail
-from django.contrib import messages
 from django.contrib.auth import login as auth_login
-from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.contrib.auth import logout as auth_logout
 branch=None
 def index(request):
