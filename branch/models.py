@@ -6,12 +6,13 @@ class branch_subjects(models.Model):
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
 	subject_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE,default=None)
 	def __str__(self):
-	    return self.branch_subject.subject_name+"-"+self.subject_teacher.Name
+		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name
+	branch_sub_obj=models.Manager()
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25,primary_key=True)
 	batch=models.IntegerField()
 	def __str__(self):
-	    return self.name
+		return self.name
 	branch_obj=models.Manager()
 	mon_lec1=models.ForeignKey(branch_subjects,on_delete=models.CASCADE,related_name='mon_l1',default=None,null=True)
 	mon_lec2=models.ForeignKey(branch_subjects,on_delete=models.CASCADE,related_name='mon_l2',default=None,null=True)
