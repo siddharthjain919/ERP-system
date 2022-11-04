@@ -87,7 +87,7 @@ def update(request):
 					new_sub=subjects.sub_obj.filter(subject_name=new_sub)
 					new_sub=new_sub[0].id
 					new_teach=teacher_timetable.teach_obj.filter(Name=new_teach)
-					new_teach=new_teach[0]
+					
 					print(new_teach,type(new_teach))
 					#print(new_sub,new_teach,branch_subjects.branch_sub_obj.filter(branch_subject=new_sub)[0])
 					setattr(ob,temp,branch_subjects.branch_sub_obj.filter(branch_subject=new_sub)[0])
