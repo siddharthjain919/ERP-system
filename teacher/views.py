@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate
-from .models import teacher_timetable, teacherlogin
+from .models import teacherlogin
 from branch.models import branch_subjects,branch_detail
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -36,6 +36,7 @@ def coordinatorlogin(request):
 		try:
 			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
 			user2 = authenticate(request, username=username, password=password)
+			print(user,user2,username,password)
 			if user is not None:
 				global branch
 				auth_login(request,user2)
@@ -79,28 +80,14 @@ def update(request):
 				temp=i+'_lec'+str(j)
 				temp2=request.POST.get(temp)
 				
-				if temp2:
-					temp2=temp2.split("-")
-					print(temp2,111111111111111111111111111111111111111)
-					new_sub=temp2[0]
-					new_teach=temp2[1]
-					new_sub=subjects.sub_obj.filter(subject_name=new_sub)
-					new_sub=new_sub[0].id
-					new_teach=teacher_timetable.teach_obj.filter(Name=new_teach)
-					
-					print(new_teach,type(new_teach))
-					#print(new_sub,new_teach,branch_subjects.branch_sub_obj.filter(branch_subject=new_sub)[0])
-					setattr(ob,temp,branch_subjects.branch_sub_obj.filter(branch_subject=new_sub)[0])
-					setattr(new_teach,temp,teacher_timetable.teach_obj.filter(teacherid=new_teach)[0])
-					ob.save()
-					new_teach.save()
+				pass
 				#messages.success(request,"Timetable Updated")
 	print("****Success****")
 	return timetable(request)
 @login_required(login_url='/teacher/login/')
 def subject(request):
 	global branch
-	subject_list=list(subjects.sub_obj.all().values_list('subject'))
+	subject_list=list(subjects.sub_obj.all().values_list('subject_name'))
 	return render(request,'subjects.html',context={'subject_list':subject_list,'n':range(len(subject_list))})
 @login_required(login_url='/teacher/login/')
 def add(request):

@@ -6,6 +6,7 @@ from django.db import transaction
 import smtplib,secrets,string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from erp.settings import password,sender
 # Create your models here.
 class studentlogin(models.Model):
 	studentid=models.CharField(max_length=20,primary_key=True)
@@ -31,8 +32,6 @@ class studentlogin(models.Model):
 			setattr(kwargs["instance"],'studentpwd',pwd)
 			kwargs["instance"].save()
 
-			password="oqmdkyfhgkxeolfk"
-			sender="abhinavsinghal256@gmail.com"
 			receiver=kwargs["instance"].email
 			user=kwargs["instance"].student_name
 			user=user.title()
