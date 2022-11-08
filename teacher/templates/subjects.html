@@ -141,22 +141,25 @@
 													<th scope="col">No.</th>
 													<th scope="col">Code</th>
 													<th scope="col">Subject</th>
+													<th scope="col">Faculty</th>
 												</tr>
-												{% with j=0 %}
-												{% for i in subject_list %}
+												
+												{% for i in branch_subject %}
 												<tr>
 													<td>
 														{{forloop.counter}}
 													</td>
 													<td>
-														{{i|cut:"('"|slice:":7"}}
+														{{i.0|cut:"('"|slice:":7"}}
 													</td>
 													<td>
-														{{i|cut:"('"|slice:"8:-3"}}
+														{{i.0|cut:"('"|slice:"8:"}}
+													</td>
+													<td>
+														{{i.1}}
 													</td>
 												</tr>
 												{%endfor%}
-												{% endwith %}
 
 											</thead>
 

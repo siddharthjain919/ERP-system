@@ -5,7 +5,7 @@ from branch.models import branch_subjects,branch_detail
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
-from erp.models import subjects
+from branch.models import branch_subjects
 branch=None
 def index(request):
 	return render(request,'login.html')
@@ -60,13 +60,13 @@ def logout(request):
 	return redirect('/teacher')
 @login_required(login_url='/teacher/login/')
 def timetable(request):
-	print(request.user,22222222222222)
+	# print(request.user,22222222222222)
+	branch_list=list(branch_detail.branch_obj.all())
 	if not request.user.is_authenticated:
 		return redirect('/teacher')
 	if branch:
-		timetable_list=branch_detail.branch_obj.get(pk=branch)
 		subject_list=list(branch_subjects.branch_sub_obj.all())
-		return render(request,'timetable.html',context={'timetable_list':timetable_list,"subject_list":subject_list})
+		return render(request,'timetable.html',context={"branch_list":branch_list,"subject_list":subject_list})
 	else:
 		return render(request,'login.html')
 @login_required(login_url='/teacher/login/')
@@ -87,8 +87,11 @@ def update(request):
 @login_required(login_url='/teacher/login/')
 def subject(request):
 	global branch
-	subject_list=list(subjects.sub_obj.all().values_list('subject_name'))
-	return render(request,'subjects.html',context={'subject_list':subject_list,'n':range(len(subject_list))})
+	subject_list=list(branch_subjects.branch_sub_obj.all())
+	for i in range(len(subject_list)):
+		subject_list[i]=str(subject_list[i])
+		subject_list[i]=subject_list[i].split('-')
+	return render(request,'subjects.html',context={'branch_subject':subject_list})
 @login_required(login_url='/teacher/login/')
 def add(request):
 	subject_list=list(subjects.sub_obj.all().values_list('subject'))
@@ -97,7 +100,7 @@ def add(request):
 	name=request.POST.get('name').title()
 	code=''.join(code.split())
 	code=code[:3]+' '+code[3:]
-	code=code+': '+name
+	code=code+':'+name
 	name=(code,)
 	if name not in subject_list:
 		ob=subjects.sub_obj.create(subject=code)
