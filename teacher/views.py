@@ -110,3 +110,6 @@ def add(request):
 @login_required(login_url='/teacher/login/')
 def attendance(request):
 	return render(request,"attendance.html",{})
+
+def about(request):
+	return render(request,"about.html",{})
