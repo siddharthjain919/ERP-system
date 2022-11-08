@@ -14,4 +14,5 @@ urlpatterns = [
     path('subject/add/',views.add,name="add"),
     path("subject/",views.subject,name="subject"),
 	path("coordinator/login/",views.coordinatorlogin,name="coordinator"),
+    path('about/',views.about,name="about"),
 ]
