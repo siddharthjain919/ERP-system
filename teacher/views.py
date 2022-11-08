@@ -27,6 +27,8 @@ def login(request):
 		except Exception as identifier:
 			print(111111111111111111111111,identifier)
 			return redirect('/teacher')
+	elif request.user.is_authenticated:
+		return render(request, 'dash1.html', {})
 	else:
 		return render(request,'login.html')
 def coordinatorlogin(request):
