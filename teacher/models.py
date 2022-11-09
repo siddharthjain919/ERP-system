@@ -103,11 +103,11 @@ class teacherlogin(models.Model):
 			for _ in range(10):
 				pwd += ''.join(secrets.choice(alphabet))
 			setattr(kwargs["instance"],'teacherpwd',pwd)
-			kwargs["instance"].save()
+			
 
 			#for adding user to group
 			createuser(**kwargs)
-
+			kwargs["instance"].save()
 			#sending mails
 			receiver=kwargs["instance"].email
 			user=kwargs["instance"].Name
