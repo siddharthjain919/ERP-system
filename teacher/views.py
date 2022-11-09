@@ -6,6 +6,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from branch.models import branch_subjects
+from erp.models import subjects
 branch=None
 def index(request):
 	return render(request,'login.html')
@@ -90,24 +91,24 @@ def update(request):
 def subject(request):
 	global branch
 	subject_list=list(branch_subjects.branch_sub_obj.all())
+	all_subjects=list(subjects.sub_obj.all())
+	teacher_list=list(teacherlogin.teach_obj.all())
 	for i in range(len(subject_list)):
 		subject_list[i]=str(subject_list[i])
 		subject_list[i]=subject_list[i].split('-')
-	return render(request,'subjects.html',context={'branch_subject':subject_list})
+	return render(request,'subjects.html',context={'branch_subject':subject_list,"all_subjects":all_subjects,"teacher_list":teacher_list})
 @login_required(login_url='/teacher/login/')
 def add(request):
-	subject_list=list(subjects.sub_obj.all().values_list('subject'))
-	code=request.POST.get('code').upper()
-	code=code.replace('-','')
-	name=request.POST.get('name').title()
-	code=''.join(code.split())
-	code=code[:3]+' '+code[3:]
-	code=code+':'+name
-	name=(code,)
-	if name not in subject_list:
-		ob=subjects.sub_obj.create(subject=code)
+	subject_list=list(branch_subjects.branch_sub_obj.all())
+	name=request.POST.get('subject_name')
+	name=subjects.sub_obj.get(subject_name=name)
+	faculty=request.POST.get("subject_teacher")
+	faculty=teacherlogin.teach_obj.get(Name=faculty)
+	for sub in subject_list:
+		if sub.branch_subject==name and sub.subject_teacher==faculty:
+			break 
 	else:
-		pass
+		ob=branch_subjects.branch_sub_obj.create(branch_subject=name,subject_teacher=faculty)
 	return subject(request)
 @login_required(login_url='/teacher/login/')
 def attendance(request):

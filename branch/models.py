@@ -17,8 +17,10 @@ class branch_subjects(models.Model):
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
 	subject_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE,default=None)
 	def __str__(self):
-		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name
+		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name	
 	branch_sub_obj=models.Manager()
+	class Meta:
+		unique_together=[['branch_subject','subject_teacher']]
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25,primary_key=True)
 	batch=models.IntegerField()
