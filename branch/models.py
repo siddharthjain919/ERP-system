@@ -4,9 +4,11 @@ from teacher.models import teacherlogin
 # Create your models here.
 
 def update_teacher_timetable(**kwargs):
+	print(kwargs["instance"],11111111111)
 	if isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
-		print(branch,type(branch.mon_lec1),branch_detail.branch_obj.get(name=branch.name).mon_lec1)
+		print(kwargs)
+		#print(branch,type(branch.mon_lec1),branch_detail.branch_obj.get(name=branch.name).mon_lec1)
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
 				lecture_name=i+'_lec'+str(j)
@@ -18,7 +20,7 @@ def update_teacher_timetable(**kwargs):
 					teacher_slot=getattr(lecture_details.subject_teacher,"teach_"+lecture_name)
 					if teacher_slot and teacher_slot!=branch:
 						raise Exception(lecture_details.subject_teacher.Name,"already occupied at",lecture_name)
-					if previous!=lecture_details:
+					if previous and previous!=lecture_details:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 						previous.subject_teacher.save()
 						print("cleared",branch,"from",previous.subject_teacher,"at slot",lecture_name)

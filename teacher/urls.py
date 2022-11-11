@@ -15,4 +15,5 @@ urlpatterns = [
     path("subject/",views.subject,name="subject"),
 	path("coordinator/login/",views.coordinatorlogin,name="coordinator"),
     path('about/',views.about,name="about"),
+    path('your-timetable/',views.teachertimetable,name="teacher_timetable"),
 ]

@@ -3,7 +3,7 @@
 	{% load static %}
 
 	<head>
-		<title>Dashboard </title>
+		<title>Attendance</title>
 		<!-- Favicon icon -->
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
@@ -84,6 +84,12 @@
 						<li><a class="ai-icon" href="/teacher/timetable" aria-expanded="false">
 								<i class="la la-calendar"></i>
 								<span class="nav-text">Time Table</span>
+							</a>
+						</li>
+						<li>
+							<a class="ai-icon" href="/teacher/your-timetable" aria-expanded="false">
+								<i class="la la-calendar"></i>
+								<span class="nav-text">Your Time Table</span>
 							</a>
 						</li>
 						<li><a class="has-arrow" href="/teacher/attendance" aria-expanded="false">

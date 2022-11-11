@@ -1,12 +1,14 @@
-from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate
-from .models import teacherlogin
-from branch.models import branch_subjects,branch_detail
 from django.contrib.auth import login as auth_login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
-from branch.models import branch_subjects
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+
+from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
+
+from .models import teacherlogin
+
 branch=None
 def index(request):
 	return render(request,'login.html')
@@ -61,34 +63,75 @@ def logout(request):
 	request.session.flush()
 	auth_logout(request)
 	return redirect('/teacher')
-@login_required(login_url='/teacher/login/')
 def timetable(request):
-	# print(request.user,22222222222222)
+	
 	branch_list=list(branch_detail.branch_obj.all())
 	if not request.user.is_authenticated:
-		return redirect('/teacher')
+		return redirect('/teacher/login')
 	if branch:
+		print(branch)
 		subject_list=list(branch_subjects.branch_sub_obj.all())
 		return render(request,'timetable.html',context={"branch_list":branch_list,"subject_list":subject_list})
 	else:
-		return render(request,'login.html')
-@login_required(login_url='/teacher/login/')
+		return render(request,'timetable.html',context={"branch_list":branch_list})
+
 def update(request):
+
 	global branch
-	ob=branch_detail.branch_obj.get(pk=branch)
-	print(ob,type(ob))
-	if request.method=='POST':
-		for i in ['mon','tues','wed','thurs','fri','sat']:
-			for j in range(1,9):
-				temp=i+'_lec'+str(j)
-				temp2=request.POST.get(temp)
-				
-				pass
-				#messages.success(request,"Timetable Updated")
-	print("****Success****")
+
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
+	if request.method=='GET':
+		values=request.GET
+		print(values,111111111111111)
+	if branch:
+		ob=branch_detail.branch_obj.get(name=branch)
+		#print(ob,type(ob))
+		if request.method=='POST':
+			for i in ['mon','tues','wed','thurs','fri','sat']:
+				for j in range(1,9):
+					lecture_name=i+'_lec'+str(j)
+					lecture_input=request.POST.get(lecture_name)
+					# print(1,lecture_input,type(lecture_input))
+					previous=getattr(ob,lecture_name)
+					##print(lecture_input,previous)
+					# print(2,previous,type(previous))
+					# print(lecture_input,previous,type(lecture_input),11111111111111)
+					if lecture_input=='':
+						continue
+					if lecture_input:
+						lecture_input=lecture_input.split('-')
+						subject_name=lecture_input[0]
+						subject_name=subjects.sub_obj.get(subject_name=subject_name)
+						subject_teacher=lecture_input[1]
+						subject_teacher=teacherlogin.teach_obj.get(Name=subject_teacher)
+						teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
+						if teacher_slot and teacher_slot!=branch:
+							raise Exception(subject_teacher.Name,"already occupied at",lecture_name)
+						if previous and lecture_input!=previous:
+							setattr(previous.subject_teacher,"teach_"+lecture_name,None)
+							previous.subject_teacher.save()
+						setattr(subject_teacher,"teach_"+lecture_name,branch)
+						
+						subject_teacher.save()
+						setattr(ob,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name))
+						# print(1,subject_name,type(subject_name))
+						# print(2,subject_teacher,type(subject_teacher))
+					elif previous:
+						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
+						previous.subject_teacher.save()
+						setattr(ob,lecture_name,None)
+					else:
+						setattr(ob,lecture_name,None)
+					ob.save()
+					
+					#messages.success(request,"Timetable Updated")
+		print("****Success****")
 	return timetable(request)
-@login_required(login_url='/teacher/login/')
+
 def subject(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
 	global branch
 	subject_list=list(branch_subjects.branch_sub_obj.all())
 	all_subjects=list(subjects.sub_obj.all())
@@ -97,8 +140,10 @@ def subject(request):
 		subject_list[i]=str(subject_list[i])
 		subject_list[i]=subject_list[i].split('-')
 	return render(request,'subjects.html',context={'branch_subject':subject_list,"all_subjects":all_subjects,"teacher_list":teacher_list})
-@login_required(login_url='/teacher/login/')
+
 def add(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
 	subject_list=list(branch_subjects.branch_sub_obj.all())
 	name=request.POST.get('subject_name')
 	name=subjects.sub_obj.get(subject_name=name)
@@ -110,9 +155,19 @@ def add(request):
 	else:
 		ob=branch_subjects.branch_sub_obj.create(branch_subject=name,subject_teacher=faculty)
 	return subject(request)
-@login_required(login_url='/teacher/login/')
+
 def attendance(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
 	return render(request,"attendance.html",{})
 
 def about(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
 	return render(request,"about.html",{})
+
+def teachertimetable(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
+	user = teacherlogin.teach_obj.get(teacherid=request.user.username)
+	return render(request,"your-timetable.html",{"user":user})
