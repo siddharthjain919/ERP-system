@@ -21,6 +21,7 @@ def createuser(**kwargs):
 		user.groups.add(user_group)
 def deleteuser(**kwargs):
 	print(kwargs,55555555555555555555555)
+	
 	try:
 		u=User.objects.get(username=kwargs["instance"].teacherid)
 		u.delete()

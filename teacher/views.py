@@ -120,7 +120,7 @@ def update(request):
 				
 				#messages.success(request,"Timetable Updated")
 	print("****Success****")
-	return timetable(request)
+	return redirect('/teacher/timetable')
 
 def subject(request):
 	if not request.user.is_authenticated:

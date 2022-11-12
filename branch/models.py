@@ -15,7 +15,10 @@ def update_teacher_timetable(**kwargs):
 				#holds the new value
 				lecture_details=getattr(branch,lecture_name)
 				#holds the value stored in the database
-				previous=getattr(branch_detail.branch_obj.get(name=branch.name),lecture_name)
+				try:
+					previous=getattr(branch_detail.branch_obj.get(name=branch.name),lecture_name)
+				except:
+					previous=None
 				if lecture_details:
 					teacher_slot=getattr(lecture_details.subject_teacher,"teach_"+lecture_name)
 					if teacher_slot and teacher_slot!=branch:
