@@ -18,7 +18,7 @@ def login(request):
 		password = request.POST.get('teacherpwd')
 		try:
 			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
-			print(user)
+			# print(user)
 			user2 = authenticate(request, username=username, password=password)
 			if user is not None:
 				auth_login(request,user2)
@@ -28,7 +28,7 @@ def login(request):
 				print("They used username: {} and password: {}".format(username,password))
 				return redirect('/')
 		except Exception as identifier:
-			print(111111111111111111111111,identifier)
+			print("******\n",identifier,"******\n")
 			return redirect('/teacher')
 	elif request.user.is_authenticated:
 		return render(request, 'dash1.html', {})
@@ -41,7 +41,6 @@ def coordinatorlogin(request):
 		try:
 			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
 			user2 = authenticate(request, username=username, password=password)
-			print(user,user2,username,password)
 			if user is not None:
 				global branch
 				auth_login(request,user2)
@@ -69,64 +68,58 @@ def timetable(request):
 	if not request.user.is_authenticated:
 		return redirect('/teacher/login')
 	if branch:
-		print(branch)
+		# print(branch)
 		subject_list=list(branch_subjects.branch_sub_obj.all())
 		return render(request,'timetable.html',context={"branch_list":branch_list,"subject_list":subject_list})
 	else:
 		return render(request,'timetable.html',context={"branch_list":branch_list})
 
 def update(request):
-
-	global branch
-
 	if not request.user.is_authenticated:
 		return redirect('/teacher/login')
-	if request.method=='GET':
-		values=request.GET
-		print(values,111111111111111)
-	if branch:
-		ob=branch_detail.branch_obj.get(name=branch)
-		#print(ob,type(ob))
-		if request.method=='POST':
-			for i in ['mon','tues','wed','thurs','fri','sat']:
-				for j in range(1,9):
-					lecture_name=i+'_lec'+str(j)
-					lecture_input=request.POST.get(lecture_name)
-					# print(1,lecture_input,type(lecture_input))
-					previous=getattr(ob,lecture_name)
-					##print(lecture_input,previous)
-					# print(2,previous,type(previous))
-					# print(lecture_input,previous,type(lecture_input),11111111111111)
-					if lecture_input=='':
-						continue
-					if lecture_input:
-						lecture_input=lecture_input.split('-')
-						subject_name=lecture_input[0]
-						subject_name=subjects.sub_obj.get(subject_name=subject_name)
-						subject_teacher=lecture_input[1]
-						subject_teacher=teacherlogin.teach_obj.get(Name=subject_teacher)
-						teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
-						if teacher_slot and teacher_slot!=branch:
-							raise Exception(subject_teacher.Name,"already occupied at",lecture_name)
-						if previous and lecture_input!=previous:
-							setattr(previous.subject_teacher,"teach_"+lecture_name,None)
-							previous.subject_teacher.save()
-						setattr(subject_teacher,"teach_"+lecture_name,branch)
-						
-						subject_teacher.save()
-						setattr(ob,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name))
-						# print(1,subject_name,type(subject_name))
-						# print(2,subject_teacher,type(subject_teacher))
-					elif previous:
+	#print(branch,type(branch))
+	if request.method=='POST':
+		branch=request.POST.get("branch")
+		branch=branch_detail.branch_obj.get(name=branch)
+		for i in ['mon','tues','wed','thurs','fri','sat']:
+			for j in range(1,9):
+				lecture_name=i+'_lec'+str(j)
+				lecture_input=request.POST.get(lecture_name)
+				# print(1,lecture_input,type(lecture_input))
+				previous=getattr(branch,lecture_name)
+				##print(lecture_input,previous)
+				# print(2,previous,type(previous))
+				# print(lecture_input,previous,type(lecture_input),11111111111111)
+				if lecture_input=='':
+					continue
+				if lecture_input:
+					lecture_input=lecture_input.split('-')
+					subject_name=lecture_input[0]
+					subject_name=subjects.sub_obj.get(subject_name=subject_name)
+					subject_teacher=lecture_input[1]
+					subject_teacher=teacherlogin.teach_obj.get(Name=subject_teacher)
+					teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
+					if teacher_slot and teacher_slot!=branch:
+						raise Exception(subject_teacher.Name,"already occupied at",lecture_name)
+					if previous and lecture_input!=previous:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 						previous.subject_teacher.save()
-						setattr(ob,lecture_name,None)
-					else:
-						setattr(ob,lecture_name,None)
-					ob.save()
+					setattr(subject_teacher,"teach_"+lecture_name,branch)
 					
-					#messages.success(request,"Timetable Updated")
-		print("****Success****")
+					subject_teacher.save()
+					setattr(branch,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name))
+					# print(1,subject_name,type(subject_name))
+					# print(2,subject_teacher,type(subject_teacher))
+				elif previous:
+					setattr(previous.subject_teacher,"teach_"+lecture_name,None)
+					previous.subject_teacher.save()
+					setattr(branch,lecture_name,None)
+				else:
+					setattr(branch,lecture_name,None)
+				branch.save()
+				
+				#messages.success(request,"Timetable Updated")
+	print("****Success****")
 	return timetable(request)
 
 def subject(request):
