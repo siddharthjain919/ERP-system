@@ -182,13 +182,13 @@ Content body start
 									<input list="name" placeholder="Subject Name" name="subject_name">
 										<datalist id="name">
 											{%for subject in all_subjects%}
-											<option value={{subject.subject_name}}></option>
+											<option value="{{subject}}"></option>
 											{%endfor%}
 										</datalist>
 									<input list="teacher" placeholder="Subject Teacher" name="subject_teacher">
 										<datalist id="teacher">
 											{%for teacher in teacher_list%}
-											<option value={{teacher.Name}}></option>
+											<option value="{{teacher.Name}}"></option>
 											{%endfor%}
 										</datalist>
 

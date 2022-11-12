@@ -20,13 +20,11 @@ def createuser(**kwargs):
 		user_group = Group.objects.get(name='teacher')
 		user.groups.add(user_group)
 def deleteuser(**kwargs):
-	print(kwargs,55555555555555555555555)
-	
 	try:
 		u=User.objects.get(username=kwargs["instance"].teacherid)
 		u.delete()
 	except Exception as e:
-		print(e,222222222222222)
+		print("******\n",e,"******\n")
 class teacherlogin(models.Model):
 
 	teacherid=models.CharField(max_length=20,primary_key=True)
