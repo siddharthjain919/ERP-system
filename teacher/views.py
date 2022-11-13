@@ -11,7 +11,10 @@ from .models import teacherlogin
 
 branch=None
 def index(request):
-	return render(request,'login.html')
+	if not request.user.is_active:
+		return render(request,'login.html')
+	else:
+		return render(request, 'dash1.html', {})
 def login(request):
 	if request.method == 'POST':
 		username = request.POST.get('teacherid')
