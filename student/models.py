@@ -24,6 +24,8 @@ def createuser(**kwargs):
 		except:
 			user_group=Group.objects.create(name="student")
 		user.groups.add(user_group)
+		branch_group=Group.objects.get(name=kwargs["instance"].branch)
+		user.groups.add(branch_group)
 def deleteuser(**kwargs):
 	try:
 		u=User.objects.get(username=kwargs["instance"].studentid)

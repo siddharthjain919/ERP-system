@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABES Engineering College</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
-    <link rel="stylesheet" type="text/css" href="{% static 'homepage/app.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'app.css' %}" />
 </head>
 
 <body>
 {% csrf_token %}
     <div class="panel">
         <div class="pricing-plan">
-            <img src="{% static 'homepage/icons/student.jpg' %}" alt="" class="user-img">
+            <img src="{% static 'icons/student.jpg' %}" alt="" class="user-img">
             <h2 class="pricing-header">Student</h2>
 
             <span class="pricing-price"></span>
@@ -21,14 +21,14 @@
         </div>
 
         <div class="pricing-plan">
-            <img src="{% static 'homepage/icons/logo.png' %}" alt="" class="logo-img">
+            <img src="{% static 'icons/logo.png' %}" alt="" class="logo-img">
             <span class="pricing-price"></span>
             <!-- <span class="new-user">New User?</span>
             <a href="#/" class="pricing-button">Register Now!</a> -->
 
         </div>
         <div class="pricing-plan">
-            <img src="{% static 'homepage/icons/teacher.jpg' %}" alt="" class="user-img">
+            <img src="{% static 'icons/teacher.jpg' %}" alt="" class="user-img">
             <h2 class="pricing-header">Teacher</h2>
 
             <span class="pricing-price"></span>
