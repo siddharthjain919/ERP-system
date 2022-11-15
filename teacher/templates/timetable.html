@@ -851,6 +851,13 @@ Content body start
 
 								<div class="card-body">
 									<div class="table-responsive recentOrderTable">
+										{% if messages %}
+										{% for message in messages %}
+											<div class="alert alert-{{ message.tags }}"  style="color:green; font-size:18px; text-align:center";>
+												<ol>{{ message|safe}}</ol>
+											</div>
+										{% endfor %}
+										{% endif %}
 										<form method="post" action="/teacher/update/">
 											{% csrf_token %}
 											<table border="7" cellspacing="0" align="center">

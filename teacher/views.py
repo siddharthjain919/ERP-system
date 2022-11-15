@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.contrib import messages
 
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
@@ -27,10 +28,12 @@ def login(request):
 				auth_login(request,user2)
 				return render(request, 'dash1.html', {})
 			else:
+				messages.error(request, 'Invalid Credentials')
 				print("Someone tried to login and failed.")
 				print("They used username: {} and password: {}".format(username,password))
 				return redirect('/')
 		except Exception as identifier:
+			messages.error(request, 'Invalid Credentials')
 			print("******\n",identifier,"******\n")
 			return redirect('/teacher')
 	elif request.user.is_authenticated:
@@ -54,9 +57,11 @@ def coordinatorlogin(request):
 				return render(request, 'dash1.html', {})
 			else:
 				print("Someone tried to login and failed.")
+				messages.error(request, 'Invalid Credentials')
 				print("They used username: {} and password: {}".format(username,password))
 				return redirect('/')
 		except Exception as identifier:
+			messages.error(request, 'Invalid Credentials')
 			return redirect('/teacher')
 	else:
 		return render(request,'login.html')
@@ -82,7 +87,7 @@ def update(request):
 		return redirect('/teacher/login')
 	#print(branch,type(branch))
 	if request.method=='POST':
-		branch=request.POST.get("branch")
+		branch=request.POST.get("branch").split('-')[0]
 		branch=branch_detail.branch_obj.get(name=branch)
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
@@ -107,6 +112,7 @@ def update(request):
 					if previous and lecture_input!=previous:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 						previous.subject_teacher.save()
+						messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.Name,lecture_name))
 					setattr(subject_teacher,"teach_"+lecture_name,branch)
 					
 					subject_teacher.save()
