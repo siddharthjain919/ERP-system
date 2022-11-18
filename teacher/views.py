@@ -17,7 +17,9 @@ def index(request):
 	else:
 		return render(request, 'dash1.html', {})
 def login(request):
-	if request.method == 'POST':
+	if request.user.is_authenticated:
+		return render(request, 'dash1.html', {})
+	elif request.method == 'POST':
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
 		try:
@@ -34,14 +36,15 @@ def login(request):
 				return redirect('/')
 		except Exception as identifier:
 			messages.error(request, 'Invalid Credentials')
-			print("******\n",identifier,"******\n")
+			print("******\n",identifier,1,"\n******",39)
 			return redirect('/teacher')
-	elif request.user.is_authenticated:
-		return render(request, 'dash1.html', {})
+	
 	else:
 		return render(request,'login.html')
 def coordinatorlogin(request):
-	if request.method == 'POST':
+	if request.user.is_authenticated:
+		return render(request, 'dash1.html', {})
+	elif request.method == 'POST':
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
 		try:
@@ -71,7 +74,7 @@ def logout(request):
 	auth_logout(request)
 	return redirect('/teacher')
 def timetable(request):
-	
+	global branch
 	branch_list=list(branch_detail.branch_obj.all())
 	if not request.user.is_authenticated:
 		return redirect('/teacher/login')

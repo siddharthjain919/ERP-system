@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'student',
     'branch',
 	'import_export',
-
+    'attendance',
 ]
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'add'
 IMPORT_EXPORT_USE_TRANSACTIONS = True
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 ROOT_URLCONF = 'erp.urls'
 
