@@ -24,14 +24,15 @@ def createuser(**kwargs):
 		except:
 			user_group=Group.objects.create(name="student")
 		user.groups.add(user_group)
-		branch_group=Group.objects.get(name=kwargs["instance"].branch)
+		branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
 		user.groups.add(branch_group)
 def deleteuser(**kwargs):
-	try:
-		u=User.objects.get(username=kwargs["instance"].studentid)
-		u.delete()
-	except Exception as e:
-		print("******\n",e,"******\n")
+	if isinstance(kwargs["instance"],studentlogin):
+		try:
+			u=User.objects.get(username=kwargs["instance"].studentid)
+			u.delete()
+		except Exception as e:
+			print("******\n",e,"******\n")
 class studentlogin(models.Model):
 	studentid=models.CharField(max_length=20,primary_key=True)
 	student_name=models.CharField(max_length=40)

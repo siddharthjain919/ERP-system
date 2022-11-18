@@ -4,9 +4,11 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
+from student.models import studentlogin
 
 from .models import teacherlogin
 
@@ -165,7 +167,14 @@ def add(request):
 def attendance(request):
 	if not request.user.is_authenticated:
 		return redirect('/teacher/login')
-	return render(request,"attendance.html",{})
+	branch_list=list(branch_detail.branch_obj.all())
+	student={}
+	for branch in branch_list:
+		temp=User.objects.filter(groups__name=branch)
+		for i in temp:
+			student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
+	print(student)
+	return render(request,"attendance.html",context={'student':student})
 
 def about(request):
 	if not request.user.is_authenticated:
