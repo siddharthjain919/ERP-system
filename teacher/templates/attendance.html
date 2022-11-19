@@ -888,21 +888,37 @@ input:checked + .slider:before {
 					<div class="row">
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card">
-								<form>
+								<form method="post" action="/teacher/mark_attendance/">
+									{%csrf_token%}
 									<details>
 										<summary>
 											<div class="card-header">
-												<h3 class="card-title">{{branch}}</h3>
+												<h3 class="card-title"><b>{{branch}}</b></h3>
 											</div>
 										</summary>
 									
 										<br>
 										<div class="card-body">
+											<div align="center">
+												<label>Subject:</label>
+													<input list="subject_name" placeholder="Subject Name" name="subject_name" required>
+													<datalist id="subject_name">
+														{%for subject in all_subjects%}
+															<option value="{{subject}}"></option>
+														{%endfor%}
+													</datalist>
+												&emsp;
+												&ensp;
+												<label>Date:</label>
+												<input type="date" name="date" required>
+												
+											</div>
 											<div class="table-responsive recentOrderTable">
 												<table class="table verticle-middle table-responsive-md">
 													<thead>
 														<tr>
 															<th scope="col">No.</th>
+															<th scope="col">Id</th>
 															<th scope="col">Name</th>
 															<th scope="col">Present</th>
 														</tr>
@@ -911,10 +927,11 @@ input:checked + .slider:before {
 														{%for studentob in studentlist%}
 														<tr>
 															<th>{{forloop.counter}}</th>
+															<th>{{studentob.studentid}}</th>
 															<th>{{studentob.student_name}}</th>
 															<th>
 																<label class="switch">
-																	<input type="checkbox">
+																	<input type="checkbox" name="{{studentob.studentid}}" default="None">
 																	<span class="slider round"></span>
 																</label>
 															</th>
@@ -924,7 +941,8 @@ input:checked + .slider:before {
 
 												</table>
 											</div>
-											<button type="submit">Submit</button>
+											<button type="submit" class="nav-link bell ai-icon">Submit</button>
+											<input type="hidden" name="branch" value="{{branch}}"/>
 										</div>
 									</details>
 								</form>

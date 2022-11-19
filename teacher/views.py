@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -9,10 +8,12 @@ from django.contrib.auth.models import User
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
 from student.models import studentlogin
-
+from attendance.models import mark_attendance
 from .models import teacherlogin
+from datetime import datetime
 
 branch=None
+all_subjects=list(subjects.sub_obj.all())
 def index(request):
 	if not request.user.is_active:
 		return render(request,'login.html')
@@ -92,8 +93,8 @@ def update(request):
 		return redirect('/teacher/login')
 	#print(branch,type(branch))
 	if request.method=='POST':
-		branch=request.POST.get("branch").split('-')[0]
-		branch=branch_detail.branch_obj.get(name=branch)
+		branch=request.POST.get("branch").split('-')
+		branch=branch_detail.branch_obj.get(name=branch[0],batch=int(branch[1]))
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
 				lecture_name=i+'_lec'+str(j)
@@ -142,7 +143,7 @@ def subject(request):
 		return redirect('/teacher/login')
 	global branch
 	subject_list=list(branch_subjects.branch_sub_obj.all())
-	all_subjects=list(subjects.sub_obj.all())
+	
 	teacher_list=list(teacherlogin.teach_obj.all())
 	for i in range(len(subject_list)):
 		subject_list[i]=str(subject_list[i])
@@ -174,7 +175,25 @@ def attendance(request):
 		for i in temp:
 			student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
 	print(student)
-	return render(request,"attendance.html",context={'student':student})
+	return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects})
+
+def mark(request):
+	if not request.user.is_authenticated:
+		return redirect('/teacher/login')
+	subject=subjects.sub_obj.get(subject_name=request.POST.get('subject_name'))
+	date=request.POST.get('date')
+	date=datetime.strptime(date,"%Y-%m-%d").date()
+	branch=request.POST.get("branch")
+	branch=User.objects.filter(groups__name=branch)
+	if request.method=="POST":
+		for i in branch:
+			student=studentlogin.stud_obj.get(studentid=i)
+			if student.studentid in request.POST:
+				mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date)
+			else:
+				mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date)
+	return attendance(request)
+
 
 def about(request):
 	if not request.user.is_authenticated:
