@@ -34,7 +34,15 @@
 						<input type="password" placeholder="Password" name="studentpwd">
 					</div>
 
-					<br><br>
+					<br>
+					{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}"  style="color:red; font-size:18px; text-align:center";>
+						{{ message|safe}}
+					</div>
+				{% endfor %}
+				{% endif %}
+					<br>
 
 					<div class="remember-me--forget-password">
 						<!-- Angular -->

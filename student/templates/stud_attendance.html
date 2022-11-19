@@ -5,7 +5,7 @@
 	<head>
 
 
-		<title>Dashboard </title>
+		<title>Attendance</title>
 		<!-- Favicon icon -->
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
@@ -132,21 +132,34 @@
 					<div class="row">
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card">
+								<img width="50%" height="50%" align="center" src="{%static 'images/plots/1.png' %}">
 								<div class="card-header">
-									<h4 class="card-title">Assignment</h4>
+									<h4 class="card-title">Attendance</h4>
 								</div>
 								<div class="card-body">
 									<div class="table-responsive recentOrderTable">
 										<table class="table verticle-middle table-responsive-md">
 											<thead>
 												<tr>
-													<th scope="col">No.</th>
-													<th scope="col">Name</th>
 													<th scope="col">Subject</th>
-													<th scope="col">Date Of Submission</th>
-													<th scope="col">Status</th>
+													<th scope="col">Present</th>
+													<th scope="col">Total</th>
 												</tr>
 											</thead>
+											<tbody>
+												{%for i,v in label.items%}
+												<tr>
+													<td>{{i}}</td>
+													<td>{{v.0}}</td>
+													<td>{{v.1}}</td>
+												</tr>
+												{%endfor%}
+												<tr>
+													<td align="right"><b>Total</b></td>
+													<td>{{total.0}}</td>
+													<td>{{total.1}}</td>
+												</tr>
+											</tbody>
 
 										</table>
 									</div>
