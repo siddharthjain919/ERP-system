@@ -87,10 +87,10 @@ def attendance(request):
         fig.gca().add_artist(centre_circle)
         ax1.axis('equal')
         try:
-            os.remove('student//static//images//plots//'+str(student)+'.png')
+            os.remove('media//'+str(student)+'.png')
         except:
             pass
-        plt.savefig('student//static//images//plots//'+str(student)+'.png',dpi=500)
+        plt.savefig('media//'+str(student)+'.png',dpi=500)
         return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total]})
 def timetable(request):
     if not request.user.is_active:

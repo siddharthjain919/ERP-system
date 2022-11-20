@@ -132,7 +132,7 @@
 					<div class="row">
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card">
-								<img width="50%" height="50%" align="center" src="{%static 'images/plots/'|add:request.user.username|add:'.png' %}">
+								<img width="50%" height="50%" align="center" src="{{'/media/'|add:request.user.username|add:'.png'}}"/>
 								<div class="card-header">
 									<h4 class="card-title">Attendance</h4>
 								</div>
