@@ -77,6 +77,14 @@ class studentlogin(models.Model):
 		elif isinstance(kwargs["instance"],studentlogin):
 			u = User.objects.get(username=kwargs["instance"].studentid)
 			u.set_password(kwargs["instance"].studentpwd)
+			group=u.groups.all()
+			for i in group:
+				if str(i)=='student':
+					continue 
+				else:
+					u.groups.remove(i)	
+			branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
+			u.groups.add(branch_group)
 			u.save()
 
 	stud_obj = models.Manager()

@@ -57,7 +57,7 @@ def attendance(request):
         print(attendance_list)
         total=0
         total_present=0
-        label={}
+        label={'Absent':[0,0]}
         for obj in attendance_list:
             if obj.present:
                 if obj.subject in label:
@@ -72,14 +72,22 @@ def attendance(request):
                 else:
                     label[obj.subject]=[0,1]
             total+=1
+        label['Absent']=[total-total_present,total]
         fig1,ax1=plt.subplots()
-        ax1.pie([i[0] for i in label.values()],labels=tuple(label.keys()),explode=(0.05,)*len(label),autopct='%1.1f%%',startangle=90)
+        # ,explode=(0.025,)*len(label)
+        ax1.pie([i[0] for i in label.values()],labels=tuple(label.keys()),autopct='%1.1f%%',startangle=90,pctdistance=0.65)
+        centre_circle=plt.Circle((0,0),0.82,fc='white')
+        fig=plt.gcf()
+        plt.text(-.125, 0,str(round(total_present/total*100,2))+'%')
+        plt.xlim([-4, 4])
+        plt.ylim([-4, 4])
+        fig.gca().add_artist(centre_circle)
         ax1.axis('equal')
         try:
             os.remove('student//static//images//plots//'+str(student)+'.png')
         except:
             pass
-        plt.savefig('student//static//images//plots//'+str(student)+'.png',dpi=100)
+        plt.savefig('student//static//images//plots//'+str(student)+'.png',dpi=500)
         return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total]})
 def timetable(request):
     if not request.user.is_active:
