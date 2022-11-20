@@ -75,10 +75,13 @@ def attendance(request):
         label['Absent']=[total-total_present,total]
         fig1,ax1=plt.subplots()
         # ,explode=(0.025,)*len(label)
-        ax1.pie([i[0] for i in label.values()],labels=tuple(label.keys()),autopct='%1.1f%%',startangle=90,pctdistance=0.65)
+        ax1.pie([i[0] for i in label.values()],labels=tuple(label.keys()),explode=(0.0125,)*len(label),autopct='%1.1f%%',startangle=90,pctdistance=0.65)
         centre_circle=plt.Circle((0,0),0.82,fc='white')
         fig=plt.gcf()
-        plt.text(-.125, 0,str(round(total_present/total*100,2))+'%')
+        try:
+            plt.text(-.125, 0,str(round(total_present/total*100,2))+'%')
+        except:
+            plt.text(-.125, 0,'No Record Found')
         plt.xlim([-4, 4])
         plt.ylim([-4, 4])
         fig.gca().add_artist(centre_circle)
