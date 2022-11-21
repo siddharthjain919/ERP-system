@@ -14,14 +14,14 @@ from attendance.models import mark_attendance
 
 
 def index(request):
-    if not request.user.is_active:
-        return render(request,'studentlogin.html')
+    if request.user.is_active and request.user.groups.filter(name="student"). exists():
+        return render(request,'dashboard.html')
     else:
-        return render(request, 'dashboard.html')
+        return render(request, 'studentlogin.html')
     #return render_to_response('home.html')
 
 def login(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.groups.filter(name="student"). exists() :
         return index(request)
     elif request.method == 'POST':
         username = request.POST.get('studentid')
@@ -49,9 +49,7 @@ def logout(request):
     return redirect('/student')
 
 def attendance(request):
-    if not request.user.is_active:
-        return render(request,'studentlogin.html')
-    else:
+    if request.user.is_active and request.user.groups.filter(name="student").exists():
         student= studentlogin.stud_obj.get(studentid=request.user.username)
         attendance_list=mark_attendance.attend_obj.filter(student=student)
         print(attendance_list)
@@ -98,19 +96,21 @@ def attendance(request):
             pass
         plt.savefig('media//'+str(student)+'.png',dpi=500)
         return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total]})
-def timetable(request):
-    if not request.user.is_active:
-        return render(request,'studentlogin.html')
     else:
+        return render(request,'studentlogin.html')
+def timetable(request):
+    if  request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
         user = studentlogin.stud_obj.get(studentid=request.user.username)
         return render(request,"stud_timetable.html",{"user":user})
+    else:
+        return render(request,'studentlogin.html')
 def subject(request):
-    if not request.user.is_active:
-        return render(request,'studentlogin.html')
-    else:
+    if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
         return render(request, 'dashboard.html')
+    else:
+        return render(request,'studentlogin.html')
 def about(request):
-    if not request.user.is_active:
-        return render(request,'studentlogin.html')
-    else:
+    if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
         return render(request, 'dashboard.html')
+    else:
+        return render(request,'studentlogin.html')
