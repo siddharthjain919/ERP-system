@@ -86,6 +86,12 @@ def attendance(request):
         plt.ylim([-4, 4])
         fig.gca().add_artist(centre_circle)
         ax1.axis('equal')
+        # WHEN DEPLOYMENT
+        # try:
+        #     os.remove('ERP/media/'+str(student)+'.png')
+        # except:
+        #     pass
+        # plt.savefig('ERP/media/'+str(student)+'.png',format="png",dpi=500)
         try:
             os.remove('media//'+str(student)+'.png')
         except:
