@@ -51,7 +51,7 @@ class studentlogin(models.Model):
 			
 			alphabet = string.ascii_letters + string.digits + string.punctuation
 			pwd=''
-			for _ in range(10):
+			for _ in range(8):
 				pwd += ''.join(secrets.choice(alphabet))
 			setattr(kwargs["instance"],'studentpwd',pwd)
 			createuser(**kwargs)

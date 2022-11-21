@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group
 from django.core.validators import MinLengthValidator
+from django.core.mail import send_mail
 from django.db.models.signals import post_save,post_delete
 import smtplib,secrets,string
 from email.mime.multipart import MIMEMultipart
@@ -104,7 +105,7 @@ class teacherlogin(models.Model):
 			special_chars = string.punctuation
 			alphabet = letters + digits + special_chars
 			pwd=''
-			for _ in range(10):
+			for _ in range(8):
 				pwd += ''.join(secrets.choice(alphabet))
 			setattr(kwargs["instance"],'teacherpwd',pwd)
 			
@@ -138,3 +139,4 @@ class teacherlogin(models.Model):
 
 	post_save.connect(mail)
 	post_delete.connect(deleteuser)
+
