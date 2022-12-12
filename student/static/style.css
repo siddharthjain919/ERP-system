@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   background-image: linear-gradient(135deg, #FAB2FF 10%, #1904E5 100%);
   background-size: cover;
@@ -177,3 +178,6 @@ label span.text-checkbox {
 label input[type="checkbox"] {
   display: none;
 }
+=======
+]
+>>>>>>> d06e42ec6e63d633e211bff8b74c5be8b11c930b

@@ -4,13 +4,17 @@ from django.contrib.auth import logout as auth_logout
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User
-
+import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
 # from erp.models import subjects
 from student.models import studentlogin
 from attendance.models import mark_attendance
 from .models import teacherlogin
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from erp.settings import password,sender
+
 
 branch=None
 # all_subjects=list(subjects.sub_obj.all())
@@ -44,6 +48,8 @@ def login(request):
 	
 	else:
 		return render(request,'login.html')
+
+
 def coordinatorlogin(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		return render(request, 'dash1.html', {})
@@ -211,3 +217,50 @@ def teachertimetable(request):
 		return render(request,"your-timetable.html",{"user":user})
 	else:
 		return redirect('/teacher/login')
+
+
+def forget(request):
+	return render(request,'forget-password.html')
+
+
+def forgot_mail(request):
+	try:
+		if request.method=='POST':
+			user=teacherlogin.teach_obj.get(email=request.POST.get('email'))
+
+			letters = string.ascii_letters
+			digits = string.digits
+			special_chars = string.punctuation
+			alphabet = letters + digits + special_chars
+			pwd=''
+			for _ in range(8):
+				pwd += ''.join(secrets.choice(alphabet))
+			setattr(user,'teacherpwd',pwd)
+			# user2=User.objects.get(username=user.teacherid)
+			# setattr(user2,'password',pwd)
+			# user2.save()
+			#for adding user to group
+			user.save()
+			#sending mails
+			receiver=user.email
+			user=user.Name
+			user=user.title()
+			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
+			message['Subject']="Regarding ERP password"
+			message['From']=sender
+			message['To']=receiver
+			try:
+				server=smtplib.SMTP('smtp.gmail.com:587')
+				server.ehlo()
+				server.starttls()
+				server.login(sender,password)
+				server.sendmail(sender,receiver,message.as_string())
+				server.quit()
+
+			except:
+				pass
+		return index(request)
+	except:
+		messages.error(request, 'No user with this email found.')
+		return forget(request)

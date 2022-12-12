@@ -1,16 +1,39 @@
 body {
   padding-top: 2.25%;
   padding-bottom: 2.25%;
-  background-image: linear-gradient(135deg, #FAB2FF 10%, #1904E5 100%);
-  background-size: cover;
+  /* backgr/ound-image: linear-gradient(135deg, #1b49b6 100%, #1904E5 100%); */
+  /* background-color: #3b5998; */
+  /* background-size: cover; */
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: "Open Sans", sans-serif;
+<<<<<<< HEAD:teacher/static/teacher-style.css
   color: #333333;
   background: rgb(99, 39, 120)
+=======
+  color: #3a82d4;
+>>>>>>> d06e42ec6e63d633e211bff8b74c5be8b11c930b:teacher/static/style.css
 }
 button:hover{
   opacity:0.6;
+}
+.forget {
+  padding-top: 3%;
+  padding-bottom: 5%;
+  
+  margin:auto;
+  margin-top: 12%;
+  width: 30%;
+  background: #FFFFFF;
+  border-radius: 10px;
+  display: flex;
+  flex: 1 1 100%;
+  box-shadow: 0 0 20px 6px #090b6f85;
+  /* flex-flow: wrap; */
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 200%;
 }
 .box-form {
   margin: 0 auto;

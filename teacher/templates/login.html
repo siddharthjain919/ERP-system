@@ -12,7 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'teacher-style.css' %}" />
 </head>
 
-<body>
+<body stle="background-color:#5e72e4">
 	<!-- partial:index.partial.html -->
 	<div class="box-form">
 		<div class="left">
@@ -52,7 +52,7 @@
 						<input type="checkbox" name="item" checked />
 						<span class="text-checkbox">Remember me</span>
 					</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<p>Forgot Password?</p>
+					<a href="/teacher/forget/"><p>Forgot Password?</p></a>
 				</div>
 				<br>
 				<button type="submit" style="cursor:pointer;" formaction="/teacher/coordinator/login/">CC login</button>

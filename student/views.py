@@ -11,6 +11,12 @@ from matplotlib import pyplot as plt
 
 from .models import studentlogin
 from attendance.models import mark_attendance
+import smtplib,secrets,string
+from erp.models import subjects
+from student.models import studentlogin
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from erp.settings import password,sender
 
 
 def index(request):
@@ -114,3 +120,48 @@ def about(request):
         return render(request, 'dashboard.html')
     else:
         return render(request,'studentlogin.html')
+
+def forget(request):
+	return render(request,'forget-password.html')
+
+def forgot_mail(request):
+    try:
+        if request.method=='POST':
+            user=studentlogin.stud_obj.get(email=request.POST.get('email'))
+
+            letters = string.ascii_letters
+            digits = string.digits
+            special_chars = string.punctuation
+            alphabet = letters + digits + special_chars
+            pwd=''
+            for _ in range(8):
+                pwd += ''.join(secrets.choice(alphabet))
+            setattr(user,'teacherpwd',pwd)
+            # user2=User.objects.get(username=user.teacherid)
+            # setattr(user2,'password',pwd)
+            # user2.save()
+            #for adding user to group
+            user.save()
+            #sending mails
+            receiver=user.email
+            user=user.Name
+            user=user.title()
+            email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+            message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
+            message['Subject']="Regarding ERP password"
+            message['From']=sender
+            message['To']=receiver
+            try:
+                server=smtplib.SMTP('smtp.gmail.com:587')
+                server.ehlo()
+                server.starttls()
+                server.login(sender,password)
+                server.sendmail(sender,receiver,message.as_string())
+                server.quit()
+                
+            except:
+                pass
+        return login(request)
+    except:
+        messages.error(request, 'No user with this email found.')
+        return forget(request)

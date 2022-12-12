@@ -11,4 +11,6 @@ urlpatterns = [
     path('subject/',views.subject),
     path('attendance/',views.attendance),
     path('about/',views.about),
+    path('forget/',views.forget,name='forget'),
+    path('mail/',views.forgot_mail),
 ]

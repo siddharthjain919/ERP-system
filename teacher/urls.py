@@ -17,4 +17,6 @@ urlpatterns = [
     path('about/',views.about,name="about"),
     path('mark_attendance/',views.mark,name="mark"),
     path('your-timetable/',views.teachertimetable,name="teacher_timetable"),
+    path('forget/',views.forget,name='forget'),
+    path('mail/',views.forgot_mail),
 ]
