@@ -34,22 +34,45 @@ def update_teacher_timetable(**kwargs):
 				elif previous:
 					setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 					previous.subject_teacher.save()
-					
+
+def subject_check(**kwargs):
+    if  isinstance(kwargs["instance"],branch_subjects):
+        subject=kwargs["instance"]
+        lecture_sum=subject.NOLR1+subject.NOLR2+subject.NOLR3+subject.NOLR4+subject.NOLR5
+        if lecture_sum<40:
+            raise Exception("Total lectures cannot be less than 40.")			
 class branch_subjects(models.Model):
+	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
 	subject_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE,default=None)
+
+	NOLR1=models.IntegerField(default=8)
+	NOLT1=models.IntegerField(default=0,editable=False)
+
+	NOLR2=models.IntegerField(default=8)
+	NOLT2=models.IntegerField(default=0,editable=False)
+
+	NOLR3=models.IntegerField(default=8)
+	NOLT3=models.IntegerField(default=0,editable=False)
+
+	NOLR4=models.IntegerField(default=8)
+	NOLT4=models.IntegerField(default=0,editable=False)
+
+	NOLR5=models.IntegerField(default=8)
+	NOLT5=models.IntegerField(default=0,editable=False)
 	def __str__(self):
 		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name	
 	branch_sub_obj=models.Manager()
 	class Meta:
-		unique_together=[['branch_subject','subject_teacher']]
+		unique_together=[['branch_subject','subject_teacher','branch']]
+	pre_save.connect(subject_check)
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25)
 	batch=models.IntegerField()
 	department=models.ForeignKey("erp.department",on_delete=models.CASCADE)
 	section=models.CharField(max_length=1,help_text="Caps Only")
 	def __str__(self):
-		return self.name+"-"+str(self.batch)
+		return self.name+"("+self.section+")"+"-"+str(self.batch)
 	branch_obj=models.Manager()
 
 	class Meta:

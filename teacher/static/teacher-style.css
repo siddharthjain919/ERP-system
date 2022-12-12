@@ -7,12 +7,8 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: "Open Sans", sans-serif;
-<<<<<<< HEAD:teacher/static/teacher-style.css
   color: #333333;
-  background: rgb(99, 39, 120)
-=======
-  color: #3a82d4;
->>>>>>> d06e42ec6e63d633e211bff8b74c5be8b11c930b:teacher/static/style.css
+  background: rgb(127, 78, 145)
 }
 button:hover{
   opacity:0.6;

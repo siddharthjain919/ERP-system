@@ -9,7 +9,17 @@
 	<link rel="stylesheet" href={% static 'css/style.css' %}>
 	<link rel="stylesheet" href={% static "css/skin-3.css" %}>
 	<link rel="stylesheet" href={% static "button.css" %}>
-
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		#my-dialog{
+			padding: 23px;
+			border-color:aliceblue;
+			border-radius: 32px;
+			position: absolute;
+			top: -10%;
+			left: 53%;
+		}
+	</style>
 </head>
 
 <body>
@@ -35,7 +45,7 @@
 								<div class="dropdown-menu p-0 m-0">
 									{% csrf_token %}
 									<form>
-										<input class="form-control" type="search" placeholder="Search" aria-label="Search">
+										<input required class="form-control" type="search" placeholder="Search" aria-label="Search">
 									</form>
 								</div>
 								<span class="search_icon p-3 c-pointer" data-toggle="dropdown">
@@ -145,6 +155,7 @@ Content body start
 												<th scope="col">Code</th>
 												<th scope="col">Subject</th>
 												<th scope="col">Faculty</th>
+												<th scope="col">Branch</th>
 											</tr>
 											
 											{% for i in branch_subject %}
@@ -153,13 +164,16 @@ Content body start
 													{{forloop.counter}}
 												</td>
 												<td>
-													{{i.0|cut:"('"|slice:":7"}}
+													{{i.branch_subject.code}}
 												</td>
 												<td>
-													{{i.0|cut:"('"|slice:"8:"}}
+													{{i.branch_subject.subject_name}}
 												</td>
 												<td>
-													{{i.1}}
+													{{i.subject_teacher}}
+												</td>
+												<td>
+													{{i.branch}}
 												</td>
 											</tr>
 											{%endfor%}
@@ -169,38 +183,46 @@ Content body start
 									</table>
 								</div>
 							</div>
-							<form method="post" action="/teacher/subject/add/">
+							<form method="post" action="/teacher/subject/">
 								{% csrf_token %}
-								<a class="nav-link bell ai-icon" href="#" role="button" data-toggle="dropdown">
+								<a  href="#" role="button">
 									<div align="right">
-										<button type="submit" class="buttondesign" align="right">
+										<button type="submit" class="buttondesign" align="right" onclick="openDialog()">
 											Add New
 										</button>
 									</div>
 								</a>
-								<div class="dropdown-menu dropdown-menu-right">
+								<dialog id="my-dialog">
+								<div>
+						
+									<button onclick="closeDialog()" style="float: right;"><i class="material-icons" style="font-size:20px;color:red;border-color: aliceblue;">visibility_off</i></button><br>
 									You are adding a subject to your department.
 									<br>
-									<input list="name" placeholder="Subject Name" name="subject_name">
-										<datalist id="name">
-											{%for subject in all_subjects%}
-											<option value="{{subject}}"></option>
-											{%endfor%}
-										</datalist>
-									<input list="teacher" placeholder="Subject Teacher" name="subject_teacher">
-										<datalist id="teacher">
-											{%for teacher in teacher_list%}
-											<option value="{{teacher.Name}}"></option>
-											{%endfor%}
-										</datalist>
-
+									{{form.as_p}}
 									<button type="submit" class="smallbutton">Add</button>
 								</div>
+							</dialog>
 
 							</form>
+							
+							
 						</div>
 					</div>
 				</div>
+				<div>
+				
+
+<script>
+  function openDialog() {
+    var dialog = document.getElementById('my-dialog');
+    dialog.open = true;
+  }
+
+  function closeDialog() {
+    var dialog = document.getElementById('my-dialog');
+    dialog.open = false;
+  }
+</script>
 
 			</div>
 		</div>
@@ -221,31 +243,31 @@ Scripts
 ***********************************-->
 	<!-- Required vendors -->
 	<script src={% static "vendor/global/global.min.js"%}></script>
-	<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script>
+	<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
 	<script src={% static "js/custom.min.js"%}></script>
-	<script src={% static "js/dlabnav-init.js"%}></script>
+	<!-- <script src={% static "js/dlabnav-init.js"%}></script> -->
 
 	<!-- Chart sparkline plugin files -->
-	<script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js"%}></script>
-	<script src={% static "js/plugins-init/sparkline-init.js"%}></script>
+	<!-- <script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js"%}></script> -->
+	<!-- <script src={% static "js/plugins-init/sparkline-init.js"%}></script> -->
 
 	<!-- Chart Morris plugin files -->
-	<script src={% static "vendor/raphael/raphael.min.js"%}></script>
-	<script src={% static "vendor/morris/morris.min.js"%}></script>
+	<!-- <script src={% static "vendor/raphael/raphael.min.js"%}></script> -->
+	<!-- <script src={% static "vendor/morris/morris.min.js"%}></script> -->
 
 	<!-- Init file -->
-	<script src={% static "js/plugins-init/widgets-script-init.js"%}></script>
+	<!-- <script src={% static "js/plugins-init/widgets-script-init.js"%}></script> -->
 
 	<!-- Demo scripts -->
 	<script src={% static "js/dashboard/dashboard.js"%}></script>
 
 	<!-- Summernote -->
-	<script src={% static "vendor/summernote/js/summernote.min.js"%}></script>
+	<!-- <script src={% static "vendor/summernote/js/summernote.min.js"%}></script> -->
 	<!-- Summernote init -->
-	<script src={% static "js/plugins-init/summernote-init.js"%}></script>
+	<!-- <script src={% static "js/plugins-init/summernote-init.js"%}></script> -->
 
 	<!-- Svganimation scripts -->
-	<script src={% static "vendor/svganimation/vivus.min.js"%}></script>
+	<!-- <script src={% static "vendor/svganimation/vivus.min.js"%}></script> -->
 	<script src={% static "vendor/svganimation/svg.animation.js"%}></script>
 	<!--script src={% static "js/styleSwitcher.js"></script-->
 	<!--

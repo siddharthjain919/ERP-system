@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
-# from erp.models import subjects
+from erp.models import subjects
 from student.models import studentlogin
 from attendance.models import mark_attendance
 from .models import teacherlogin
@@ -17,12 +17,14 @@ from erp.settings import password,sender
 
 
 branch=None
-# all_subjects=list(subjects.sub_obj.all())
+
+
 def index(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		return render(request, 'dash1.html', {})
 	else:
 		return render(request,'login.html')
+
 def login(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		return render(request, 'dash1.html', {})
@@ -48,7 +50,6 @@ def login(request):
 	
 	else:
 		return render(request,'login.html')
-
 
 def coordinatorlogin(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
@@ -82,16 +83,18 @@ def logout(request):
 	request.session.flush()
 	auth_logout(request)
 	return redirect('/teacher')
+from branch.forms import branch_timetable_form
 def timetable(request):
 	global branch
 	branch_list=list(branch_detail.branch_obj.all())
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
+		form=branch_timetable_form()
 		if branch:
 			# print(branch)
 			subject_list=list(branch_subjects.branch_sub_obj.all())
-			return render(request,'timetable.html',context={"branch_list":branch_list,"subject_list":subject_list})
+			return render(request,'timetable.html',context={"form":form,"branch_list":branch_list,"subject_list":subject_list})
 		else:
-			return render(request,'timetable.html',context={"branch_list":branch_list})
+			return render(request,'timetable.html',context={"branch_list":branch_list,"n":list(range(1,9))})
 	else:
 		return redirect('/teacher/login')
 
@@ -146,34 +149,22 @@ def update(request):
 		return timetable(request)
 	else:
 		return redirect('/teacher/login')
-
+from branch.forms import branch_subject_form
 def subject(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		global branch
-		subject_list=list(branch_subjects.branch_sub_obj.all())
-		
-		teacher_list=list(teacherlogin.teach_obj.all())
-		for i in range(len(subject_list)):
-			subject_list[i]=str(subject_list[i])
-			subject_list[i]=subject_list[i].split('-')
-		return render(request,'subjects.html',context={'branch_subject':subject_list,"all_subjects":all_subjects,"teacher_list":teacher_list})
-	else:
-		return redirect('/teacher/login')
-def add(request):
-	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		subject_list=list(branch_subjects.branch_sub_obj.all())
-		name=request.POST.get('subject_name')
-		name=subjects.sub_obj.get(subject_name=name)
-		faculty=request.POST.get("subject_teacher")
-		faculty=teacherlogin.teach_obj.get(Name=faculty)
-		for sub in subject_list:
-			if sub.branch_subject==name and sub.subject_teacher==faculty:
-				break 
+		if request.method=="POST":
+			form=branch_subject_form(request.POST)
+			if form.is_valid():
+				form.save()
+			request.method="GET"
+			return subject(request)
 		else:
-			ob=branch_subjects.branch_sub_obj.create(branch_subject=name,subject_teacher=faculty)
-		return subject(request)
+			subject_list=list(branch_subjects.branch_sub_obj.all())
+			form=branch_subject_form()
+			return render(request,'subjects.html',context={"form":form,'branch_subject':subject_list})
 	else:
 		return redirect('/teacher/login')
+
 
 def attendance(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
