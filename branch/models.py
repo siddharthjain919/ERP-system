@@ -46,6 +46,8 @@ class branch_subjects(models.Model):
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25)
 	batch=models.IntegerField()
+	department=models.ForeignKey("erp.department",on_delete=models.CASCADE)
+	section=models.CharField(max_length=1,help_text="Caps Only")
 	def __str__(self):
 		return self.name+"-"+str(self.batch)
 	branch_obj=models.Manager()

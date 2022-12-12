@@ -6,14 +6,14 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 from branch.models import branch_detail, branch_subjects
-from erp.models import subjects
+# from erp.models import subjects
 from student.models import studentlogin
 from attendance.models import mark_attendance
 from .models import teacherlogin
 from datetime import datetime
 
 branch=None
-all_subjects=list(subjects.sub_obj.all())
+# all_subjects=list(subjects.sub_obj.all())
 def index(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		return render(request, 'dash1.html', {})
@@ -206,7 +206,7 @@ def about(request):
 	else:
 		return redirect('/teacher/login')
 def teachertimetable(request):
-	if not request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
+	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		user = teacherlogin.teach_obj.get(teacherid=request.user.username)
 		return render(request,"your-timetable.html",{"user":user})
 	else:

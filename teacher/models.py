@@ -22,6 +22,8 @@ def createuser(**kwargs):
 		except:
 			user_group=Group.objects.create(name="teacher")
 		user.groups.add(user_group)
+		user.is_staff=True
+		user.save()
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],teacherlogin):
 		try:

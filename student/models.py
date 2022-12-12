@@ -25,7 +25,9 @@ def createuser(**kwargs):
 			user_group=Group.objects.create(name="student")
 		user.groups.add(user_group)
 		branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
-		user.groups.add(branch_group)
+		dept_group=Group.objects.get(name=str(kwargs["instance"].branch.department))
+		course_group=Group.objects.get(name=str(kwargs["instance"].branch.department.course))
+		user.groups.add(dept_group,course_group,branch_group)
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],studentlogin):
 		try:
@@ -41,7 +43,6 @@ class studentlogin(models.Model):
 	])
 	isactive=models.IntegerField(null=True)
 	branch=models.ForeignKey(branch_detail,on_delete=models.CASCADE,related_name="branch",default=None)
-	#branch=models.CharField(max_length=20)
 	email=models.EmailField(max_length=60)
 
 	def __str__(self):
