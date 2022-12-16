@@ -24,3 +24,11 @@
   font-size: 12px;
   border-radius: 8px;
 }
+#my-dialog{
+  padding: 23px;
+  border-color:aliceblue;
+  border-radius: 32px;
+  position: absolute;
+  top: -10%;
+  left: 53%;
+}

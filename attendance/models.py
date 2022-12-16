@@ -8,7 +8,7 @@ class mark_attendance(models.Model):
     date=models.DateField(default=timezone.now)
     present=models.BooleanField("Present")
     lecture_number=models.IntegerField(validators=[MaxValueValidator(8),MinValueValidator(1)])
-
+    
     def __str__(self):
         return str(self.student)+":"+str(self.date)
     class Meta:

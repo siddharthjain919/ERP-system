@@ -1,4 +1,4 @@
-from django.urls import path,re_path
+from django.urls import path,re_path,include
 from . import views
 
 app_name='teacher'
@@ -8,7 +8,7 @@ urlpatterns = [
     path('logout/',views.logout,name='logout'),
     path('login/',views.login,name='login'),
     path('timetable/',views.timetable,name="timetable"),
-	path('attendance/',views.attendance,name="attendance"),
+	path('attendance/',include('attendance.urls')),
     re_path(r'^$',views.index,name="index"),
 	path('update/',views.update,name="update"),
     # path('subject/add/',views.add,name="add"),

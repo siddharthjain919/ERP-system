@@ -10,16 +10,6 @@
 	<link rel="stylesheet" href={% static "css/skin-3.css" %}>
 	<link rel="stylesheet" href={% static "button.css" %}>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<style>
-		#my-dialog{
-			padding: 23px;
-			border-color:aliceblue;
-			border-radius: 32px;
-			position: absolute;
-			top: -10%;
-			left: 53%;
-		}
-	</style>
 </head>
 
 <body>
@@ -186,7 +176,7 @@ Content body start
 							<form method="post" action="/teacher/subject/">
 								{% csrf_token %}
 								<a  href="#" role="button">
-									<div align="right">
+									<div align="right" style="margin: 1%;">
 										<button type="submit" class="buttondesign" align="right" onclick="openDialog()">
 											Add New
 										</button>
@@ -194,8 +184,7 @@ Content body start
 								</a>
 								<dialog id="my-dialog">
 								<div>
-						
-									<button onclick="closeDialog()" style="float: right;"><i class="material-icons" style="font-size:20px;color:red;border-color: aliceblue;">visibility_off</i></button><br>
+									<button onclick="closeDialog()" style="float: right; background-color:white;border: 0ch;"><i class="material-icons" style="font-size:20px;color:red;">highlight_off</i></button><br>
 									You are adding a subject to your department.
 									<br>
 									{{form.as_p}}

@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for subject in subjects %}
+<option value="{{subject.branch_subject}}">{{subject.branch_subject|capfirst}}</option>
+{% endfor %}

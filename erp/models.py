@@ -15,13 +15,14 @@ class course(models.Model):
     def __str__(self):
         return self.name
     post_save.connect(create_group)
+    course_obj=models.Manager()
 class department(models.Model):
     name=models.CharField(max_length=20,primary_key=True)
     course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
     def __str__(self):
         return str(self.course)+'-'+self.name
     post_save.connect(create_group)
-
+    department_obj=models.Manager()
 
 class subjects(models.Model):
     code=models.CharField(max_length=6,unique=True)

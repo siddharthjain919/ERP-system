@@ -83,16 +83,16 @@ def logout(request):
 	request.session.flush()
 	auth_logout(request)
 	return redirect('/teacher')
-from branch.forms import branch_timetable_form
+
 def timetable(request):
 	global branch
-	branch_list=list(branch_detail.branch_obj.all())
+	
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		form=branch_timetable_form()
+		branch_list=list(branch_detail.branch_obj.filter(department=teacherlogin.teach_obj.get(teacherid=request.user.username).department))
 		if branch:
 			# print(branch)
 			subject_list=list(branch_subjects.branch_sub_obj.all())
-			return render(request,'timetable.html',context={"form":form,"branch_list":branch_list,"subject_list":subject_list})
+			return render(request,'timetable.html',context={"branch_list":branch_list,"subject_list":subject_list})
 		else:
 			return render(request,'timetable.html',context={"branch_list":branch_list,"n":list(range(1,9))})
 	else:
@@ -160,6 +160,10 @@ def subject(request):
 			return subject(request)
 		else:
 			subject_list=list(branch_subjects.branch_sub_obj.all())
+			current_dept=teacherlogin.teach_obj.get(teacherid=request.user.username).department
+			for i in subject_list:
+				if i.branch.department!=current_dept:
+					subject_list.remove(i)
 			form=branch_subject_form()
 			return render(request,'subjects.html',context={"form":form,'branch_subject':subject_list})
 	else:
@@ -169,13 +173,14 @@ def subject(request):
 def attendance(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		branch_list=list(branch_detail.branch_obj.all())
+		all_subjects=branch_subjects.branch_sub_obj.all()
 		student={}
 		for branch in branch_list:
 			temp=User.objects.filter(groups__name=branch)
 			for i in temp:
 				student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
 		print(student)
-		return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects})
+		return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects,"branch_list":branch_list})
 	else:
 		return redirect('/teacher/login')
 def mark(request):
