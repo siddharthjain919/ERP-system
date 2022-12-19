@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save,post_save
 from django.contrib.auth.models import Group
+from django.core.validators import MaxValueValidator, MinValueValidator
 # from teacher.models import teacherlogin
 # Create your models here.
 def create_branch_group(**kwargs):
@@ -69,7 +70,8 @@ class branch_subjects(models.Model):
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25)
 	batch=models.IntegerField()
-	department=models.ForeignKey("erp.department",on_delete=models.CASCADE)
+	course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
+	semester=models.IntegerField(default=1,validators=[MaxValueValidator(8),MinValueValidator(1)])
 	section=models.CharField(max_length=1,help_text="Caps Only")
 	def __str__(self):
 		return self.name+"("+self.section+")"+"-"+str(self.batch)

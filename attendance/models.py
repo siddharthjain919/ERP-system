@@ -10,7 +10,7 @@ class mark_attendance(models.Model):
     lecture_number=models.IntegerField(validators=[MaxValueValidator(8),MinValueValidator(1)])
     
     def __str__(self):
-        return str(self.student)+":"+str(self.date)
+        return str(self.student)+":"+str(self.date)+":"+str(self.lecture_number)
     class Meta:
         unique_together=[["student","date","lecture_number"]]
     

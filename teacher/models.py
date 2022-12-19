@@ -39,8 +39,8 @@ class teacherlogin(models.Model):
 	Name=models.CharField(max_length=40)
 	teacherpwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
 	# isactive=models.IntegerField(null=True,blank=True)
-	department=models.ForeignKey("erp.department",on_delete=models.CASCADE)
-	cc_of_branch=models.ForeignKey("branch.branch_detail",null=True,blank=True,default=None,on_delete=models.CASCADE)
+	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE,null=True,blank=True)
+	cc_of_branch=models.ForeignKey("branch.branch_detail",null=True,blank=True,default=None,on_delete=models.CASCADE,related_name="Class_Coordinator")
 	email=models.EmailField(max_length=50)
 
 	teach_mon_lec1=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE,related_name='teach_mon_l1',default=None,null=True,editable=False)

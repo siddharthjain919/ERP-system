@@ -769,7 +769,7 @@ input:checked + .slider:before {
 		</style>
 		<style type="text/css">
 			label{
-				float:left;
+				float:center;
 			}
 			input{
 				width:70%;
@@ -827,7 +827,7 @@ input:checked + .slider:before {
 										<a class="all-notification" href="#">See all notifications <i class="ti-arrow-right"></i></a>
 									</div>
 									<div>
-										<a href="/teacher"><button type="submit" class="btn btn-danger">Logout</button></a>
+										<a href="/teacher/logout"><button type="submit" class="btn btn-danger">Logout</button></a>
 									</div>
 								</li>
 							</ul>
@@ -884,34 +884,20 @@ input:checked + .slider:before {
 			<div class="content-body">
 				<!-- row -->
 				<div class="container-fluid">
-					
 					<div class="row">
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
-							<div class="card">
-								{% block title %}Attendance{% endblock %}
+							<div class="card" >
+								<div class="card-title">
+									{% block title %} Attendance{% endblock %}
+								</div>
+								<div class="card-body">
 								{% block extra_head %}
 								{{ form.media }}
 								{% endblock %}
 								{% block content %}
-								<div >
 								<form action="/teacher/attendance/studentlist" id="mark_attendance_form" method="POST">
 									{% csrf_token %}
-									{{ form.as_p}}
-									<!-- Course:
-									<select id="id_course"></select>
-										{% block course %}
-										<option value="">---------</option>
-										{% for course in course_list %}
-											<option value="{{course}}">{{course.name}}</option>
-										{% endfor %}
-										{%endblock%}
-									</select>
-									
-									Department:
-									<select id="my_department">
-										{% block department%}
-										{%endblock%}
-									</select> -->
+									{{ form.as_p}}<br>
 									<button type="submit" class="btn btn-primary profile-button">Mark</button>
 								</form>
 								</div>
@@ -936,44 +922,21 @@ input:checked + .slider:before {
 	***********************************-->
 		<script>
 			$(document).ready(function(){
-			$("#id_course").change(function () {
-				// alert("course change")
-				// var url1 = $("#department").attr("department-queries-url");
-				// const url2 = $("#id_branch").attr("branch-queries-url");
-				var course = $(this).val();
-				// alert(course)              // get the selected course  from the HTML input
+			$("#id_batch").change(function () {
+				var batch = $(this).val();
+				var course=document.getElementById("id_course").value;
 				$.ajax({                                          // initialize an AJAX request
-					url: "department",                                    // set the url of the request (= ajax/load-department-details/ )
-					data: { 'course': course },        // add the course  to the GET parameters
+					url: "branch",                                    // set the url of the request (= ajax/load-department-details/ )
+					data: { 'course': course,
+							'batch':batch
+				 		  },        // add the course  to the GET parameters
 					success: function (data) {  
-						$("#id_department").html(data); 
-					}
-				});
-				// $.ajax({
-				//     url: url2,
-				//     data: { 'course': course },
-				//     success: function (data) {
-				//         $("#id_branch").html(data);
-				//     }
-				// })
-			});
-
-			$("#id_department").change(function () {
-				// alert("department")
-				const url = $("#id_branch").attr("branch-queries-url");  
-				const department = $(this).val();  
-				$.ajax({                                  
-					url: "branch",                    
-					data: { 'department': department },       
-					success: function (data) {   
-						$("#id_branch").html(data);  
+						$("#id_branch").html(data); 
 					}
 				});
 			});
 
 			$("#id_branch").change(function () {
-				const url = $("#id_subject").attr("subject-queries-url");
-				// const url2 = $("#id_student").attr("student-queries-url");
 				const branch = $(this).val();
 				$.ajax({
 					url: "subject",
@@ -982,14 +945,6 @@ input:checked + .slider:before {
 						$("#id_subject").html(data);
 					}
 				});
-				// $.ajax({
-				// 		url: url2,
-				// 		data: { 'branch':branch },
-				// 		success: function (data) {
-				// 			$("#id_student").html(data);
-				// 		}
-				// 	})
-
 			});
 		});
 		</script>
@@ -998,7 +953,7 @@ input:checked + .slider:before {
 	***********************************-->
 		<!-- Required vendors -->
 		<script src={% static "vendor/global/global.min.js"%}></script>
-		<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script>
+		<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
 		<script src={% static "js/custom.min.js"%}></script>
 		<script src={% static "js/dlabnav-init.js"%}></script>
 

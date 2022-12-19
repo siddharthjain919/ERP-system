@@ -823,31 +823,28 @@ Sidebar end
 Content body start
 ***********************************-->
 		<div class="content-body">
-			<!-- row -->
-			{% for branch in branch_list %}
 			<div class="container-fluid">
+			<!-- row -->
 				<div class="row">
 					<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+						{% if cc_branch %}
 						<div class="card">
 							<details>
 								<summary>
 									<div class="card-header">
-										<h2 class="card-title"><b>{{branch}}</b></h2>
+										<h2 class="card-title" style="color: darkcyan;"><b>{{cc_branch}}</b></h2>
 									</div>
 								</summary>
 								<br>
 								<div class="card-body">
 									<h6>Lunch Time:</h6>
-									<form action=views.slot method="post">
+									<form action="views.slot" method="post">
 										<select>
 											<option value="12:20-01:10">12:20-01:10</option>
 											<option value="01:10-02:00">01:10-02:00</option>
 											<input type="submit" class="smallbutton" />
 										</select>
 									</form>
-								</div>
-
-								<div class="card-body">
 									<div class="table-responsive recentOrderTable">
 										{% if messages %}
 										{% for message in messages %}
@@ -856,7 +853,7 @@ Content body start
 											</div>
 										{% endfor %}
 										{% endif %}
-										<form method="post" action="/teacher/update/">
+										<form method="post" action="/teacher/timetable/">
 											{% csrf_token %}
 											<table border="7" cellspacing="0" align="center">
 												<tr>
@@ -899,7 +896,7 @@ Content body start
 														<b>Monday</b>
 													</td>
 													<td align="center" height="40">
-														<input list="mon_lec1" name="mon_lec1" placeholder="{{branch.mon_lec1}}">
+														<input list="mon_lec1" name="mon_lec1" placeholder="{{cc_branch.mon_lec1}}">
 														<datalist id="mon_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -907,7 +904,7 @@ Content body start
 														</datalist></input>
 													</td>
 													<td align="center" height="40">
-														<input list="mon_lec2" name="mon_lec2" placeholder="{{branch.mon_lec2}}">
+														<input list="mon_lec2" name="mon_lec2" placeholder="{{cc_branch.mon_lec2}}">
 														<datalist id="mon_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -917,7 +914,7 @@ Content body start
 													<td rowspan="6" align="center" height="40">
 														<h5>B<br>R<br>E<br>A<br>K</h5>
 													<td align="center" height="40">
-														<input list="mon_lec3" name="mon_lec3" placeholder="{{branch.mon_lec3}}">
+														<input list="mon_lec3" name="mon_lec3" placeholder="{{cc_branch.mon_lec3}}">
 														<datalist id="mon_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -925,7 +922,7 @@ Content body start
 														</datalist></input>
 													</td>
 													<td align="center" height="40">
-														<input list="mon_lec4" name="mon_lec4" placeholder="{{branch.mon_lec4}}">
+														<input list="mon_lec4" name="mon_lec4" placeholder="{{cc_branch.mon_lec4}}">
 														<datalist id="mon_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -934,7 +931,7 @@ Content body start
 
 													</td>
 													<td align="center" height="40">
-														<input list="mon_lec5" name="mon_lec5" placeholder="{{branch.mon_lec5}}">
+														<input list="mon_lec5" name="mon_lec5" placeholder="{{cc_branch.mon_lec5}}">
 														<datalist id="mon_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -945,21 +942,21 @@ Content body start
 														<h5>L<br>U<br>N<br>C<br>H</h5>
 													</td>
 													<td align="center" height="40">
-														<input list="mon_lec6" name="mon_lec6" placeholder="{{branch.mon_lec6}}">
+														<input list="mon_lec6" name="mon_lec6" placeholder="{{cc_branch.mon_lec6}}">
 														<datalist id="mon_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="mon_lec7" name="mon_lec7" placeholder="{{branch.mon_lec7}}">
+													<td align="center" height="40"><input list="mon_lec7" name="mon_lec7" placeholder="{{cc_branch.mon_lec7}}">
 														<datalist id="mon_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="mon_lec8" name="mon_lec8" placeholder="{{branch.mon_lec8}}">
+													<td align="center" height="40"><input list="mon_lec8" name="mon_lec8" placeholder="{{cc_branch.mon_lec8}}">
 														<datalist id="mon_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -973,56 +970,56 @@ Content body start
 														<b>Tuesday</b>
 													</td>
 
-													<td align="center" height="40"><input list="tues_lec1" name="tues_lec1" placeholder="{{branch.tues_lec1}}">
+													<td align="center" height="40"><input list="tues_lec1" name="tues_lec1" placeholder="{{cc_branch.tues_lec1}}">
 														<datalist id="tues_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec2" name="tues_lec2" placeholder="{{branch.tues_lec2}}">
+													<td align="center" height="40"><input list="tues_lec2" name="tues_lec2" placeholder="{{cc_branch.tues_lec2}}">
 														<datalist id="tues_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec3" name="tues_lec3" placeholder="{{branch.tues_lec3}}">
+													<td align="center" height="40"><input list="tues_lec3" name="tues_lec3" placeholder="{{cc_branch.tues_lec3}}">
 														<datalist id="tues_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec4" name="tues_lec4" placeholder="{{branch.tues_lec4}}">
+													<td align="center" height="40"><input list="tues_lec4" name="tues_lec4" placeholder="{{cc_branch.tues_lec4}}">
 														<datalist id="tues_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec5" name="tues_lec5" placeholder="{{branch.tues_lec5}}">
+													<td align="center" height="40"><input list="tues_lec5" name="tues_lec5" placeholder="{{cc_branch.tues_lec5}}">
 														<datalist id="tues_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec6" name="tues_lec6" placeholder="{{branch.tues_lec6}}">
+													<td align="center" height="40"><input list="tues_lec6" name="tues_lec6" placeholder="{{cc_branch.tues_lec6}}">
 														<datalist id="tues_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec7" name="tues_lec7" placeholder="{{branch.tues_lec7}}">
+													<td align="center" height="40"><input list="tues_lec7" name="tues_lec7" placeholder="{{cc_branch.tues_lec7}}">
 														<datalist id="tues_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="tues_lec8" name="tues_lec8" placeholder="{{branch.tues_lec8}}">
+													<td align="center" height="40"><input list="tues_lec8" name="tues_lec8" placeholder="{{cc_branch.tues_lec8}}">
 														<datalist id="tues_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1034,56 +1031,56 @@ Content body start
 													<td align="center" height="40">
 														<b>Wednesday</b>
 													</td>
-													<td align="center" height="40"><input list="wed_lec1" name="wed_lec1" placeholder="{{branch.wed_lec1}}">
+													<td align="center" height="40"><input list="wed_lec1" name="wed_lec1" placeholder="{{cc_branch.wed_lec1}}">
 														<datalist id="wed_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec2" name="wed_lec2" placeholder="{{branch.wed_lec2}}">
+													<td align="center" height="40"><input list="wed_lec2" name="wed_lec2" placeholder="{{cc_branch.wed_lec2}}">
 														<datalist id="wed_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec3" name="wed_lec3" placeholder="{{branch.wed_lec3}}">
+													<td align="center" height="40"><input list="wed_lec3" name="wed_lec3" placeholder="{{cc_branch.wed_lec3}}">
 														<datalist id="wed_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec4" name="wed_lec4" placeholder="{{branch.wed_lec4}}">
+													<td align="center" height="40"><input list="wed_lec4" name="wed_lec4" placeholder="{{cc_branch.wed_lec4}}">
 														<datalist id="wed_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec5" name="wed_lec5" placeholder="{{branch.wed_lec5}}">
+													<td align="center" height="40"><input list="wed_lec5" name="wed_lec5" placeholder="{{cc_branch.wed_lec5}}">
 														<datalist id="wed_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec6" name="wed_lec6" placeholder="{{branch.wed_lec6}}">
+													<td align="center" height="40"><input list="wed_lec6" name="wed_lec6" placeholder="{{cc_branch.wed_lec6}}">
 														<datalist id="wed_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec7" name="wed_lec7" placeholder="{{branch.wed_lec7}}">
+													<td align="center" height="40"><input list="wed_lec7" name="wed_lec7" placeholder="{{cc_branch.wed_lec7}}">
 														<datalist id="wed_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="wed_lec8" name="wed_lec8" placeholder="{{branch.wed_lec8}}">
+													<td align="center" height="40"><input list="wed_lec8" name="wed_lec8" placeholder="{{cc_branch.wed_lec8}}">
 														<datalist id="wed_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1096,49 +1093,49 @@ Content body start
 													<td align="center" height="40">
 														<b>Thursday</b>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec1" name="thurs_lec1" placeholder="{{branch.thurs_lec1}}">
+													<td align="center" height="40"><input list="thurs_lec1" name="thurs_lec1" placeholder="{{cc_branch.thurs_lec1}}">
 														<datalist id="thurs_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec2" name="thurs_lec2" placeholder="{{branch.thurs_lec2}}">
+													<td align="center" height="40"><input list="thurs_lec2" name="thurs_lec2" placeholder="{{cc_branch.thurs_lec2}}">
 														<datalist id="thurs_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec3" name="thurs_lec3" placeholder="{{branch.thurs_lec3}}">
+													<td align="center" height="40"><input list="thurs_lec3" name="thurs_lec3" placeholder="{{cc_branch.thurs_lec3}}">
 														<datalist id="thurs_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec4" name="thurs_lec4" placeholder="{{branch.thurs_lec4}}">
+													<td align="center" height="40"><input list="thurs_lec4" name="thurs_lec4" placeholder="{{cc_branch.thurs_lec4}}">
 														<datalist id="thurs_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec5" name=thurs_lec5 placeholder="{{branch.thurs_lec5}}">
+													<td align="center" height="40"><input list="thurs_lec5" name=thurs_lec5 placeholder="{{cc_branch.thurs_lec5}}">
 														<datalist id="thurs_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec6" name="thurs_lec6" placeholder="{{branch.thurs_lec6}}">
+													<td align="center" height="40"><input list="thurs_lec6" name="thurs_lec6" placeholder="{{cc_branch.thurs_lec6}}">
 														<datalist id="thurs_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="thurs_lec7" name="thurs_lec7" placeholder="{{branch.thurs_lec7}}">
+													<td align="center" height="40"><input list="thurs_lec7" name="thurs_lec7" placeholder="{{cc_branch.thurs_lec7}}">
 														<datalist id="thurs_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1146,7 +1143,7 @@ Content body start
 														</datalist></input>
 													</td>
 
-													<td align="center" height="40"><input list="thurs_lec8" name="thurs_lec8" placeholder="{{branch.thurs_lec8}}">
+													<td align="center" height="40"><input list="thurs_lec8" name="thurs_lec8" placeholder="{{cc_branch.thurs_lec8}}">
 														<datalist id="thurs_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1159,56 +1156,56 @@ Content body start
 														<b>Friday</b>
 													</td>
 
-													<td align="center" height="40"><input list="fri_lec1" name="fri_lec1" placeholder="{{branch.fri_lec1}}">
+													<td align="center" height="40"><input list="fri_lec1" name="fri_lec1" placeholder="{{cc_branch.fri_lec1}}">
 														<datalist id="fri_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec2" name="fri_lec2" placeholder="{{branch.fri_lec2}}">
+													<td align="center" height="40"><input list="fri_lec2" name="fri_lec2" placeholder="{{cc_branch.fri_lec2}}">
 														<datalist id="fri_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec3" name="fri_lec3" placeholder="{{branch.fri_lec3}}">
+													<td align="center" height="40"><input list="fri_lec3" name="fri_lec3" placeholder="{{cc_branch.fri_lec3}}">
 														<datalist id="fri_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec4" name="fri_lec4" placeholder="{{branch.fri_lec4}}">
+													<td align="center" height="40"><input list="fri_lec4" name="fri_lec4" placeholder="{{cc_branch.fri_lec4}}">
 														<datalist id="fri_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec5" name="fri_lec5" placeholder="{{branch.fri_lec5}}">
+													<td align="center" height="40"><input list="fri_lec5" name="fri_lec5" placeholder="{{cc_branch.fri_lec5}}">
 														<datalist id="fri_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec6" name="fri_lec6" placeholder="{{branch.fri_lec6}}">
+													<td align="center" height="40"><input list="fri_lec6" name="fri_lec6" placeholder="{{cc_branch.fri_lec6}}">
 														<datalist id="fri_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec7" name="fri_lec7" placeholder="{{branch.fri_lec7}}">
+													<td align="center" height="40"><input list="fri_lec7" name="fri_lec7" placeholder="{{cc_branch.fri_lec7}}">
 														<datalist id="fri_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="fri_lec8" name="fri_lec8" placeholder="{{branch.fri_lec8}}">
+													<td align="center" height="40"><input list="fri_lec8" name="fri_lec8" placeholder="{{cc_branch.fri_lec8}}">
 														<datalist id="fri_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1220,49 +1217,49 @@ Content body start
 													<td align="center" height="40">
 														<b>Saturday</b>
 													</td>
-													<td align="center" height="40"><input list="sat_lec1" name="sat_lec1" placeholder="{{branch.sat_lec1}}">
+													<td align="center" height="40"><input list="sat_lec1" name="sat_lec1" placeholder="{{cc_branch.sat_lec1}}">
 														<datalist id="sat_lec1">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec2" name="sat_lec2" placeholder="{{branch.sat_lec2}}">
+													<td align="center" height="40"><input list="sat_lec2" name="sat_lec2" placeholder="{{cc_branch.sat_lec2}}">
 														<datalist id="sat_lec2">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec3" name="sat_lec3" placeholder="{{branch.sat_lec3}}">
+													<td align="center" height="40"><input list="sat_lec3" name="sat_lec3" placeholder="{{cc_branch.sat_lec3}}">
 														<datalist id="sat_lec3">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec4" name="sat_lec4" placeholder="{{branch.sat_lec4}}">
+													<td align="center" height="40"><input list="sat_lec4" name="sat_lec4" placeholder="{{cc_branch.sat_lec4}}">
 														<datalist id="sat_lec4">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec5" name="sat_lec5" placeholder="{{branch.sat_lec5}}">
+													<td align="center" height="40"><input list="sat_lec5" name="sat_lec5" placeholder="{{cc_branch.sat_lec5}}">
 														<datalist id="sat_lec5">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec6" name="sat_lec6" placeholder="{{branch.sat_lec6}}">
+													<td align="center" height="40"><input list="sat_lec6" name="sat_lec6" placeholder="{{cc_branch.sat_lec6}}">
 														<datalist id="sat_lec6">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
 																{%endfor%}
 														</datalist></input>
 													</td>
-													<td align="center" height="40"><input list="sat_lec7" name="sat_lec7" placeholder="{{branch.sat_lec7}}">
+													<td align="center" height="40"><input list="sat_lec7" name="sat_lec7" placeholder="{{cc_branch.sat_lec7}}">
 														<datalist id="sat_lec7">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1270,7 +1267,7 @@ Content body start
 														</datalist></input>
 													</td>
 
-													<td align="center" height="40"><input list="sat_lec8" name="sat_lec8" placeholder="{{branch.sat_lec8}}">
+													<td align="center" height="40"><input list="sat_lec8" name="sat_lec8" placeholder="{{cc_branch.sat_lec8}}">
 														<datalist id="sat_lec8">
 															{% for subject in subject_list %}
 															<option value="{{subject}}">
@@ -1279,7 +1276,7 @@ Content body start
 													</td>
 												</tr>
 											</table>
-											<input type="hidden" value="{{branch}}" name="branch"/>
+											<input type="hidden" value="{{cc_branch}}" name="cc_branch"/>
 											<br>
 									
 											<button align="right" class="buttondesign" type="submit" style="cursor:pointer;">Save</button>
@@ -1289,10 +1286,256 @@ Content body start
 
 							</details>
 						</div>
+						{%endif%}
 					</div>
 				</div>
+				
+				{% for branch in branch_list %}
+				<div class="row">
+					<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+						<div class="card">
+							<details>
+								<summary>
+									<div class="card-header">
+										<h2 class="card-title">{{branch}}</h4>
+									</div>
+								</summary>
+								<div class="card-body">
+									<div class="table-responsive recentOrderTable">
+											<table border="7" cellspacing="0" align="center">
+												<tr>
+													<td align="center" height="40" width="100"><br>
+														<b>Day/Period</b></br>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>1<br>8:50-9:40</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>2<br>9:40-10:30</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>10:30-10:40</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>3<br>10:40-11:30</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>4<br>11:30-12:20</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>5<br>12:20-1:10</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>1:10-2:00</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>6<br>2:00-2:50</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>7<br>2:50-3:40</b>
+													</td>
+													<td align="center" height="40" width="100">
+														<b>8<br>3:40-4:30</b>
+													</td>
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Monday</b>
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec2}}
+													</td>
+													<td rowspan="6" align="center" height="40">
+														<h5>B<br>R<br>E<br>A<br>K</h5>
+													<td align="center" height="40">
+														{{branch.mon_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec4}}
+
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec5}}
+													</td>
+													<td rowspan="6" align="center" height="40" width="60">
+														<h5>L<br>U<br>N<br>C<br>H</h5>
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec7}}
+													</td>
+													<td align="center" height="40">
+														{{branch.mon_lec8}}
+													</td>
+
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Tuesday</b>
+													</td>
+
+													<td align="center" height="40">
+														{{branch.tues_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec2}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec4}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec5}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec7}}
+													</td>
+													<td align="center" height="40">
+														{{branch.tues_lec8}}
+													</td>
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Wednesday</b>
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec2}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec4}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec5}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec7}}
+													</td>
+													<td align="center" height="40">
+														{{branch.wed_lec8}}
+													</td>
+
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Thursday</b>
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec2}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec4}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec5}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.thurs_lec7}}
+													</td>
+
+													<td align="center" height="40">
+														{{branch.thurs_lec8}}
+													</td>
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Friday</b>
+													</td>
+
+													<td align="center" height="40">
+														{{branch.fri_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec2}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec4}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec5}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec7}}
+													</td>
+													<td align="center" height="40">
+														{{branch.fri_lec8}}
+													</td>
+												</tr>
+												<tr>
+													<td align="center" height="40">
+														<b>Saturday</b>
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec1}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec2}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec3}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec4}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec5}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec6}}
+													</td>
+													<td align="center" height="40">
+														{{branch.sat_lec7}}
+													</td>
+
+													<td align="center" height="40">
+														{{branch.sat_lec8}}
+													</td>
+												</tr>
+											</table>
+											<br>
+									</div>
+								</div>
+							</details>
+                        </div>
+						
+					</div>
+				</div>
+				{%endfor%}
+					
 			</div>
-		{%endfor%}
 		</div>
 		<!--**********************************
 Content body end
@@ -1311,7 +1554,7 @@ Scripts
 ***********************************-->
 	<!-- Required vendors -->
 	<script src={% static "vendor/global/global.min.js"%}></script>
-	<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script>
+	<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
 	<script src={% static "js/custom.min.js"%}></script>
 	<script src={% static "js/dlabnav-init.js"%}></script>
 

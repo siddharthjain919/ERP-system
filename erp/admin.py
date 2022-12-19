@@ -5,6 +5,6 @@ from . models import *
 
 admin.site.register(course)
 admin.site.register(subjects)
-admin.site.register(department)
+
 
 

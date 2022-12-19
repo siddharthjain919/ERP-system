@@ -12,10 +12,10 @@ from sqlalchemy import create_engine
 		engine=create_engine('sqlite:///db.sqlite3')
 		df.to_sql(studentlogin._meta.db_table,if_exists='append',con=engine,index=False)
 '''
-class studentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-	#print(dir(ImportExportModelAdmin))
-	engine=create_engine('sqlite:///db.sqlite3')
-	exclude=("id",)
-	list_display=["studentid","student_name","studentpwd","isactive","branch","email"]
+# class studentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+# 	#print(dir(ImportExportModelAdmin))
+# 	engine=create_engine('sqlite:///db.sqlite3')
+# 	exclude=("id",)
+# 	list_display=["studentid","student_name","studentpwd","branch","email"]
 
-admin.site.register(studentlogin,studentloginAdmin)
+admin.site.register(studentlogin)

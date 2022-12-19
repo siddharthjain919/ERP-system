@@ -16,59 +16,77 @@
 					}
 
 /* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+			.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+			}
 
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
+			/* The slider */
+			.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+			width:90px;
+			padding: 2px 0px;
+			}
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
+			.slider:before {
+			position: absolute;
+			content: "";
+			height: 30px;
+			width: 30px;
+			left: 30px;
+			bottom: 2px;
+			background-color: white;
+			-webkit-transition: 1s;
+			transition: 1s;
+			border-radius: 50%;
+			
+			}
+			.slider:after {
+			position: absolute;
+			content: "";
+			height: 30px;
+			width: 30px;
+			left: 30px;
+			bottom: 2px;
+			background-color: white;
+			-webkit-transition: 1s;
+			transition: 1s;
+			border-radius: 50%;
+			}
+			input:checked + .slider:after {
+			-webkit-transform: translateX(-26px);
+			-ms-transform: translateX(-26px);
+			transform: translateX(-26px);
+			}
 
-input:checked + .slider {
-  background-color: #2196F3;
-}
+			input:checked + .slider {
+			background-color: #21c521;
+			}
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
+			input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+			}
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
+			input:checked + .slider:before {
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+			}
 
-.slider.round:before {
-  border-radius: 50%;
-}
+			/* Rounded sliders */
+			.slider.round {
+			border-radius: 34px;
+			}
 			.site {
 				max-width: 1500px
 			}
@@ -765,6 +783,74 @@ input:checked + .slider:before {
 				}
 			}
 		</style>
+		<style>
+			.tw-toggle {
+	  /* background: #95A5A6; */
+	  display: inline-block;
+	  padding: 2px 3px;
+	  border-radius: 30px;
+	  position:relative;
+	  border: 2px solid #95A5A6;
+	}
+	
+	.tw-toggle label {
+	  text-align: center;
+	  font-family: sans-serif;
+	  display: inline-block;
+	  color: #95A5A6;
+	  position:relative;
+	  z-index:2;
+	  margin: 0;
+	  text-align: center;
+	  padding: 2px 3px;
+	  font-size: 15px;
+	  /* cursor: pointer; */
+	}
+	
+	.tw-toggle input {
+	  /* display: none; */
+	  position: absolute;
+	  z-index: 3;
+	  opacity: 0;
+	  cursor: pointer;
+	}
+	
+	.tw-toggle span {
+	  height: 26px;
+	  width: 26px;
+	  line-height: 30px;
+	  border-radius: 50%;
+	  background:#fff;
+	  display:block;
+	  position:absolute;
+	  left: 22px;
+	  top: 2px;
+	  transition:all 0.3s ease-in-out;
+	}
+	
+	.tw-toggle input[value="false"]:checked ~ span{
+	  background:#e74c3c;
+	  left:2px;
+	  color:#fff;
+	}
+	
+	.tw-toggle input[value="true"]:checked ~ span{
+	  background:#27ae60;
+	  left: 46px;
+	}
+	.tw-toggle input[value="-1"]:checked ~ span{
+	  background:#95A5A6;
+	  left: 23px;
+	}
+	
+	.tw-toggle input[value="false"]:checked + label,.tw-toggle input[value="true"]:checked + label{
+	  color:#fff;
+	}
+	.tw-toggle input[value="-1"]:checked + label{
+	  color:#fff;
+	}
+	
+		</style>
 	</head>
 
 	<body>
@@ -817,7 +903,7 @@ input:checked + .slider:before {
 										<a class="all-notification" href="#">See all notifications <i class="ti-arrow-right"></i></a>
 									</div>
 									<div>
-										<a href="/teacher"><button type="submit" class="btn btn-danger">Logout</button></a>
+										<a href="/teacher/logout"><button type="submit" class="btn btn-danger">Logout</button></a>
 									</div>
 								</li>
 							</ul>
@@ -924,10 +1010,19 @@ input:checked + .slider:before {
                                                         <th>{{studentob.username}}</th>
                                                         <th>{{studentob.get_full_name|capfirst}}</th>
                                                         <th>
-                                                            <label class="switch">
+                                                            <div class="tw-toggle">
+																<input type="radio" name="toggle" value="false" >
+																<label class="toggle toggle-yes"><i class="fa fa-times"></i></label>
+																<input checked type="radio" name="toggle" value="-1">
+																<label class="toggle toggle-yes"><i class="fa fa-minus"></i></label>
+																<input type="radio" name="toggle" value="true">
+																<label class="toggle toggle-yes" ><i class="fa fa-check" ></i></label>
+																<span></span>  
+															  </div>
+															  <!-- <label class="switch">
                                                                 <input type="checkbox" name="{{studentob.username}}" default="None">
                                                                 <span class="slider round"></span>
-                                                            </label>
+                                                            </label> -->
                                                         </th>
                                                     </tr>
                                                     {%endfor%}
@@ -963,7 +1058,7 @@ input:checked + .slider:before {
 	***********************************-->
 		<!-- Required vendors -->
 		<script src={% static "vendor/global/global.min.js"%}></script>
-		<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script>
+		<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
 		<script src={% static "js/custom.min.js"%}></script>
 		<script src={% static "js/dlabnav-init.js"%}></script>
 
