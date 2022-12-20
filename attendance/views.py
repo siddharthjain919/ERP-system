@@ -13,25 +13,13 @@ from django.db.models import Q
 
 def attendance_form(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-        # course_list=list(course.course_obj.all())
-        # department_list=[]
-        # branch_list=[]
         form=mark_attendance_form()
         return render(request,'attendance.html',context={"form":form})
     else:
         return redirect('/teacher/login')
-
-# def load_department_details(request):
-#     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-#         curr_course=course.course_obj.get(name=request.GET.get('course'))
-#         departments=list(department.department_obj.filter(course=curr_course))
-#         return render(request,'load_department_dropdown_list.html',{'departments':departments})
-#     else:
-#         return redirect('/teacher/login')
     
 def load_branch_details(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-        # curr_dept=department.department_obj.get(name=request.GET.get('department'))
         curr_course=course.course_obj.get(name=request.GET.get('course'))
         curr_batch=request.GET.get('batch')
         branches=list(branch_detail.branch_obj.filter(course=curr_course,batch=curr_batch))
@@ -58,7 +46,6 @@ def studentlist(request):
             for i in "12345":
                 so=i+getattr(curr_subject,"CO_"+i)
                 sos.append(so)
-            # return attendance_form(request)
             return render(request,"studentlist.html",context={"sos":sos,"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
         else:
             return attendance_form(request)
