@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
 		<link rel="stylesheet" href={% static "css/skin-3.css" %}>
 		<link rel="stylesheet" href={% static 'css/button.css' %}>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 		<style type="text/css" id="wp-custom-css">
 			.site {
 				max-width: 1500px
@@ -718,13 +719,8 @@
 				.radio2,
 				.radio3 {
 				position: absolute;
-				/*top: -9999px; - don't use may cause focus/scolling issues*/
 				left: -9999px;
 				}
-				/* .topLabelContainer{
-				margin:auto;
-				padding-left:6.5em; /*must match .labelLeft width + padding
-				} */
 				
 				.sliderContainer{
 				height: 40px;
@@ -742,15 +738,12 @@
 				.label3 {
 				height: 100%;
 				width: 100%;
-				/* padding: 6px; */
-				/* position:center; */
 				border: 2px solid #000;
 				border-radius: 20px;
 				top: 0;
 				bottom: 0;
 				left: 0;
 				right: 0;
-				/* background: rgba(148, 146, 146, 0.616) */
 				
 				}
 				.radio1:checked ~ span .label1,
@@ -829,7 +822,7 @@
 				text-shadow: 0 0 1px rgb(255,50,255), 0 0 6px rgb(255,0,255);
 				}
 				.radio2:checked ~ .sliderContainer .slider{
-				background:rgb(154, 152, 152);
+				background:#06a006;
 				}
 				.labelTop3,
 				.radio3:checked ~ .content1{
@@ -840,7 +833,7 @@
 				text-shadow: 0 0 1px rgb(100,100,255), 0 0 8px rgb(0,0,255);
 				}
 				.radio3:checked ~ .sliderContainer .slider{
-				background:#06a006;
+				background:rgb(154, 152, 152);
 				}
 		</style>
 	</head>
@@ -977,14 +970,18 @@
                                                     <option value="{{so|slice:1}}">{{so|slice:"1:"}}</option>
                                                 {%endfor%}
                                             </datalist>
-                                        &emsp;
-                                        &ensp;
+											&emsp;
+											&ensp;
                                         <label>Date:</label>
-										<input type="date" name="date" onfocus="this.max=new Date().toISOString().split('T')[0]" required/>
-                                        &emsp;
-                                        &ensp;
+											<input type="date" name="date" onfocus="this.max=new Date().toISOString().split('T')[0]" required/>
+											&emsp;
+											&ensp;
                                         <label>Lecture Number:</label>
-                                            <input type="number" max="8" min="1" value="1" name="lecture_no"required>
+                                            <input type="number" max="8" min="1" name="lecture_no"required>
+										<br>
+										<label style="margin-top:15px;">Mark All as Present:</label>
+											<input id="present" type="checkbox" value="1" name="present" onclick="check()">
+											&emsp;
                                         <div class="table-responsive recentOrderTable">
                                             <table class="table verticle-middle table-responsive-md">
                                                 <thead>
@@ -992,7 +989,7 @@
                                                         <th scope="col">No.</th>
                                                         <th scope="col">Id</th>
                                                         <th scope="col">Name</th>
-                                                        <th scope="col">Present</th>
+                                                        <th scope="col">Absent / Present / Exempt</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1002,25 +999,10 @@
                                                         <th>{{studentob.username}}</th>
                                                         <th>{{studentob.get_full_name|capfirst}}</th>
                                                         <th>
-                                                            <!-- <div class="tw-toggle">
-																<input type="radio" name="toggle" value="false" >
-																<label class="toggle toggle-yes"><i class="fa fa-times"></i></label>
-																<input checked type="radio" name="toggle" value="-1">
-																<label class="toggle toggle-yes"><i class="fa fa-minus"></i></label>
-																<input type="radio" name="toggle" value="true">
-																<label class="toggle toggle-yes" ><i class="fa fa-check" ></i></label>
-																<span></span>  
-															  </div>
-															  <label class="switch">
-                                                                <input type="checkbox" name="{{studentob.username}}" value="false" default="None">
-																<input type="checkbox" name="{{studentob.username}}" value="exempt" default="None">
-																<input type="checkbox" name="{{studentob.username}}" value="true" default="None"> 
-                                                                <span class="slider round"></span>
-                                                              </label>   -->
 															<div class="toggle3-switch">
-																<input type="radio" id="toggle3radio1" class=radio1 value=-1 name="{{studentob.username}}"/>
-																<input type="radio" id="toggle3radio2" class=radio2  value=0 name="{{studentob.username}}" checked />
-																<input type="radio" id="toggle3radio3" class=radio3 value=1 name="{{studentob.username}}" />
+																<input type="radio" id="toggle3radio1" class=radio1 value=-1 name="{{studentob.username}}"checked/>
+																<input type="radio" id="toggle3radio2" class=radio2  value=1 name="{{studentob.username}}"/>
+																<input type="radio" id="toggle3radio3" class=radio3 value=0 name="{{studentob.username}}" />
 																  <span class=sliderContainer>
 																  <label class="label1" for="toggle3radio1"></label>
 																  <label class="label2" for="toggle3radio2"></label>
@@ -1060,6 +1042,18 @@
 		<!--**********************************
 	Scripts
 	***********************************-->
+		<script>
+			function check(){
+				var p=document.getElementById("present");
+				if(p.checked){
+					document.getElementById("toggle3radio2").checked=true;
+				}
+				else{
+					document.getElementById("toggle3radio1").checked=true;
+				}
+			}
+			
+		</script>
 		<!-- Required vendors -->
 		<script src={% static "vendor/global/global.min.js"%}></script>
 		<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->

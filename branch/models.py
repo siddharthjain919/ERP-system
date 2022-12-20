@@ -11,7 +11,6 @@ def create_branch_group(**kwargs):
 def update_teacher_timetable(**kwargs):
 	if isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
-		#print(branch,type(branch.mon_lec1),branch_detail.branch_obj.get(name=branch.name).mon_lec1)
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
 				lecture_name=i+'_lec'+str(j)

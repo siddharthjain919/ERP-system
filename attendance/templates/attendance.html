@@ -11,9 +11,15 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 		<!-- <script src="{% static 'js/markattendance.js' %}"></script> -->
 		<style type="text/css" id="wp-custom-css">
+			select{
+				margin-bottom: 20px;
+			}
+			input{
+				margin-bottom: 20px;
+			}
 			.switch {
 					position: relative;
-						display: inline-block;
+					display: inline-block;
 					width: 60px;
 					height: 34px;
 					}
@@ -904,15 +910,12 @@ input:checked + .slider:before {
 								<div class="card-title">
 									<b>{% block title %} Attendance{% endblock %}</b>
 									<a href="/teacher/attendance/pastattendance"><button class="gray_button" >Previous</button></a>
-								</div>
+								</div><hr>
 								<div class="card-body">
-								{% block extra_head %}
-								{{ form.media }}
-								{% endblock %}
 								{% block content %}
 								<form action="/teacher/attendance/studentlist" id="mark_attendance_form" method="POST">
 									{% csrf_token %}
-									{{ form.as_p}}<br>
+									{{ form.as_ul}}<br>
 									<button type="submit" class="buttondesign">Mark</button>
 								</form>
 								</div>

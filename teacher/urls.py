@@ -10,8 +10,6 @@ urlpatterns = [
     path('timetable/',views.timetable,name="timetable"),
 	path('attendance/',include('attendance.urls')),
     re_path(r'^$',views.index,name="index"),
-	# path('update/',views.update,name="update"),
-    # path('subject/add/',views.add,name="add"),
     path("subject/",views.subject,name="subject"),
 	path("coordinator/login/",views.coordinatorlogin,name="coordinator"),
     path('about/',views.about,name="about"),

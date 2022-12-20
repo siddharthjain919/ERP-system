@@ -142,57 +142,6 @@ def timetable(request):
 	else:
 		return redirect('/teacher/login')
 
-# def update(request):
-# 	print(request.user)
-# 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-# 	#print(branch,type(branch))
-# 		print(request.user)
-# 		if request.method=='POST':
-# 			branch=request.POST.get("cc_branch").split('-')
-# 			name=branch[0].split('(')
-# 			section=name[1][0]
-# 			name=name[0]
-# 			batch=int(branch[1])
-# 			branch=branch_detail.branch_obj.get(name=name,section=section,batch=batch)
-# 			for i in ['mon','tues','wed','thurs','fri','sat']:
-# 				for j in range(1,9):
-# 					lecture_name=i+'_lec'+str(j)
-# 					lecture_input=request.POST.get(lecture_name)
-# 					# print(1,lecture_input,type(lecture_input))
-# 					previous=getattr(branch,lecture_name)
-# 					##print(lecture_input,previous)
-# 					# print(2,previous,type(previous))
-# 					# print(lecture_input,previous,type(lecture_input),11111111111111)
-# 					if lecture_input=='':
-# 						continue
-# 					if lecture_input:
-# 						lecture_input=lecture_input.split('-')
-# 						subject_name=lecture_input[0]
-# 						subject_name=subjects.sub_obj.get(subject_name=subject_name)
-# 						subject_teacher=lecture_input[1]
-# 						subject_teacher=teacherlogin.teach_obj.get(Name=subject_teacher)
-# 						teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
-# 						if teacher_slot and teacher_slot!=branch:
-# 							raise Exception(subject_teacher.Name,"already occupied at",lecture_name)
-# 						if previous and lecture_input!=previous:
-# 							setattr(previous.subject_teacher,"teach_"+lecture_name,None)
-# 							previous.subject_teacher.save()
-# 							messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.Name,lecture_name))
-# 						setattr(subject_teacher,"teach_"+lecture_name,branch)
-# 						subject_teacher.save()
-# 						setattr(branch,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name,branch=branch))
-# 					elif previous:
-# 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
-# 						previous.subject_teacher.save()
-# 						setattr(branch,lecture_name,None)
-# 					else:
-# 						setattr(branch,lecture_name,None)
-# 					branch.save()
-# 		print(request.user,149)
-		
-# 		return HttpResponseRedirect("/teacher/timetable")
-# 	else:
-# 		return redirect('/teacher/login')
 from branch.forms import branch_subject_form
 def subject(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
@@ -222,24 +171,6 @@ def attendance(request):
 				student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
 		print(student)
 		return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects,"branch_list":branch_list})
-	else:
-		return redirect('/teacher/login')
-def mark(request):
-	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		
-		subject=subjects.sub_obj.get(subject_name=request.POST.get('subject_name'))
-		date=request.POST.get('date')
-		date=datetime.strptime(date,"%Y-%m-%d").date()
-		branch=request.POST.get("branch")
-		branch=User.objects.filter(groups__name=branch)
-		if request.method=="POST":
-			for i in branch:
-				student=studentlogin.stud_obj.get(studentid=i)
-				if student.studentid in request.POST:
-					mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date)
-				else:
-					mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date)
-		return attendance(request)
 	else:
 		return redirect('/teacher/login')
 
@@ -273,9 +204,6 @@ def forgot_mail(request):
 			for _ in range(8):
 				pwd += ''.join(secrets.choice(alphabet))
 			setattr(user,'teacherpwd',pwd)
-			# user2=User.objects.get(username=user.teacherid)
-			# setattr(user2,'password',pwd)
-			# user2.save()
 			#for adding user to group
 			user.save()
 			#sending mails
