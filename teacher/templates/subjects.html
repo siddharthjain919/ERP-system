@@ -10,6 +10,22 @@
 	<link rel="stylesheet" href={% static "css/skin-3.css" %}>
 	<link rel="stylesheet" href={% static "button.css" %}>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		#my-dialog{
+			background-color:rgb(189, 236, 255);
+			margin-right: 1%;
+			color:rgb(5, 41, 56);
+		}
+		input{
+			background-color: rgb(227, 247, 255);
+		}
+		select{
+			background-color: rgb(227, 247, 255);
+		}
+		label{
+			text-decoration-color: burlywood;
+		}
+	</style>
 </head>
 
 <body>
@@ -182,9 +198,9 @@ Content body start
 										</button>
 									</div>
 								</a>
-								<dialog id="my-dialog">
-								<div>
-									<button onclick="closeDialog()" style="float: right; background-color:white;border: 0ch;"><i class="material-icons" style="font-size:20px;color:red;">highlight_off</i></button><br>
+								<dialog id="my-dialog" >
+								<div >
+									<button onclick="closeDialog()" style="float: right; background-color:rgb(189, 236, 255); border: 0ch;margin-top: 0;"><i class="material-icons" style="font-size:20px;color:red;">highlight_off</i></button><br>
 									You are adding a subject to your department.
 									<br>
 									{{form.as_p}}
@@ -232,7 +248,7 @@ Scripts
 ***********************************-->
 	<!-- Required vendors -->
 	<script src={% static "vendor/global/global.min.js"%}></script>
-	<script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
+	<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> --> -->
 	<script src={% static "js/custom.min.js"%}></script>
 	<!-- <script src={% static "js/dlabnav-init.js"%}></script> -->
 

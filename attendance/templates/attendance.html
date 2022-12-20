@@ -7,6 +7,7 @@
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
 		<link rel="stylesheet" href={% static "css/skin-3.css" %}>
+		<link rel="stylesheet" href={% static 'css/button.css' %}>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 		<!-- <script src="{% static 'js/markattendance.js' %}"></script> -->
 		<style type="text/css" id="wp-custom-css">
@@ -768,11 +769,24 @@ input:checked + .slider:before {
 			}
 		</style>
 		<style type="text/css">
+			.gray_button {
+			border: none;
+			padding: 6px 10px;
+			text-align: center;
+			display: inline-block;
+			font-size: 12px;
+			cursor: pointer;
+			background-color: #e7e7e7; 
+			color: black;
+			float:right;
+			border-radius: 20px;
+			}
 			label{
 				float:center;
 			}
 			input{
-				width:70%;
+				width: 70px;
+				height:23px;
 			}
 		</style>
 	</head>
@@ -888,7 +902,8 @@ input:checked + .slider:before {
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card" >
 								<div class="card-title">
-									{% block title %} Attendance{% endblock %}
+									<b>{% block title %} Attendance{% endblock %}</b>
+									<a href="/teacher/attendance/pastattendance"><button class="gray_button" >Previous</button></a>
 								</div>
 								<div class="card-body">
 								{% block extra_head %}
@@ -898,7 +913,7 @@ input:checked + .slider:before {
 								<form action="/teacher/attendance/studentlist" id="mark_attendance_form" method="POST">
 									{% csrf_token %}
 									{{ form.as_p}}<br>
-									<button type="submit" class="btn btn-primary profile-button">Mark</button>
+									<button type="submit" class="buttondesign">Mark</button>
 								</form>
 								</div>
 								
@@ -936,11 +951,16 @@ input:checked + .slider:before {
 				});
 			});
 
-			$("#id_branch").change(function () {
-				const branch = $(this).val();
+			$("#id_section").change(function () {
+				const section = $(this).val();
+				const branch=document.getElementById("id_branch").value;
+				const batch=document.getElementById("id_batch").value;
 				$.ajax({
 					url: "subject",
-					data: {'branch': branch},
+					data: {'branch': branch,
+							'section':section,
+							'batch':batch
+					},
 					success: function (data) {
 						$("#id_subject").html(data);
 					}

@@ -4,6 +4,8 @@
 	<head>
 		<title>Attendance</title>
 		<!-- Favicon icon -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
 		<link rel="stylesheet" href={% static "css/skin-3.css" %}>
@@ -706,142 +708,9 @@
 			}
 		</style>
 		<style>
-			/*test of 3 position toggle switch*/
-				.toggle3-switch {
-				margin:auto;
-				position:relative;
-				/* text-align:center; */
-				font-size:1.3em;
-				align-self: left;
-				}
-				.radio1,
-				.radio2,
-				.radio3 {
-				position: absolute;
-				/*top: -9999px; - don't use may cause focus/scolling issues*/
-				left: -9999px;
-				}
-				/* .topLabelContainer{
-				margin:auto;
-				padding-left:6.5em; /*must match .labelLeft width + padding
-				} */
-				
-				.sliderContainer{
-				height: 40px;
-				width: 120px;
-				border-radius: 20px;
-				/* margin: 2px auto; */
-				position: relative;
-				padding-top: 2px;
-				display: inline-block;
-				}
-
-
-				.label1,
-				.label2,
-				.label3 {
-				height: 100%;
-				width: 100%;
-				/* padding: 6px; */
-				/* position:center; */
-				border: 2px solid #000;
-				border-radius: 20px;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				/* background: rgba(148, 146, 146, 0.616) */
-				
-				}
-				.radio1:checked ~ span .label1,
-				.radio1:checked ~ span .label3,
-				.radio2:checked ~ span .label1,
-				.radio2:checked ~ span .label2,
-				.radio3:checked ~ span .label2,
-				.radio3:checked ~ span .label3 {
-				/*hide labels */
-				position: absolute;
-				/*top: -9999px;*/
-				left: -9999px
-				}
-				.slider {
-				width: 30px;
-				height: 30px;
-				border-radius: 50%;
-				margin: 6.25px;
-				position: absolute;
-				display: inline-block;
-				pointer-events: none;
-				 /*ie fallback may be required */
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				background-color:rgb(100,100,100);
-				-webkit-transition: .4s;
-				transition: .4s;
-				}
-
-				.radio2:checked ~ span .slider {
-				-webkit-transform: translateX(2em);
-				-ms-transform: translateX(2em);
-				transform: translateX(2em);
-				}
-
-				.radio3:checked ~ span .slider {
-				-webkit-transform: translateX(4em);
-				-ms-transform: translateX(4em);
-				transform: translateX(4em);
-				}
-
-				.content1{
-				height:4em;
-				width:100%;
-				position:relative;
-				display:block;
-				margin:0 auto;
-				padding:1em;
-				/* text-align:center; */
-				font-size:1.3em;
-				background:beige;
-				}
-				.content1 p{
-				margin:0;
-				}
-				.labelTop1,
-				.radio1:checked ~ .sliderContainer .slider,
-				.radio1:checked ~ .content1{
-				color:rgb(255,0,0);
-				}
-				.radio1:checked ~ .topLabelContainer .labelTop1{
-				color:white;
-				text-shadow: 0 0 1px rgb(255,100,100), 0 0 8px rgb(255,0,0);
-				}
-				.radio1:checked ~ .sliderContainer .slider{
-				background:rgb(255,0,0);
-				}
-				.labelTop2,
-				.radio2:checked ~ .content1{
-				color:rgb(255,0,255);
-				}
-				.radio2:checked ~ .topLabelContainer .labelTop2{
-				color:white;
-				text-shadow: 0 0 1px rgb(255,50,255), 0 0 6px rgb(255,0,255);
-				}
-				.radio2:checked ~ .sliderContainer .slider{
-				background:rgb(154, 152, 152);
-				}
-				.labelTop3,
-				.radio3:checked ~ .content1{
-				color:rgb(0,0,255);
-				}
-				.radio3:checked ~ .topLabelContainer .labelTop3{
-				color:white;
-				text-shadow: 0 0 1px rgb(100,100,255), 0 0 8px rgb(0,0,255);
-				}
-				.radio3:checked ~ .sliderContainer .slider{
-				background:#06a006;
-				}
+			input{
+                width:60px;
+            }
 		</style>
 	</head>
 
@@ -965,82 +834,60 @@
 					<div class="row">
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card">
-								<form method="post" action="/teacher/attendance/mark">
-									{%csrf_token%}
-                                    <h3 class="card-title"><b>{{curr_branch}}</b></h3>
+                                <h3 class="card-title"><b>Previous Attendance</b></h3>
                                     <br>
                                     <div class="card-body" align="center">
-                                        <label>Objective:</label>
-                                            <input list="so" placeholder="Objective" name="so" required>
-                                            <datalist id="so">
-                                                {%for so in sos%}
-                                                    <option value="{{so|slice:1}}">{{so|slice:"1:"}}</option>
+                                        
+                                        <label>Branch:</label>
+                                            <select class="ajax" id="branch" list="branch" placeholder="Branch" name="branch">
+                                                <option value="None">----------</option>
+                                                {%for branch in branches%}
+                                                    <option value="{{branch}}">{{branch}}</option>
                                                 {%endfor%}
-                                            </datalist>
-                                        &emsp;
-                                        &ensp;
+                                            </select>
+                                            &emsp;
+                                        <label for="session">Session:</label>
+                                            <input class="ajax" type="number" id="session" name="session" min="2019" max="2100" step="1" placeholder="YYYY">
+                                            &emsp;
+                                        <label for="semester">Semester:</label>
+                                            <input class="ajax" type="number" id="semester" name="semester" min="1" max="8" step="1" placeholder="---" style="width: 35px;">
+                                        <br>
+                                        <label>Student ID:</label>
+                                            <input class="ajax" type ="text" id="studentid" name="studentid" placeholder="Admission Id" style="width: 100px;">
+                                            &emsp;
                                         <label>Date:</label>
-										<input type="date" name="date" onfocus="this.max=new Date().toISOString().split('T')[0]" required/>
-                                        &emsp;
-                                        &ensp;
-                                        <label>Lecture Number:</label>
-                                            <input type="number" max="8" min="1" value="1" name="lecture_no"required>
+										    <input class="ajax" type="date" id="date"style="width: 110px;" name="date" onfocus="this.max=new Date().toISOString().split('T')[0]" />
+                                        
+                                        <hr>
                                         <div class="table-responsive recentOrderTable">
                                             <table class="table verticle-middle table-responsive-md">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">No.</th>
-                                                        <th scope="col">Id</th>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Lecture No.</th>
+                                                        <th scope="col">ID</th>
                                                         <th scope="col">Name</th>
+                                                        <th scope="col">Subject</th>
                                                         <th scope="col">Present</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    {%for studentob in student_list%}
+                                                <tbody id="attendancelist">
+                                                    {% for attendance in attendancelist%}
                                                     <tr>
-                                                        <th>{{forloop.counter}}</th>
-                                                        <th>{{studentob.username}}</th>
-                                                        <th>{{studentob.get_full_name|capfirst}}</th>
-                                                        <th>
-                                                            <!-- <div class="tw-toggle">
-																<input type="radio" name="toggle" value="false" >
-																<label class="toggle toggle-yes"><i class="fa fa-times"></i></label>
-																<input checked type="radio" name="toggle" value="-1">
-																<label class="toggle toggle-yes"><i class="fa fa-minus"></i></label>
-																<input type="radio" name="toggle" value="true">
-																<label class="toggle toggle-yes" ><i class="fa fa-check" ></i></label>
-																<span></span>  
-															  </div>
-															  <label class="switch">
-                                                                <input type="checkbox" name="{{studentob.username}}" value="false" default="None">
-																<input type="checkbox" name="{{studentob.username}}" value="exempt" default="None">
-																<input type="checkbox" name="{{studentob.username}}" value="true" default="None"> 
-                                                                <span class="slider round"></span>
-                                                              </label>   -->
-															<div class="toggle3-switch">
-																<input type="radio" id="toggle3radio1" class=radio1 value=-1 name="{{studentob.username}}"/>
-																<input type="radio" id="toggle3radio2" class=radio2  value=0 name="{{studentob.username}}" checked />
-																<input type="radio" id="toggle3radio3" class=radio3 value=1 name="{{studentob.username}}" />
-																  <span class=sliderContainer>
-																  <label class="label1" for="toggle3radio1"></label>
-																  <label class="label2" for="toggle3radio2"></label>
-																  <label class="label3" for="toggle3radio3"></label>
-																  <span class="slider"></span>
-																</span>
-                                                        </th>
+                                                        <td>{{attendance.date}}</td>
+                                                        <td>{{attendance.lecture_number}}</td>
+                                                        <td>{{attendance.student.studentid}}</td>
+                                                        <td>{{attendance.student.student_name|capfirst}}</td>
+                                                        <td>{{attendance.subject.subject_name}}</td>
+                                                        <td>{{attendance.present}}</td>
                                                     </tr>
                                                     {%endfor%}
+                                                    
                                                 </tbody>
-
                                             </table>
                                         </div>
-										<input type="hidden" name="branch" value="{{curr_branch}}"/>
-										<input type="hidden" name="subject" value="{{curr_subject}}"/>
-                                        <button type="submit" class="buttondesign">Submit</button>
-                                        
                                     </div>
-								</form>
-							</div>
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -1053,6 +900,34 @@
 
 
 		</div>
+        <script>
+            $(document).ready(function(){
+                // alert("ajax")
+                $(".ajax").change(function(){
+                    
+                    var branch=document.getElementById("branch").value;
+                    var session=document.getElementById("session").value;
+                    var semester=document.getElementById("semester").value;
+                    var studentid=document.getElementById("studentid").value;
+                    var date=document.getElementById("date").value;
+                    $.ajax({                                          // initialize an AJAX request
+					url: "pastattendance",                                    // set the url of the request (= ajax/load-department-details/ )
+					data: {
+							'branch':branch,
+                            'session':session,
+                            'semester':semester,
+                            'studentid':studentid,
+                            'date':date,
+				 		  },        // add the course  to the GET parameters
+					success: function (data) {  
+						$("#attendancelist").html(data); 
+					}
+				});
+
+                });
+
+            });
+        </script>
 		<!--**********************************
 	Main wrapper end
 	***********************************-->

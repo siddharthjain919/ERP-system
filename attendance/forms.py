@@ -11,6 +11,7 @@ class mark_attendance_form(forms.ModelForm):
     batch=forms.IntegerField(max_value=int(datetime.now().year),min_value=int(datetime.now().year-3))
     branch=forms.ModelChoiceField(queryset=branch_detail.branch_obj.all())
     CHOICES =(
+    (None,'------'),
     ("A", "A"),
     ("B", "B"),
     ("C", "C"),

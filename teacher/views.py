@@ -203,11 +203,8 @@ def subject(request):
 			request.method="GET"
 			return subject(request)
 		else:
-			subject_list=list(branch_subjects.branch_sub_obj.all())
-			current_dept=teacherlogin.teach_obj.get(teacherid=request.user.username).department
-			for i in subject_list:
-				if i.branch.department!=current_dept:
-					subject_list.remove(i)
+			current_branch=teacherlogin.teach_obj.get(teacherid=request.user.username).branch
+			subject_list=list(branch_subjects.branch_sub_obj.filter(branch=current_branch))
 			form=branch_subject_form()
 			return render(request,'subjects.html',context={"form":form,'branch_subject':subject_list})
 	else:

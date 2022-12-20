@@ -1,0 +1,18 @@
+{% for attendance in attendancelist%}
+<tr>
+    <td>{{attendance.date}}</td>
+    <td>{{attendance.lecture_number}}</td>
+    <td>{{attendance.student.studentid}}</td>
+    <td>{{attendance.student.student_name}}</td>
+    <td>{{attendance.subject.subject_name}}</td>
+    <td>{{attendance.present}}</td>
+</tr>
+{%endfor%}
+{% if messages %}
+    <script>
+        {%for message in messages %}
+            alert("{{message}}");
+        {%endfor%}
+        location.reload();
+    </script>
+{% endif %}
