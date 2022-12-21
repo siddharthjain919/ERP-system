@@ -55,7 +55,6 @@ def studentlist(request):
 def mark(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         if request.method=='POST':
-            print(list(request.POST.items()))
             subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
             lecture_number=request.POST.get("lecture_no")
             date=request.POST.get('date')
@@ -79,6 +78,7 @@ def mark(request):
 def pastattendance(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         branch=request.GET.get('branch')
+        print(branch,type(branch))
         semester=request.GET.get('semester')
         date=request.GET.get('date')
         session=request.GET.get('session')
@@ -99,8 +99,7 @@ def pastattendance(request):
             query&=Q(date=date)
         if session:
             query&=Q(session=session)
-        if branch:
-            temp=branch
+        if branch and branch!='None':
             branch=branch.split('-')
             batch=int(branch[1])
             branch=branch[0].split('(')
@@ -117,6 +116,7 @@ def pastattendance(request):
             return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
 
         elif query:
+            print(query)
             attendancelist=list(mark_attendance.attend_obj.filter(query))
             return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
         else:
