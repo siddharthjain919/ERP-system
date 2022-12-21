@@ -1,0 +1,25 @@
+
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    <style>
+        /* Add custom styles for your button here */
+        #my-button{
+            background-color: #ba2121;
+            border-radius: 4px;
+            border:none;
+            color: white;
+            padding: 12px;
+            width:100%;
+            cursor: pointer;
+            font-size: larger;
+        }
+    </style>
+{% endblock %}
+
+{% block submit_buttons_bottom%}
+    {{ block.super }}
+    <button id="my-button" onclick="window.location.href='/'" type="submit" name="endsem" >End Semester</button>
+{% endblock %}
+
+

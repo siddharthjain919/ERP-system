@@ -3,12 +3,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-# import numpy as np
 import os
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
-
 from .models import studentlogin
 from attendance.models import mark_attendance
 import smtplib,secrets,string
@@ -32,9 +30,11 @@ def login(request):
     elif request.method == 'POST':
         username = request.POST.get('studentid')
         password = request.POST.get('studentpwd')
+        print(username,password)
         try:
             model_user = studentlogin.stud_obj.get(studentid=username,studentpwd=password)
             admin_user=authenticate(request, username=username, password=password)
+            
             if model_user is not None:
                 auth_login(request,admin_user)
                 return render(request, 'dashboard.html', {})
@@ -57,8 +57,7 @@ def logout(request):
 def attendance(request):
     if request.user.is_active and request.user.groups.filter(name="student").exists():
         student= studentlogin.stud_obj.get(studentid=request.user.username)
-        attendance_list=mark_attendance.attend_obj.filter(student=student)
-        print(attendance_list)
+        attendance_list=mark_attendance.attend_obj.filter(student=student,semester=student.branch.semester)
         total=0
         total_present=0
         label={'Absent':[0,0]}
@@ -137,12 +136,7 @@ def forgot_mail(request):
             for _ in range(8):
                 pwd += ''.join(secrets.choice(alphabet))
             setattr(user,'teacherpwd',pwd)
-            # user2=User.objects.get(username=user.teacherid)
-            # setattr(user2,'password',pwd)
-            # user2.save()
-            #for adding user to group
             user.save()
-            #sending mails
             receiver=user.email
             user=user.Name
             user=user.title()
@@ -158,7 +152,6 @@ def forgot_mail(request):
                 server.login(sender,password)
                 server.sendmail(sender,receiver,message.as_string())
                 server.quit()
-                
             except:
                 pass
         return login(request)

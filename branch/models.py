@@ -72,6 +72,13 @@ class branch_detail(models.Model):
 	course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
 	semester=models.IntegerField(default=1,validators=[MaxValueValidator(8),MinValueValidator(1)])
 	section=models.CharField(max_length=1,help_text="Caps Only")
+
+	PSO_1=models.CharField(max_length=50)
+	PSO_2=models.CharField(max_length=50)
+	PSO_3=models.CharField(max_length=50)
+	PSO_4=models.CharField(max_length=50)
+	PSO_5=models.CharField(max_length=50)
+
 	def __str__(self):
 		return self.name+"("+self.section+")"+"-"+str(self.batch)
 	branch_obj=models.Manager()
