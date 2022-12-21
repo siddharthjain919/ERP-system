@@ -55,18 +55,20 @@ def studentlist(request):
 def mark(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         if request.method=='POST':
+            print(list(request.POST.items()))
             subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
             lecture_number=request.POST.get("lecture_no")
             date=request.POST.get('date')
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
             branch=User.objects.filter(groups__name=branch)
-            
             for i in branch:
                 student=studentlogin.stud_obj.get(studentid=i)
-                if request.POST.get(str(i))=='1':
+                if str(i)+'_exempt' in request.POST:
+                    continue
+                elif str(i) in request.POST:
                     mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch)
-                elif request.POST.get(str(i))=='-1':
+                else:
                     mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch)
             return HttpResponseRedirect("/teacher/attendance/")
         else:

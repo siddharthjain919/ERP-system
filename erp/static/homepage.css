@@ -111,6 +111,12 @@ section {
 
 body {
     line-height: 1;
+    background-image: linear-gradient(135deg, #FAB2FF 10%, #1904E5 100%);
+    /* background-color:#632778; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 ol,
@@ -139,14 +145,6 @@ table {
 html {
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif;
-}
-
-body {
-    background-color:#632778;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
 .panel {
