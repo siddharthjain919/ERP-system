@@ -93,6 +93,8 @@ def pastattendance(request):
             except:
                 messages.add_message(request, messages.SUCCESS, 'Invalid Student Id!')
                 query=Q()
+                attendancelist=list(mark_attendance.attend_obj.all())
+                return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
         if semester:
             query&=Q(semester=semester)
         if date:

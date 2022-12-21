@@ -40,11 +40,17 @@
 
 				<br>
 				{% if messages %}
-				{% for message in messages %}
-					<div class="alert alert-{{ message.tags }}"  style="color:red; font-size:18px; text-align:center";>
-						{{ message|safe}}
-					</div>
-				{% endfor %}
+					<!-- {% for message in messages %}
+						<div class="alert alert-{{ message.tags }}"  style="color:red; font-size:18px; text-align:center";>
+							{{ message|safe}}
+						</div>
+					{% endfor %} -->
+					<script>
+						{%for message in messages %}
+							alert("{{message}}");
+						{%endfor%}
+						location.reload();
+					</script>
 				{% endif %}
 				<div class="remember-me--forget-password">
 					<!-- Angular -->
