@@ -163,3 +163,17 @@ class studentlogin(models.Model):
 	post_delete.connect(deleteuser)
 
 	#transaction.on_commit(mail)
+
+class marks(models.Model):
+	student=models.ForeignKey(studentlogin,on_delete=models.CASCADE)
+	subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE)
+	assignment1_marks=models.IntegerField(blank=True,null=True)
+	assignment2_marks=models.IntegerField(blank=True,null=True)
+	assignment3_marks=models.IntegerField(blank=True,null=True)
+	assignment4_marks=models.IntegerField(blank=True,null=True)
+	assignment5_marks=models.IntegerField(blank=True,null=True)
+	st1_marks=models.IntegerField(blank=True,null=True)
+	st2_marks=models.IntegerField(blank=True,null=True)
+	pue_marks=models.IntegerField(blank=True,null=True)
+	re_pue_marks=models.IntegerField(blank=True,null=True)
+

@@ -1,16 +1,14 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.shortcuts import redirect, render,HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
 from student.models import studentlogin
-from attendance.models import mark_attendance
 from .models import teacherlogin
-from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from erp.settings import password,sender
@@ -100,7 +98,7 @@ def timetable(request):
 					lecture_input=request.POST.get(lecture_name)
 					# print(1,lecture_input,type(lecture_input))
 					previous=getattr(branch,lecture_name)
-					##print(lecture_input,previous)
+					# print(lecture_input,previous)
 					# print(2,previous,type(previous))
 					# print(lecture_input,previous,type(lecture_input),11111111111111)
 					if lecture_input=='':
@@ -120,6 +118,7 @@ def timetable(request):
 							messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.Name,lecture_name))
 						setattr(subject_teacher,"teach_"+lecture_name,branch)
 						subject_teacher.save()
+						# print(getattr(subject_teacher,"teach_"+lecture_name,55555555555555555555))
 						setattr(branch,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name,branch=branch))
 					elif previous:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
@@ -131,7 +130,7 @@ def timetable(request):
 		
 		teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
 		cc_branch=teacher.cc_of_branch
-		print(request.user,teacher,cc_branch)
+		# print(request.user,teacher,cc_branch)
 		branch_list=list(branch_detail.branch_obj.all())
 		if cc_branch:
 			branch_list.remove(cc_branch)
@@ -229,3 +228,9 @@ def forgot_mail(request):
 	except:
 		messages.error(request, 'No user with this email found.')
 		return forget(request)
+
+def marks(request):
+	if request.method=="POST":
+		pass 
+	elif request.method=="GET":
+		pass
