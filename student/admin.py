@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import studentlogin
+from .models import studentlogin,student_marks
 from import_export.admin import ImportExportModelAdmin,ImportExportMixin
 import pandas as pd
 from sqlalchemy import create_engine
@@ -19,3 +19,4 @@ from sqlalchemy import create_engine
 # 	list_display=["studentid","student_name","studentpwd","branch","email"]
 
 admin.site.register(studentlogin)
+admin.site.register(student_marks)

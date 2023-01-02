@@ -7,7 +7,7 @@ from datetime import datetime
 
 class mark_attendance_form(forms.ModelForm):
     course=forms.ModelChoiceField(queryset=course.course_obj.all())
-    batch=forms.IntegerField(max_value=int(datetime.now().year),min_value=int(datetime.now().year-3))
+    batch=forms.IntegerField(max_value=int(datetime.now().year),min_value=int(datetime.now().year-4))
     branch=forms.ModelChoiceField(queryset=branch_detail.branch_obj.all())
     CHOICES =(
     (None,'------'),

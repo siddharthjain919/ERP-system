@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
-from student.models import studentlogin
+from student.models import studentlogin,student_marks
 from .models import teacherlogin
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -230,7 +230,22 @@ def forgot_mail(request):
 		return forget(request)
 
 def marks(request):
-	if request.method=="POST":
-		pass 
-	elif request.method=="GET":
-		pass
+	from attendance.forms import mark_attendance_form
+	return render(request,"marks.html",{"form":mark_attendance_form})
+
+def studentlist(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=='POST':
+			curr_branch=branch_detail.branch_obj.get(name=request.POST.get('branch'),batch=request.POST.get('batch'),section=request.POST.get('section'))
+			curr_subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			student_list=list(studentlogin.stud_obj.filter(branch=curr_branch))
+			for i in range(len(student_list)):
+				try:
+					student_list[i]=student_marks.marks_obj.get(semester=curr_branch.semester,student=student_list[i])
+				except:
+					student_list[i]=student_marks.marks_obj.create(student=student_list[i],branch=curr_branch,semester=curr_branch.semester,subject=curr_subject)
+			return render(request,"studentlist.html",context={"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+		else:
+			return marks(request)
+	else:
+		return redirect('/teacher/login')

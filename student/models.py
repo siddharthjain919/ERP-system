@@ -164,9 +164,11 @@ class studentlogin(models.Model):
 
 	#transaction.on_commit(mail)
 
-class marks(models.Model):
+class student_marks(models.Model):
 	student=models.ForeignKey(studentlogin,on_delete=models.CASCADE)
 	subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE)
+	semester=models.IntegerField(blank=True,null=True)
+	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
 	assignment1_marks=models.IntegerField(blank=True,null=True)
 	assignment2_marks=models.IntegerField(blank=True,null=True)
 	assignment3_marks=models.IntegerField(blank=True,null=True)
@@ -176,4 +178,8 @@ class marks(models.Model):
 	st2_marks=models.IntegerField(blank=True,null=True)
 	pue_marks=models.IntegerField(blank=True,null=True)
 	re_pue_marks=models.IntegerField(blank=True,null=True)
+
+	marks_obj=models.Manager()
+	def __str__(self) -> str:
+		return str(self.student)+"||"+str(self.branch)+"||"+str(self.subject)
 

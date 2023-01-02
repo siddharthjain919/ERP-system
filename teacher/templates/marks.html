@@ -2,7 +2,7 @@
 <html lang="en">
 {% load static %}
 	<head>
-		<title>Attendance</title>
+		<title>Marks</title>
 		<!-- Favicon icon -->
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
@@ -161,14 +161,14 @@
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card" >
 								<div class="card-title">
-									<b>{% block title %} Attendance{% endblock %}</b>
-									<a href="/teacher/attendance/pastattendance"><button class="gray_button" >Previous</button></a>
+									<b>{% block title %}Marks{% endblock %}</b>
+									<a href="/teacher/mark-records"><button class="gray_button">Previous</button></a>
 								</div><hr>
 								<div class="card-body">
 								{% block content %}
-								<form action="/teacher/attendance/studentlist" id="mark_attendance_form" method="POST">
+								<form action="/teacher/studentlist" id="marks_form" method="POST">
 									{% csrf_token %}
-									{{ form.as_ul}}<br>
+									{{form.as_ul}}<br>
 									<button type="submit" class="buttondesign">Mark</button>
 								</form>
 								</div>
@@ -177,7 +177,6 @@
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 			<!--**********************************
@@ -197,7 +196,7 @@
 				var batch = $(this).val();
 				var course=document.getElementById("id_course").value;
 				$.ajax({                                          // initialize an AJAX request
-					url: "branch",                                    // set the url of the request (= ajax/load-department-details/ )
+					url: "/teacher/attendance/branch",                                    // set the url of the request (= ajax/load-department-details/ )
 					data: { 'course': course,
 							'batch':batch
 				 		  },        // add the course  to the GET parameters
@@ -212,7 +211,7 @@
 				const branch=document.getElementById("id_branch").value;
 				const batch=document.getElementById("id_batch").value;
 				$.ajax({
-					url: "subject",
+					url: "/teacher/attendance/subject",
 					data: {'branch': branch,
 							'section':section,
 							'batch':batch
