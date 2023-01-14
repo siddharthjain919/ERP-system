@@ -251,3 +251,15 @@ def mark_marks(request):
 			return marks(request)
 	else:
 		return redirect('/teacher/login')
+def addPaper(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=="POST":
+			pass
+		else:
+			return render(request,'add-paper.html')
+	else:
+		return redirect('/teacher/login')
+
+
+
+

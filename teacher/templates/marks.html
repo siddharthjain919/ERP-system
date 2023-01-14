@@ -25,12 +25,13 @@
 			padding: 6px 10px;
 			text-align: center;
 			display: inline-block;
-			font-size: 12px;
+			font-size: 15px;
 			cursor: pointer;
 			background-color: #e7e7e7; 
 			color: black;
 			float:right;
 			border-radius: 20px;
+			margin: 0 2px;
 			}
 			label{
 				float:center;
@@ -163,12 +164,23 @@
 								<div class="card-title">
 									<b>{% block title %}Marks{% endblock %}</b>
 									<a href="/teacher/mark-records"><button class="gray_button">Previous</button></a>
+									<a href="/teacher/add-paper"><button class="gray_button">Add Paper+</button></a>
+
 								</div><hr>
 								<div class="card-body">
 								{% block content %}
 								<form action="/teacher/marks-studentlist" id="marks_form" method="POST">
 									{% csrf_token %}
-									{{form.as_ul}}<br>
+									{{form.as_ul}}
+									<label>Exam-type:</label>
+									<select name="exam-type">
+										<option value="{{None}}">--------</option>
+										<option value="ST1">ST-1</option>
+										<option value="ST2">ST-2</option>
+										<option value="re-ST">re-ST</option>
+										<option value="PUE">PUE</option>
+										<option value="re-PUE">re-PUE</option>
+									</select><br>
 									<button type="submit" class="buttondesign">Mark</button>
 								</form>
 								</div>
