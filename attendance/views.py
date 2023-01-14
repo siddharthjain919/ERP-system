@@ -46,7 +46,7 @@ def studentlist(request):
             for i in "12345":
                 so=i+getattr(curr_subject,"CO_"+i)
                 sos.append(so)
-            return render(request,"studentlist.html",context={"sos":sos,"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+            return render(request,"attendancelist.html",context={"sos":sos,"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
         else:
             return attendance_form(request)
     else:
@@ -124,3 +124,5 @@ def pastattendance(request):
         else:
             attendancelist=list(mark_attendance.attend_obj.all())
             return render(request,"pastattendance.html",{"branches":branches,"attendancelist":attendancelist})
+    else:
+        return redirect('/teacher/login')

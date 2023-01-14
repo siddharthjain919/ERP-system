@@ -166,7 +166,7 @@
 								</div><hr>
 								<div class="card-body">
 								{% block content %}
-								<form action="/teacher/studentlist" id="marks_form" method="POST">
+								<form action="/teacher/marks-studentlist" id="marks_form" method="POST">
 									{% csrf_token %}
 									{{form.as_ul}}<br>
 									<button type="submit" class="buttondesign">Mark</button>

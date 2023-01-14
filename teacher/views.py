@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 import smtplib,secrets,string
@@ -159,20 +159,6 @@ def subject(request):
 		return redirect('/teacher/login')
 
 
-def attendance(request):
-	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		branch_list=list(branch_detail.branch_obj.all())
-		all_subjects=branch_subjects.branch_sub_obj.all()
-		student={}
-		for branch in branch_list:
-			temp=User.objects.filter(groups__name=branch)
-			for i in temp:
-				student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
-		print(student)
-		return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects,"branch_list":branch_list})
-	else:
-		return redirect('/teacher/login')
-
 def about(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		return render(request,"about.html",{})
@@ -245,6 +231,22 @@ def studentlist(request):
 				except:
 					student_list[i]=student_marks.marks_obj.create(student=student_list[i],branch=curr_branch,semester=curr_branch.semester,subject=curr_subject)
 			return render(request,"studentlist.html",context={"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+		else:
+			return marks(request)
+	else:
+		return redirect('/teacher/login')
+
+def mark_marks(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=='POST':
+			subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			branch=request.POST.get("branch")
+			branch=User.objects.filter(groups__name=branch)
+			for i in branch:
+				student=studentlogin.stud_obj.get(studentid=i)
+				if str(student)+'_st1' in request.POST:
+					pass
+			return HttpResponseRedirect("/teacher/attendance/")
 		else:
 			return marks(request)
 	else:

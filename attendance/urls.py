@@ -1,7 +1,7 @@
 
 from django.urls import path
 app_name='attendance'
-from . import views
+from attendance import views
 urlpatterns=[
     path('',views.attendance_form,name="attendance_form"),
     path('branch/',views.load_branch_details,name='ajax-load-branch'),

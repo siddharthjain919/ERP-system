@@ -17,5 +17,6 @@ urlpatterns = [
     path('forget/',views.forget,name='forget'),
     path('mail/',views.forgot_mail),
     path('marks/',views.marks,name="marks"),
-    path('studentlist',views.studentlist),
+    path('marks-studentlist',views.studentlist),
+    path('mark-marks',views.mark_marks),
 ]
