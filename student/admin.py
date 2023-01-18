@@ -3,6 +3,13 @@ from .models import studentlogin,student_marks
 from import_export.admin import ImportExportModelAdmin,ImportExportMixin
 import pandas as pd
 from sqlalchemy import create_engine
+
+from .resources import StudentloginResource
+
+@admin.register(studentlogin)
+class StudentloginAdmin(ImportExportModelAdmin):
+    resource_class = StudentloginResource
+
 '''class Command(BaseCommand):
 	help="For adding data to excel file"
 	def handle(self,*args,**options):
@@ -18,5 +25,5 @@ from sqlalchemy import create_engine
 # 	exclude=("id",)
 # 	list_display=["studentid","student_name","studentpwd","branch","email"]
 
-admin.site.register(studentlogin)
+# admin.site.register(studentlogin)
 admin.site.register(student_marks)

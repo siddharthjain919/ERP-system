@@ -17,6 +17,8 @@ class course(models.Model):
     post_save.connect(create_group)
     course_obj=models.Manager()
 
+    
+
 def topics(**kwargs):
     if isinstance(kwargs["instance"],subjects):
         subject=kwargs["instance"]

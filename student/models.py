@@ -127,23 +127,23 @@ class studentlogin(models.Model):
 			createuser(**kwargs)
 			kwargs["instance"].save()
 
-			receiver=kwargs["instance"].personalEmail
-			user=kwargs["instance"].student_name
-			user=user.title()
-			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
-			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-			message['Subject']="Regarding ERP password"
-			message['From']=sender
-			message['To']=receiver
-			try:
-				server=smtplib.SMTP('smtp.gmail.com:587')
-				server.ehlo()
-				server.starttls()
-				server.login(sender,password)
-				server.sendmail(sender,receiver,message.as_string())
-				server.quit()
-			except:
-				print("error")
+			# receiver=kwargs["instance"].personalEmail
+			# user=kwargs["instance"].student_name
+			# user=user.title()
+			# email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+			# message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
+			# message['Subject']="Regarding ERP password"
+			# message['From']=sender
+			# message['To']=receiver
+			# try:
+			# 	server=smtplib.SMTP('smtp.gmail.com:587')
+			# 	server.ehlo()
+			# 	server.starttls()
+			# 	server.login(sender,password)
+			# 	server.sendmail(sender,receiver,message.as_string())
+			# 	server.quit()
+			# except:
+			# 	print("error")
 		elif isinstance(kwargs["instance"],studentlogin):
 			u = User.objects.get(username=kwargs["instance"].studentid)
 			u.set_password(kwargs["instance"].studentpwd)

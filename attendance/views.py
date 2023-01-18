@@ -8,6 +8,7 @@ from django.contrib import messages
 from erp.models import *
 from branch.models import *
 from student.models import studentlogin
+from teacher.models import teacherlogin
 from django.db.models import Q
 # Create your views here.
 
@@ -61,14 +62,15 @@ def mark(request):
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
             branch=User.objects.filter(groups__name=branch)
+            teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
             for i in branch:
                 student=studentlogin.stud_obj.get(studentid=i)
                 if str(i)+'_exempt' in request.POST:
                     continue
                 elif str(i) in request.POST:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch)
+                    mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
                 else:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch)
+                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,tecaher=teacher)
             return HttpResponseRedirect("/teacher/attendance/")
         else:
             return attendance_form(request)
@@ -83,6 +85,8 @@ def pastattendance(request):
         date=request.GET.get('date')
         session=request.GET.get('session')
         studentid=request.GET.get('studentid')
+        teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+        print(teacher,type(teacher))
         branches=branch_detail.branch_obj.all()
         query=Q()
         if studentid:
@@ -119,10 +123,11 @@ def pastattendance(request):
 
         elif query:
             print(query)
+            query&=Q(tecaher=teacher)
             attendancelist=list(mark_attendance.attend_obj.filter(query))
             return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
         else:
-            attendancelist=list(mark_attendance.attend_obj.all())
+            attendancelist=list(mark_attendance.attend_obj.filter(teacher=teacher))
             return render(request,"pastattendance.html",{"branches":branches,"attendancelist":attendancelist})
     else:
         return redirect('/teacher/login')

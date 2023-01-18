@@ -10,11 +10,15 @@ from matplotlib import pyplot as plt
 from .models import studentlogin
 from attendance.models import mark_attendance
 import smtplib,secrets,string
+
 from erp.models import subjects
 from student.models import studentlogin
+from .resources import StudentloginResource
+
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from erp.settings import password,sender
+from import_export.formats import base_formats
 
 
 def index(request):
@@ -158,3 +162,13 @@ def forgot_mail(request):
     except:
         messages.error(request, 'No user with this email found.')
         return forget(request)
+    
+def import_data(request):
+    if request.method == 'POST':
+        resource = StudentloginResource()
+        dataset = base_formats.XLSX()
+        imported_data = request.FILES['file'].read()
+        result = resource.import_data(imported_data, dry_run=True)  # Test the data import
+        if not result.has_errors():
+            resource.import_data(imported_data,dry_run= False)  # Actually import now
+    return render(request, 'import_data.html')
