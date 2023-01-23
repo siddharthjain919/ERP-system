@@ -49,7 +49,7 @@ class StudentloginResource(resources.ModelResource):
 
         try:
             row['course'] = course.course_obj.get(name=course_name)
-            row['branch'] = branch_detail.branch_obj.get(name=branch_name).pk
+            row['branch'] = branch_detail.branch_obj.get(name=branch_name,section='A').pk
         except :
             kwargs["result"].append_row_error('Invalid details', row, course_name)
 
