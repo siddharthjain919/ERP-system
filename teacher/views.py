@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
-from erp.models import subjects
+from erp.models import subjects,question_paper
 from student.models import studentlogin,student_marks
 from .models import teacherlogin
 from email.mime.multipart import MIMEMultipart
@@ -253,10 +253,35 @@ def mark_marks(request):
 		return redirect('/teacher/login')
 def addPaper(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		subject_list=list(subjects.sub_obj.all())
 		if request.method=="POST":
-			pass
+			subject=request.POST.get('subject')
+			subject=subjects.sub_obj.get(subject_name=subject)
+
+			ques_paper=question_paper()
+			ques_paper.subject=subject
+			ques_paper.semester=request.POST.get('semester')
+			ques_paper.session=request.POST.get('session')
+			total_sum=0
+			for ques in "1234567":
+				ques_marks_sum=0
+				for part in 'ABCDEFGHIJ':
+					try:
+						temp=request.POST.get(ques+part.lower()+'.')
+						setattr(ques_paper,"Ques"+ques+"_part"+part,temp)
+						temp=int(request.POST.get(ques+part.lower()+'._marks'))
+						ques_marks_sum+=temp
+						setattr(ques_paper,"Ques"+ques+'_part'+part+"_marks",temp)
+					except Exception as e:
+						break
+				setattr(ques_paper,"MarksQues"+ques,ques_marks_sum)
+				total_sum+=ques_marks_sum
+			setattr(ques_paper,"total_marks",total_sum)
+			ques_paper.save()
+			return HttpResponseRedirect("/teacher/marks")
+			
 		else:
-			return render(request,'add-paper.html')
+			return render(request,'add-paper.html',{"subjects":subject_list})
 	else:
 		return redirect('/teacher/login')
 

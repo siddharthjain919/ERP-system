@@ -63,6 +63,11 @@ def mark(request):
             branch=request.POST.get("branch")
             branch=User.objects.filter(groups__name=branch)
             teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+            branchSubject=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
+            objective=request.POST.get("so")
+            setattr(branchSubject,"NOLT"+str(objective),getattr(branchSubject,"NOLT"+str(objective))+1)
+            branchSubject.save()
+            print(branchSubject.NOLT2)
             for i in branch:
                 student=studentlogin.stud_obj.get(studentid=i)
                 if str(i)+'_exempt' in request.POST:
@@ -70,7 +75,7 @@ def mark(request):
                 elif str(i) in request.POST:
                     mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
                 else:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,tecaher=teacher)
+                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
             return HttpResponseRedirect("/teacher/attendance/")
         else:
             return attendance_form(request)

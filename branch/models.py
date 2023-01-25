@@ -73,6 +73,8 @@ class branch_detail(models.Model):
 	semester=models.IntegerField(default=1,validators=[MaxValueValidator(8),MinValueValidator(1)])
 	section=models.CharField(max_length=1,help_text="Caps Only")
 
+	total_strength=models.IntegerField(default=70)
+
 	PSO_1=models.CharField(max_length=50)
 	PSO_2=models.CharField(max_length=50)
 	PSO_3=models.CharField(max_length=50)

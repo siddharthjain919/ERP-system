@@ -3,7 +3,7 @@
     {% load static %}
 
     <head>
-        <title>Dashboard </title>
+        <title>Question Paper </title>
         <!-- Favicon icon -->
         <link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
         <link rel="stylesheet" href={% static 'css/style.css' %}>
@@ -163,113 +163,142 @@ Content body start
                                 <div class="card-body">
                                     <form action="/teacher/add-paper" method="POST">
                                         {%csrf_token%}
-                                    <div class="table-responsive recentOrderTable">
-                                        <table class="table verticle-middle table-responsive-md">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">No.</th>
-                                                    <th>Details</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th>1</th>
-                                                    <th>
-                                                        <table id="table1" style="display:none">
-                                                            <thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead>
-                                                            <!-- your existing rows and cells here -->
-                                                        </table>
-                                                        <button type="button" id="add-button1" class="buttondesign" onclick="add1()">
-                                                            Add
-                                                        </button>
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th>2</th>
-                                                    <th>
-                                                        <table id="table2" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button2" class="buttondesign"
-                                                            onclick="add2()">Add</button>
-                                                    </th>
+                                        <div align="center">
+                                            <label>Subject:</label>
+                                            <select name="subject" required>
+                                                <option value="{{None}}" disabled selected>-----</option>
+                                                {%for subject in subjects%}
+                                                <option value="{{subject}}">{{subject}}</option>
+                                                {%endfor%}
+                                            </select>
+                                            <label>Semester:</label>
+                                            <input type="number" min="1" max="8" required name="semester">
+                                            <label>Session:</label>
+                                            <input type="number" min="2019" max="2050" name="session" required>
 
-                                                </tr>
-                                                <tr>
-                                                    <th>3</th>
-                                                    <th>
-                                                        <table id="table3" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button3" class="buttondesign"
-                                                            onclick="add3()">Add</button>
-                                                    </th>
+                                        </div>
 
-                                                </tr>
-                                                <tr>
-                                                    <th>4</th>
-                                                    <th>
-                                                        <table id="table4" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button4" class="buttondesign"
-                                                            onclick="add4()">Add</button>
-                                                    </th>
+                                        <div class="table-responsive recentOrderTable">
 
-                                                </tr>
-                                                <tr>
-                                                    <th>5</th>
-                                                    <th>
-                                                        <table id="table5" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button5" class="buttondesign"
-                                                            onclick="add5()">Add</button>
-                                                    </th>
+                                            <table class="table verticle-middle table-responsive-md">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">No.</th>
+                                                        <th>Details</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>1</th>
+                                                        <th>
+                                                            <table id="table1" style="display:none">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                                <!-- your existing rows and cells here -->
+                                                            </table>
+                                                            <button type="button" id="add-button1" class="buttondesign"
+                                                                onclick="add1()">
+                                                                Add
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>2</th>
+                                                        <th>
+                                                            <table id="table2" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button2" class="buttondesign"
+                                                                onclick="add2()">Add</button>
+                                                        </th>
 
-                                                </tr>
-                                                <tr>
-                                                    <th>6</th>
-                                                    <th>
-                                                        <table id="table6" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button6" class="buttondesign"
-                                                            onclick="add6()">Add</button>
-                                                    </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>3</th>
+                                                        <th>
+                                                            <table id="table3" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button3" class="buttondesign"
+                                                                onclick="add3()">Add</button>
+                                                        </th>
 
-                                                </tr>
-                                                <tr>
-                                                    <th>7</th>
-                                                    <th>
-                                                        <table id="table7" style="display: none;"><thead >
-                                                                <th>Part</th>
-                                                                <th>Question</th>
-                                                                <th>Marks</th>
-                                                            </thead></table>
-                                                        <button type="button" id="add-button7" class="buttondesign"
-                                                            onclick="add7()">Add</button>
-                                                    </th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                    </div>
-                                    <button type="submit" class="buttondesign">Upload</button>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>4</th>
+                                                        <th>
+                                                            <table id="table4" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button4" class="buttondesign"
+                                                                onclick="add4()">Add</button>
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th>5</th>
+                                                        <th>
+                                                            <table id="table5" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button5" class="buttondesign"
+                                                                onclick="add5()">Add</button>
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th>6</th>
+                                                        <th>
+                                                            <table id="table6" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button6" class="buttondesign"
+                                                                onclick="add6()">Add</button>
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th>7</th>
+                                                        <th>
+                                                            <table id="table7" style="display: none;">
+                                                                <thead>
+                                                                    <th>Part</th>
+                                                                    <th>Question</th>
+                                                                    <th>Marks</th>
+                                                                </thead>
+                                                            </table>
+                                                            <button type="button" id="add-button7" class="buttondesign"
+                                                                onclick="add7()">Add</button>
+                                                        </th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <button type="submit" class="buttondesign">Upload</button>
                                     </form>
                                 </div>
                             </div>
@@ -291,21 +320,21 @@ Scripts
 ***********************************-->
         <!-- Required vendors -->
         <script>
-            var clickCount1= 0;
-            var clickCount2= 0;
-            var clickCount3= 0;
-            var clickCount4= 0;
-            var clickCount5= 0;// variable to keep track of clicks
-            var clickCount6= 0;
-            var clickCount7= 0;
+            var clickCount1 = 0;
+            var clickCount2 = 0;
+            var clickCount3 = 0;
+            var clickCount4 = 0;
+            var clickCount5 = 0;// variable to keep track of clicks
+            var clickCount6 = 0;
+            var clickCount7 = 0;
 
             var labels = ["a.", "b.", "c.", "d.", "e.", "f.", "g.", "h.", "i.", "j."]; // array of labels
-            
+
             function add1() {
-                if (clickCount1<10) { // only add a new row if clicks are less than 10
+                if (clickCount1 < 10) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table1");
-                    table.style.display="block";
-                    
+                    table.style.display = "block";
+
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -316,6 +345,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "1" + labels[clickCount1]);
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -323,22 +354,24 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","1"+labels[clickCount1]+"_marks")
                     newCell3.appendChild(input);
 
                     clickCount1++;
                 }
-                if (clickCount1==10) {
+                if (clickCount1 == 10) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button1");
                     button.style.display = "none";
                 }
             }
             function add2() {
-                if (clickCount2< 5) {
-                     // only add a new row if clicks are less than 10
+                if (clickCount2 < 5) {
+                    // only add a new row if clicks are less than 10
                     var table = document.getElementById("table2");
-                    table.style.display="block";
-                    
+                    table.style.display = "block";
+
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -349,6 +382,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "2" + labels[clickCount2]);
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -356,11 +391,13 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","2"+labels[clickCount2]+"_marks")
                     newCell3.appendChild(input);
 
                     clickCount2++;
                 }
-                if (clickCount2==5) {
+                if (clickCount2 == 5) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button2");
                     button.style.display = "none";
@@ -369,7 +406,7 @@ Scripts
             function add3() {
                 if (clickCount3 < 2) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table3");
-                    table.style.display="block";
+                    table.style.display = "block";
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -380,6 +417,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "3" + labels[clickCount3]); 
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -387,11 +426,14 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","3"+labels[clickCount3]+"_marks")
                     newCell3.appendChild(input);
+
 
                     clickCount3++;
                 }
-                if (clickCount3==2) {
+                if (clickCount3 == 2) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button3");
                     button.style.display = "none";
@@ -400,7 +442,7 @@ Scripts
             function add4() {
                 if (clickCount4 < 2) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table4");
-                    table.style.display="block";
+                    table.style.display = "block";
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -411,6 +453,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "4" + labels[clickCount4]); 
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -418,11 +462,14 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","4"+labels[clickCount4]+"_marks")
                     newCell3.appendChild(input);
+
 
                     clickCount4++;
                 }
-                if (clickCount4==2) {
+                if (clickCount4 == 2) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button4");
                     button.style.display = "none";
@@ -431,7 +478,7 @@ Scripts
             function add5() {
                 if (clickCount5 < 2) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table5");
-                    table.style.display="block";
+                    table.style.display = "block";
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -442,6 +489,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "5" + labels[clickCount5]); 
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -449,11 +498,13 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","5"+labels[clickCount5]+"_marks")
                     newCell3.appendChild(input);
 
                     clickCount5++;
                 }
-                if (clickCount5==2) {
+                if (clickCount5 == 2) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button5");
                     button.style.display = "none";
@@ -462,7 +513,7 @@ Scripts
             function add6() {
                 if (clickCount6 < 2) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table6");
-                    table.style.display="block";
+                    table.style.display = "block";
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -473,6 +524,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "6" + labels[clickCount6]); 
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -480,11 +533,13 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","6"+labels[clickCount6]+"_marks")
                     newCell3.appendChild(input);
 
                     clickCount6++;
                 }
-                if (clickCount6==2) {
+                if (clickCount6 == 2) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button6");
                     button.style.display = "none";
@@ -493,7 +548,7 @@ Scripts
             function add7() {
                 if (clickCount7 < 2) { // only add a new row if clicks are less than 10
                     var table = document.getElementById("table7");
-                    table.style.display="block";
+                    table.style.display = "block";
                     var newRow = table.insertRow();
 
                     var newCell = newRow.insertCell();
@@ -504,6 +559,8 @@ Scripts
                     var input = document.createElement("input");
                     input.setAttribute("type", "text");
                     input.setAttribute("class", "ques");
+                    input.setAttribute("name", "7" + labels[clickCount7]); 
+                    input.required = true;
                     newCell2.appendChild(input);
 
                     var newCell3 = newRow.insertCell();
@@ -511,11 +568,13 @@ Scripts
                     input.setAttribute("type", "number");
                     input.setAttribute("max", "10");
                     input.setAttribute("min", "0");
+                    input.required = true;
+                    input.setAttribute("name","7"+labels[clickCount7]+"_marks")
                     newCell3.appendChild(input);
 
                     clickCount7++;
                 }
-                if (clickCount7==2) {
+                if (clickCount7 == 2) {
                     // disable the button after 10 clicks
                     var button = document.getElementById("add-button7");
                     button.style.display = "none";
@@ -524,7 +583,7 @@ Scripts
         </script>
 
         <script src={% static "vendor/global/global.min.js" %}></script>
-        <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js" %}></script>
+        <!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js" %}></script> -->
         <script src={% static "js/custom.min.js" %}></script>
         <script src={% static "js/dlabnav-init.js" %}></script>
 
