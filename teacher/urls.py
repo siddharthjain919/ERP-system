@@ -16,4 +16,8 @@ urlpatterns = [
     path('your-timetable/',views.teachertimetable,name="teacher_timetable"),
     path('forget/',views.forget,name='forget'),
     path('mail/',views.forgot_mail),
+    path('marks/',views.marks,name="marks"),
+    path('marks-studentlist',views.studentlist),
+    path('mark-marks',views.mark_marks),
+    path('add-paper',views.addPaper),
 ]

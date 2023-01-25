@@ -7,10 +7,8 @@ from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
 from erp.models import subjects
-from student.models import studentlogin
-from attendance.models import mark_attendance
+from student.models import studentlogin,student_marks
 from .models import teacherlogin
-from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from erp.settings import password,sender
@@ -100,7 +98,7 @@ def timetable(request):
 					lecture_input=request.POST.get(lecture_name)
 					# print(1,lecture_input,type(lecture_input))
 					previous=getattr(branch,lecture_name)
-					##print(lecture_input,previous)
+					# print(lecture_input,previous)
 					# print(2,previous,type(previous))
 					# print(lecture_input,previous,type(lecture_input),11111111111111)
 					if lecture_input=='':
@@ -120,6 +118,7 @@ def timetable(request):
 							messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.Name,lecture_name))
 						setattr(subject_teacher,"teach_"+lecture_name,branch)
 						subject_teacher.save()
+						# print(getattr(subject_teacher,"teach_"+lecture_name,55555555555555555555))
 						setattr(branch,lecture_name,branch_subjects.branch_sub_obj.get(subject_teacher=subject_teacher,branch_subject=subject_name,branch=branch))
 					elif previous:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
@@ -131,7 +130,7 @@ def timetable(request):
 		
 		teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
 		cc_branch=teacher.cc_of_branch
-		print(request.user,teacher,cc_branch)
+		# print(request.user,teacher,cc_branch)
 		branch_list=list(branch_detail.branch_obj.all())
 		if cc_branch:
 			branch_list.remove(cc_branch)
@@ -153,26 +152,12 @@ def subject(request):
 			return subject(request)
 		else:
 			current_branch=teacherlogin.teach_obj.get(teacherid=request.user.username).branch
-			subject_list=list(branch_subjects.branch_sub_obj.filter(branch=current_branch))
+			subject_list=list(branch_subjects.branch_sub_obj.all())
 			form=branch_subject_form()
 			return render(request,'subjects.html',context={"form":form,'branch_subject':subject_list})
 	else:
 		return redirect('/teacher/login')
 
-
-def attendance(request):
-	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		branch_list=list(branch_detail.branch_obj.all())
-		all_subjects=branch_subjects.branch_sub_obj.all()
-		student={}
-		for branch in branch_list:
-			temp=User.objects.filter(groups__name=branch)
-			for i in temp:
-				student[branch]=student.get(branch,[])+[studentlogin.stud_obj.get(studentid=i)]
-		print(student)
-		return render(request,"attendance.html",context={'student':student,"all_subjects":all_subjects,"branch_list":branch_list})
-	else:
-		return redirect('/teacher/login')
 
 def about(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
@@ -229,3 +214,52 @@ def forgot_mail(request):
 	except:
 		messages.error(request, 'No user with this email found.')
 		return forget(request)
+
+def marks(request):
+	from attendance.forms import mark_attendance_form
+	return render(request,"marks.html",{"form":mark_attendance_form})
+
+def studentlist(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=='POST':
+			curr_branch=branch_detail.branch_obj.get(name=request.POST.get('branch'),batch=request.POST.get('batch'),section=request.POST.get('section'))
+			curr_subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			student_list=list(studentlogin.stud_obj.filter(branch=curr_branch))
+			for i in range(len(student_list)):
+				try:
+					student_list[i]=student_marks.marks_obj.get(semester=curr_branch.semester,student=student_list[i])
+				except:
+					student_list[i]=student_marks.marks_obj.create(student=student_list[i],branch=curr_branch,semester=curr_branch.semester,subject=curr_subject)
+			return render(request,"studentlist.html",context={"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+		else:
+			return marks(request)
+	else:
+		return redirect('/teacher/login')
+
+def mark_marks(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=='POST':
+			subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			branch=request.POST.get("branch")
+			branch=User.objects.filter(groups__name=branch)
+			for i in branch:
+				student=studentlogin.stud_obj.get(studentid=i)
+				if str(student)+'_st1' in request.POST:
+					pass
+			return HttpResponseRedirect("/teacher/attendance/")
+		else:
+			return marks(request)
+	else:
+		return redirect('/teacher/login')
+def addPaper(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=="POST":
+			pass
+		else:
+			return render(request,'add-paper.html')
+	else:
+		return redirect('/teacher/login')
+
+
+
+

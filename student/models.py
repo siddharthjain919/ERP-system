@@ -127,23 +127,23 @@ class studentlogin(models.Model):
 			createuser(**kwargs)
 			kwargs["instance"].save()
 
-			receiver=kwargs["instance"].personalEmail
-			user=kwargs["instance"].student_name
-			user=user.title()
-			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
-			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-			message['Subject']="Regarding ERP password"
-			message['From']=sender
-			message['To']=receiver
-			try:
-				server=smtplib.SMTP('smtp.gmail.com:587')
-				server.ehlo()
-				server.starttls()
-				server.login(sender,password)
-				server.sendmail(sender,receiver,message.as_string())
-				server.quit()
-			except:
-				print("error")
+			# receiver=kwargs["instance"].personalEmail
+			# user=kwargs["instance"].student_name
+			# user=user.title()
+			# email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+			# message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
+			# message['Subject']="Regarding ERP password"
+			# message['From']=sender
+			# message['To']=receiver
+			# try:
+			# 	server=smtplib.SMTP('smtp.gmail.com:587')
+			# 	server.ehlo()
+			# 	server.starttls()
+			# 	server.login(sender,password)
+			# 	server.sendmail(sender,receiver,message.as_string())
+			# 	server.quit()
+			# except:
+			# 	print("error")
 		elif isinstance(kwargs["instance"],studentlogin):
 			u = User.objects.get(username=kwargs["instance"].studentid)
 			u.set_password(kwargs["instance"].studentpwd)
@@ -163,3 +163,23 @@ class studentlogin(models.Model):
 	post_delete.connect(deleteuser)
 
 	#transaction.on_commit(mail)
+
+class student_marks(models.Model):
+	student=models.ForeignKey(studentlogin,on_delete=models.CASCADE)
+	subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE)
+	semester=models.IntegerField(blank=True,null=True)
+	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
+	assignment1_marks=models.IntegerField(blank=True,null=True)
+	assignment2_marks=models.IntegerField(blank=True,null=True)
+	assignment3_marks=models.IntegerField(blank=True,null=True)
+	assignment4_marks=models.IntegerField(blank=True,null=True)
+	assignment5_marks=models.IntegerField(blank=True,null=True)
+	st1_marks=models.IntegerField(blank=True,null=True)
+	st2_marks=models.IntegerField(blank=True,null=True)
+	pue_marks=models.IntegerField(blank=True,null=True)
+	re_pue_marks=models.IntegerField(blank=True,null=True)
+
+	marks_obj=models.Manager()
+	def __str__(self) -> str:
+		return str(self.student)+"||"+str(self.branch)+"||"+str(self.subject)
+

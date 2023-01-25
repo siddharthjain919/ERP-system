@@ -17,6 +17,8 @@ class course(models.Model):
     post_save.connect(create_group)
     course_obj=models.Manager()
 
+    
+
 def topics(**kwargs):
     if isinstance(kwargs["instance"],subjects):
         subject=kwargs["instance"]
@@ -54,3 +56,47 @@ class subjects(models.Model):
     
     sub_obj=models.Manager()
     pre_save.connect(topics)
+
+class question_paper(models.Model):
+    subject=models.ForeignKey(subjects,on_delete=models.CASCADE)
+    session=models.IntegerField()
+    semester=models.IntegerField()
+
+    Ques1_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partB=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partC=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partD=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partE=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partF=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partG=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partH=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partI=models.CharField(null=True,blank=True,max_length=120)
+    Ques1_partJ=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues1=models.IntegerField()
+
+    Ques2_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques2_partB=models.CharField(null=True,blank=True,max_length=120)
+    Ques2_partC=models.CharField(null=True,blank=True,max_length=120)
+    Ques2_partD=models.CharField(null=True,blank=True,max_length=120)
+    Ques2_partE=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues2=models.IntegerField()
+
+    Ques3_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques3_partB=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues3=models.IntegerField()
+
+    Ques4_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques4_partB=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues4=models.IntegerField()
+
+    Ques5_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques5_partB=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues5=models.IntegerField()
+
+    Ques6_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques6_partB=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues6=models.IntegerField()
+
+    Ques7_partA=models.CharField(null=True,blank=True,max_length=120)
+    Ques7_partB=models.CharField(null=True,blank=True,max_length=120)
+    MarksQues7=models.IntegerField()

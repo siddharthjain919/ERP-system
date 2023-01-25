@@ -2,7 +2,7 @@
 <html lang="en">
 {% load static %}
 	<head>
-		<title>Attendance</title>
+		<title>Marks</title>
 		<!-- Favicon icon -->
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
@@ -25,12 +25,13 @@
 			padding: 6px 10px;
 			text-align: center;
 			display: inline-block;
-			font-size: 12px;
+			font-size: 15px;
 			cursor: pointer;
 			background-color: #e7e7e7; 
 			color: black;
 			float:right;
 			border-radius: 20px;
+			margin: 0 2px;
 			}
 			label{
 				float:center;
@@ -161,14 +162,25 @@
 						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="card" >
 								<div class="card-title">
-									<b>{% block title %} Attendance{% endblock %}</b>
-									<a href="/teacher/attendance/pastattendance"><button class="gray_button" >Previous</button></a>
+									<b>{% block title %}Marks{% endblock %}</b>
+									<a href="/teacher/mark-records"><button class="gray_button">Previous</button></a>
+									<a href="/teacher/add-paper"><button class="gray_button">Add Paper+</button></a>
+
 								</div><hr>
 								<div class="card-body">
 								{% block content %}
-								<form action="/teacher/attendance/studentlist" id="mark_attendance_form" method="POST">
+								<form action="/teacher/marks-studentlist" id="marks_form" method="POST">
 									{% csrf_token %}
-									{{ form.as_ul}}<br>
+									{{form.as_ul}}
+									<label>Exam-type:</label>
+									<select name="exam-type">
+										<option value="{{None}}">--------</option>
+										<option value="ST1">ST-1</option>
+										<option value="ST2">ST-2</option>
+										<option value="re-ST">re-ST</option>
+										<option value="PUE">PUE</option>
+										<option value="re-PUE">re-PUE</option>
+									</select><br>
 									<button type="submit" class="buttondesign">Mark</button>
 								</form>
 								</div>
@@ -177,7 +189,6 @@
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 			<!--**********************************
@@ -197,7 +208,7 @@
 				var batch = $(this).val();
 				var course=document.getElementById("id_course").value;
 				$.ajax({                                          // initialize an AJAX request
-					url: "branch",                                    // set the url of the request (= ajax/load-department-details/ )
+					url: "/teacher/attendance/branch",                                    // set the url of the request (= ajax/load-department-details/ )
 					data: { 'course': course,
 							'batch':batch
 				 		  },        // add the course  to the GET parameters
@@ -212,7 +223,7 @@
 				const branch=document.getElementById("id_branch").value;
 				const batch=document.getElementById("id_batch").value;
 				$.ajax({
-					url: "subject",
+					url: "/teacher/attendance/subject",
 					data: {'branch': branch,
 							'section':section,
 							'batch':batch

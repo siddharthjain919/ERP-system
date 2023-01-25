@@ -7,7 +7,7 @@ class branch_detailAdmin(admin.ModelAdmin):
     change_form_template = "change_form.html"
     def response_change(self, request, obj):
         if "endsem" in request.POST:
-            print("inside if",obj,type(obj))
+            # print("inside if",obj,type(obj))
             if obj.semester==8:
                 pass
             else:

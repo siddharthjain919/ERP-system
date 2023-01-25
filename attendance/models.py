@@ -11,6 +11,7 @@ class mark_attendance(models.Model):
     present=models.BooleanField("Present")
     lecture_number=models.IntegerField(validators=[MaxValueValidator(8),MinValueValidator(1)])
     semester=models.IntegerField(default=1,validators=[MaxValueValidator(8),MinValueValidator(1)],editable=False)
+    teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE)
     def __str__(self):
         return str(self.student)+":"+str(self.date)+":"+str(self.lecture_number)
     class Meta:

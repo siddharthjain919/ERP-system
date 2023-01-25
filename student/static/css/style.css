@@ -649,7 +649,8 @@ pre {
 
 .pre-scrollable {
   max-height: 340px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+ }
 
 .container,
 .container-fluid,
@@ -12539,8 +12540,10 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
       left: auto;
       right: 0; }
     [data-sidebar-style="modern"][data-layout="vertical"] .dlabnav .slimScrollDiv,
-    [data-sidebar-style="modern"][data-layout="vertical"] .dlabnav .dlabnav-scroll {
-      overflow: visible !important; }
+    [data-sidebar-style="compact"][data-layout="vertical"] .dlabnav .dlabnav-scroll {
+      overflow: auto !important;
+    
+     }
     [data-sidebar-style="modern"][data-layout="vertical"] .dlabnav .metismenu > li > a i {
       font-size: 20px; }
     [data-sidebar-style="modern"][data-layout="vertical"] .dlabnav .metismenu > li > ul {
@@ -13826,7 +13829,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   [data-sibebarbg="color_2"] .dlabnav .metismenu > li:hover > a,
   [data-sibebarbg="color_2"] .dlabnav .metismenu > li:focus > a,
   [data-sibebarbg="color_2"] .dlabnav .metismenu > li.mm-active > a {
-    background-color: #0c223a;
+    background-color: #00b2c2;
     color: #fff; }
   [data-sibebarbg="color_2"][data-theme-version="dark"] .dlabnav .metismenu > li.mm-active,
   [data-sibebarbg="color_2"] .dlabnav .metismenu > li.mm-active {
@@ -22624,7 +22627,7 @@ button {
   .card-body {
     padding: 1.25rem; }
   .card-title {
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 500;
     color: #454545;
     text-transform: capitalize;

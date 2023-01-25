@@ -120,7 +120,7 @@ class teacherlogin(models.Model):
 			receiver=kwargs["instance"].email
 			user=kwargs["instance"].Name
 			user=user.title()
-			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
+			email_body="Hello "+user+"\nYour details for MyGurukul portal at mygurukul.pythonanywhere.com are:\nID:"+kwargs["instance"].teacherid+"\nPassword:"+pwd+"\nThank you!"
 			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
 			message['Subject']="Regarding ERP password"
 			message['From']=sender

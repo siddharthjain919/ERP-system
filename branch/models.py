@@ -84,7 +84,7 @@ class branch_detail(models.Model):
 	branch_obj=models.Manager()
 
 	class Meta:
-		unique_together=[['name','batch']]
+		unique_together=[['name','batch','section']]
 
 	mon_lec1=models.ForeignKey(branch_subjects,on_delete=models.SET_NULL,related_name='mon_l1',default=None,null=True,blank=True)
 	mon_lec2=models.ForeignKey(branch_subjects,on_delete=models.SET_NULL,related_name='mon_l2',default=None,null=True,blank=True)
