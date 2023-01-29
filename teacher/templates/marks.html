@@ -173,13 +173,13 @@
 									{% csrf_token %}
 									{{form.as_ul}}
 									<label>Exam-type:</label>
-									<select name="exam-type">
-										<option value="{{None}}">--------</option>
+									<select name="exam-type" required !important>
+										<option value="">--------</option>
 										<option value="ST1">ST-1</option>
 										<option value="ST2">ST-2</option>
-										<option value="re-ST">re-ST</option>
+										<option value="reST">re-ST</option>
 										<option value="PUE">PUE</option>
-										<option value="re-PUE">re-PUE</option>
+										<option value="rePUE">re-PUE</option>
 									</select><br>
 									<button type="submit" class="buttondesign">Mark</button>
 								</form>

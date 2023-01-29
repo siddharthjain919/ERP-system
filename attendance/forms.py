@@ -9,17 +9,25 @@ class mark_attendance_form(forms.ModelForm):
     course=forms.ModelChoiceField(queryset=course.course_obj.all())
     batch=forms.IntegerField(max_value=int(datetime.now().year),min_value=int(datetime.now().year-4))
     branch=forms.ModelChoiceField(queryset=branch_detail.branch_obj.all())
-    CHOICES =(
+    SECTION_CHOICES =(
     (None,'------'),
     ("A", "A"),
     ("B", "B"),
     ("C", "C"),
     ("D", "D"),
     )
-    section=forms.ChoiceField(choices=CHOICES)
+    section=forms.ChoiceField(choices=SECTION_CHOICES)
+
+    group_choices=(
+        ("Both","Both"),
+        ("Batch1","Batch-1"),
+        ("Batch2","Batch-2")
+    )
+    group=forms.ChoiceField(choices=group_choices)
+
     class Meta:
         model=mark_attendance
-        fields=('course','batch','branch','section','subject')
+        fields=('course','batch','branch','section','subject','group')
 
         widgets={
             'course':forms.Select(attrs={'id':'course','class':'form-control'}),

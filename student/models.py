@@ -12,6 +12,8 @@ from django.contrib.auth.models import User,Group
 # Create your models here.
 from datetime import date
 
+from branch.models import branch_detail
+
 def formatting(**kwargs):
 	if isinstance(kwargs["instance"],studentlogin):
 		student=kwargs["instance"]
@@ -35,6 +37,22 @@ def createuser(**kwargs):
 		branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
 		course_group=Group.objects.get(name=str(kwargs["instance"].branch.course))
 		user.groups.add(course_group,branch_group)
+		all_users=list(User.objects.filter(groups__name=branch_group))
+		n=len(all_users)
+		if n>=kwargs["instance"].branch.total_strength:
+			batch1=Group.objects.get_or_create(name=str(kwargs["instance"].branch)+"_Batch1")[0]
+			batch2=Group.objects.get_or_create(name=str(kwargs["instance"].branch)+"_Batch2")[0]
+
+			for i in range(-(-n//2)):
+				all_users[i].groups.add(batch1)
+			for i in range(-(-n//2),n):
+				all_users[i].groups.add(batch2)
+			
+			branch=kwargs["instance"].branch
+			# batch1=branch_detail.branch_obj.get_or_create(name=str(branch)+"_Batch1",batch=branch.batch,course=branch.course,semester=branch.semester,)[0]
+
+
+
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],studentlogin):
 		try:
@@ -46,6 +64,7 @@ class studentlogin(models.Model):
 	studentid=models.CharField(max_length=20,primary_key=True)
 	student_name=models.CharField(max_length=40)
 	gender=models.CharField(choices=(('MALE','MALE'),("FEMALE","FEMALE"),("OTHERS","OTHERS")),max_length=50)
+	mobile=models.IntegerField(blank=True,null=True)
 	DOB=models.DateField()
 	DOA=models.DateField(default=timezone.now)
 	studentpwd=models.CharField(max_length=15,editable=False,validators=[
@@ -69,9 +88,8 @@ class studentlogin(models.Model):
 	# admissionUnder=models.CharField(max_length=30) #change
 	# status=models.CharField(max_length=30) #change
 	# sub_status=models.CharField(max_length=30) #change
-	# bloodGroup=models.CharField(max_length=3,help_text="In Format A+")
-	# mobile=models.IntegerField()
-	personalEmail=models.EmailField(max_length=30)
+	# bloodGroup=models.CharField(max_length=3,help_text="In Format A+")obile_Marks=models.IntegerField(null=True,blank=True)
+	personalEmail=models.EmailField(max_length=50)
 	# email=models.EmailField(max_length=60,editable=False,default=None)
 	# maritalStatus=models.CharField(max_length=10,choices=(
 	# 	("YES","YES"),
@@ -79,16 +97,16 @@ class studentlogin(models.Model):
 	# ))
 
 	# fatherName=models.CharField(max_length=50)
-	# fatherMobile=models.IntegerField()
+	# father_mobile=models.IntegerField(null=True,blank=True)
 	# fatherEmail=models.EmailField(max_length=30,null=True,blank=True)
 	# fatherProfession=models.CharField(max_length=30)
-	# fatherIncome=models.IntegerField()
+	# father_income=models.IntegerField(null=True,blank=True)
 
 	# motherName=models.CharField(max_length=50)
-	# motherMobile=models.IntegerField()
+	# mother_mobile=models.IntegerField(null=True,blank=True)
 	# motherEmail=models.EmailField(max_length=30,null=True,blank=True)
 	# motherProfession=models.CharField(max_length=30)
-	# motherIncome=models.IntegerField()
+	# mother_income=models.IntegerField(null=True,blank=True)
 
 	# permanentAddress=models.CharField(max_length=100)
 	# currAddress=models.CharField(max_length=100)
@@ -169,15 +187,208 @@ class student_marks(models.Model):
 	subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE)
 	semester=models.IntegerField(blank=True,null=True)
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
+
 	assignment1_marks=models.IntegerField(blank=True,null=True)
 	assignment2_marks=models.IntegerField(blank=True,null=True)
 	assignment3_marks=models.IntegerField(blank=True,null=True)
 	assignment4_marks=models.IntegerField(blank=True,null=True)
 	assignment5_marks=models.IntegerField(blank=True,null=True)
-	st1_marks=models.IntegerField(blank=True,null=True)
-	st2_marks=models.IntegerField(blank=True,null=True)
-	pue_marks=models.IntegerField(blank=True,null=True)
-	re_pue_marks=models.IntegerField(blank=True,null=True)
+
+
+	#for st1
+	ST1_Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques1_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_partE_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques2_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques3_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques3_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques4_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques4_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques5_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques5_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques6_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques6_Marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques7_partB_marks=models.IntegerField(null=True,blank=True)
+	ST1_Ques7_Marks=models.IntegerField(null=True,blank=True)
+
+	ST1_total_marks=models.IntegerField(null=True,blank=True)
+
+
+	# for st-2
+
+	ST2_Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques1_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_partE_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques2_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques3_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques3_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques4_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques4_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques5_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques5_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques6_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques6_Marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques7_partB_marks=models.IntegerField(null=True,blank=True)
+	ST2_Ques7_Marks=models.IntegerField(null=True,blank=True)
+
+	ST2_total_marks=models.IntegerField(null=True,blank=True)
+
+	# REST
+
+	REST_Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques1_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_partE_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques2_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques3_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques3_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques4_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques4_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques5_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques5_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques6_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques6_Marks=models.IntegerField(null=True,blank=True)
+	REST_Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques7_partB_marks=models.IntegerField(null=True,blank=True)
+	REST_Ques7_Marks=models.IntegerField(null=True,blank=True)
+
+	REST_total_marks=models.IntegerField(null=True,blank=True)
+
+
+	# PUE
+
+
+	PUE_Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques1_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_partE_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques2_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques3_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques3_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques4_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques4_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques5_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques5_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques6_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques6_Marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques7_partB_marks=models.IntegerField(null=True,blank=True)
+	PUE_Ques7_Marks=models.IntegerField(null=True,blank=True)
+
+	PUE_total_marks=models.IntegerField(null=True,blank=True)
+
+
+	# REPUE
+
+
+	REPUE_Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques1_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_partE_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques2_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques3_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques3_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques4_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques4_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques5_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques5_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques6_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques6_Marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques7_partB_marks=models.IntegerField(null=True,blank=True)
+	REPUE_Ques7_Marks=models.IntegerField(null=True,blank=True)
+
+	REPUE_total_marks=models.IntegerField(null=True,blank=True)
+
+
+
+
+
+
 
 	marks_obj=models.Manager()
 	def __str__(self) -> str:

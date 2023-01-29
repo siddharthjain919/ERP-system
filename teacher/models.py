@@ -8,6 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from django.contrib.auth.models import User
 from erp.settings import password,sender
+
 # Create your models here.
 def createuser(**kwargs):
 		fname=kwargs["instance"].Name
@@ -25,6 +26,7 @@ def createuser(**kwargs):
 		user.groups.add(user_group)
 		user.is_staff=True
 		user.save()
+
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],teacherlogin):
 		try:
@@ -38,6 +40,9 @@ class teacherlogin(models.Model):
 	teacherid=models.CharField(max_length=20,primary_key=True)
 	Name=models.CharField(max_length=40)
 	teacherpwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
+	blood_group=models.CharField(max_length=5)
+	gender=models.CharField(max_length=10)
+	address=models.CharField(max_length=50, blank=True, null=True)
 	# isactive=models.IntegerField(null=True,blank=True)
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE,null=True,blank=True)
 	cc_of_branch=models.ForeignKey("branch.branch_detail",null=True,blank=True,default=None,on_delete=models.CASCADE,related_name="Class_Coordinator")

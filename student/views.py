@@ -107,20 +107,24 @@ def attendance(request):
         return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total]})
     else:
         return render(request,'studentlogin.html')
+
 def timetable(request):
     if  request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
         user = studentlogin.stud_obj.get(studentid=request.user.username)
         return render(request,"stud_timetable.html",{"user":user})
     else:
         return render(request,'studentlogin.html')
+
 def subject(request):
     if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
         return render(request, 'dashboard.html')
     else:
         return render(request,'studentlogin.html')
+
 def about(request):
     if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
-        return render(request, 'dashboard.html')
+        user = studentlogin.stud_obj.get(studentid=request.user.username)
+        return render(request,"stud_about.html",{"user":user})
     else:
         return render(request,'studentlogin.html')
 
