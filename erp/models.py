@@ -3,7 +3,6 @@ from django.db.models.signals import post_save,pre_save
 from django.contrib.auth.models import Group
 def create_group(**kwargs):
     if kwargs["created"]  and (isinstance(kwargs["instance"],course)):
-        # name=kwargs["instance"]
         Group.objects.create(name=kwargs["instance"].name)
 class course(models.Model):
     name=models.CharField(max_length=20,primary_key=True)
@@ -28,7 +27,7 @@ def topics(**kwargs):
         kwargs["instance"].topics4={"topic_list":subject.to4.split(',')}
         kwargs["instance"].topics5={"topic_list":subject.to5.split(',')}
 class subjects(models.Model):
-    code=models.CharField(max_length=6,unique=True)
+    code=models.CharField(max_length=7,unique=True)
     subject_name=models.CharField(max_length=50,unique=True)
     course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
     CO_1=models.CharField(max_length=50)
@@ -72,31 +71,70 @@ class question_paper(models.Model):
     Ques1_partH=models.CharField(null=True,blank=True,max_length=120)
     Ques1_partI=models.CharField(null=True,blank=True,max_length=120)
     Ques1_partJ=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques1_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partB_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partC_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partD_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partE_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partF_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partG_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partH_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partI_marks=models.IntegerField(null=True,blank=True)
+    Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
     MarksQues1=models.IntegerField()
+
 
     Ques2_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques2_partB=models.CharField(null=True,blank=True,max_length=120)
     Ques2_partC=models.CharField(null=True,blank=True,max_length=120)
     Ques2_partD=models.CharField(null=True,blank=True,max_length=120)
     Ques2_partE=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques2_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques2_partB_marks=models.IntegerField(null=True,blank=True)
+    Ques2_partC_marks=models.IntegerField(null=True,blank=True)
+    Ques2_partD_marks=models.IntegerField(null=True,blank=True)
+    Ques2_partE_marks=models.IntegerField(null=True,blank=True)
     MarksQues2=models.IntegerField()
 
     Ques3_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques3_partB=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques3_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques3_partB_marks=models.IntegerField(null=True,blank=True)
     MarksQues3=models.IntegerField()
 
     Ques4_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques4_partB=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques4_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques4_partB_marks=models.IntegerField(null=True,blank=True)
     MarksQues4=models.IntegerField()
 
     Ques5_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques5_partB=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques5_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques5_partB_marks=models.IntegerField(null=True,blank=True)
     MarksQues5=models.IntegerField()
 
     Ques6_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques6_partB=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques6_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques6_partB_marks=models.IntegerField(null=True,blank=True)
     MarksQues6=models.IntegerField()
 
     Ques7_partA=models.CharField(null=True,blank=True,max_length=120)
     Ques7_partB=models.CharField(null=True,blank=True,max_length=120)
+
+    Ques7_partA_marks=models.IntegerField(null=True,blank=True)
+    Ques7_partB_marks=models.IntegerField(null=True,blank=True)
     MarksQues7=models.IntegerField()
+
+    total_marks=models.IntegerField(null=True,blank=True)
+
+    question_paper_obj=models.Manager()
+    def __str__(self):
+        return str(self.subject)+str(self.session)

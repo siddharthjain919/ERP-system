@@ -190,8 +190,8 @@ Content body start
                               </label>
                               <input type="File" name="fileToUpload" id="fileToUpload">
                             </form>
-                            {{user.Name}}
-                            {{user.email}}
+                            {{user.student_name}} 
+                            {{user.personalEmail}}
                         </div>
                     </div>
                     <div class="col-md-5 border-right">
@@ -203,16 +203,19 @@ Content body start
                             <div class="row mt-3">
                                 <div class="col-md-12">
                                     <label class="labels">Mobile No :</label>
-                                    {{user.Mobile_No}}
+                                    {{user.mobile}}
                                 </div></br>
                                 <div class="col-md-12">
-                                    <label class="labels">Email ID :</label>
+                                    <label class="labels">Personal Email ID :</label>
+                                    {{user.personalEmail}}
+                                </div></br>
+                                <div class="col-md-12">
+                                    <label class="labels">College Email ID :</label>
                                     {{user.email}}
                                 </div></br>
-                                
                                 <div class="col-md-12">
                                     <label class="labels">Blood_Group :</label>
-                                    {{user.blood_group}}
+                                    {{user.bloodGroup}}
                                 </div></br>
                                 <div class="col-md-12">
                                     <label class="labels">Gender :</label>
@@ -220,7 +223,7 @@ Content body start
                                 </div></br>
                                 <div class="col-md-12">
                                     <label class="labels">Address :</label>
-                                    {{user.address}}
+                                    {{user.permanentAddress}}
                                 </div></br>
                             </div>
                             

@@ -42,12 +42,16 @@ def studentlist(request):
         if request.method=='POST':
             curr_branch=branch_detail.branch_obj.get(name=request.POST.get('branch'),batch=request.POST.get('batch'),section=request.POST.get('section'))
             curr_subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
-            student_list=list(User.objects.filter(groups__name=curr_branch))
+            curr_group=request.POST.get("group")
+            if curr_group=="Both":
+                student_list=list(User.objects.filter(groups__name=curr_branch))
+            else:
+                student_list=list(User.objects.filter(groups__name=str(curr_branch)+"_"+curr_group))
             sos=[]
             for i in "12345":
                 so=i+getattr(curr_subject,"CO_"+i)
                 sos.append(so)
-            return render(request,"attendancelist.html",context={"sos":sos,"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+            return render(request,"attendancelist.html",context={"sos":sos,"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject,"group":curr_group})
         else:
             return attendance_form(request)
     else:
@@ -61,8 +65,17 @@ def mark(request):
             date=request.POST.get('date')
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
-            branch=User.objects.filter(groups__name=branch)
+            group=request.POST.get("group")
+            if group=="Both":
+                branch=User.objects.filter(groups__name=branch)
+            else:
+                branch=User.objects.filter(groups__name=str(branch)+"_"+group)
             teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+            branchSubject=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
+            objective=request.POST.get("so")
+            setattr(branchSubject,"NOLT"+str(objective),getattr(branchSubject,"NOLT"+str(objective))+1)
+            branchSubject.save()
+            # print(branchSubject.NOLT2)
             for i in branch:
                 student=studentlogin.stud_obj.get(studentid=i)
                 if str(i)+'_exempt' in request.POST:
@@ -70,7 +83,7 @@ def mark(request):
                 elif str(i) in request.POST:
                     mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
                 else:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,tecaher=teacher)
+                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
             return HttpResponseRedirect("/teacher/attendance/")
         else:
             return attendance_form(request)

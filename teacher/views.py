@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 import smtplib,secrets,string
 from branch.models import branch_detail, branch_subjects
-from erp.models import subjects
+from erp.models import subjects,question_paper
 from student.models import studentlogin,student_marks
 from .models import teacherlogin
 from email.mime.multipart import MIMEMultipart
@@ -43,7 +43,7 @@ def login(request):
 				return redirect('/')
 		except Exception as identifier:
 			messages.error(request, 'Invalid Credentials')
-			print("******\n",identifier,1,"\n******",39)
+			print("******\n",identifier,1,"\n******",46)
 			return redirect('/teacher')
 	
 	else:
@@ -161,7 +161,8 @@ def subject(request):
 
 def about(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		return render(request,"about.html",{})
+		user = teacherlogin.teach_obj.get(teacherid=request.user.username)
+		return render(request,"about.html",{"user":user})
 	else:
 		return redirect('/teacher/login')
 def teachertimetable(request):
@@ -225,12 +226,13 @@ def studentlist(request):
 			curr_branch=branch_detail.branch_obj.get(name=request.POST.get('branch'),batch=request.POST.get('batch'),section=request.POST.get('section'))
 			curr_subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
 			student_list=list(studentlogin.stud_obj.filter(branch=curr_branch))
+			curr_exam_type=request.POST.get('exam-type')
 			for i in range(len(student_list)):
 				try:
 					student_list[i]=student_marks.marks_obj.get(semester=curr_branch.semester,student=student_list[i])
 				except:
 					student_list[i]=student_marks.marks_obj.create(student=student_list[i],branch=curr_branch,semester=curr_branch.semester,subject=curr_subject)
-			return render(request,"studentlist.html",context={"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject})
+			return render(request,"studentlist.html",context={"student_list":student_list,"curr_branch":curr_branch,"curr_subject":curr_subject,'exam_type':curr_exam_type})
 		else:
 			return marks(request)
 	else:
@@ -242,21 +244,73 @@ def mark_marks(request):
 			subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
 			branch=request.POST.get("branch")
 			branch=User.objects.filter(groups__name=branch)
+			exam_type=request.POST.get('exam-type')
+			exam_type=exam_type.replace('-','')
+			exam_type=exam_type.upper()
+			print(dict(request.POST.items()))
 			for i in branch:
+				total_marks=0
 				student=studentlogin.stud_obj.get(studentid=i)
-				if str(student)+'_st1' in request.POST:
-					pass
-			return HttpResponseRedirect("/teacher/attendance/")
+				student_marks_obj=student_marks.marks_obj.get_or_create(student=student,subject=subject,branch=student.branch)[0]
+				for ques in "1234567":
+					for part in "abcdefghij":
+						try:
+							
+							temp=int(request.POST.get(str(student)+'-'+ques+part))
+							setattr(student_marks_obj,exam_type+'_Ques'+ques+'_part'+part.upper()+'_marks',temp)
+							# print(temp)
+						except Exception as e:
+							# print(e)
+							setattr(student_marks_obj,exam_type+'_Ques'+ques+'_part'+part.upper()+'_marks',0)
+							
+					try:
+						temp2=int(request.POST.get(str(student)+'-'+ques))
+					except Exception as e:
+						print(e,2)
+						temp2=0
+					total_marks+=temp2
+					setattr(student_marks_obj,exam_type+'_Ques'+ques+"_Marks",temp2)
+				setattr(student_marks_obj,exam_type+"_total_marks",total_marks)
+				student_marks_obj.save()
+
+			return HttpResponseRedirect("/teacher/marks/")
 		else:
 			return marks(request)
 	else:
 		return redirect('/teacher/login')
 def addPaper(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		subject_list=list(subjects.sub_obj.all())
 		if request.method=="POST":
-			pass
+			subject=request.POST.get('subject')
+			subject=subjects.sub_obj.get(subject_name=subject)
+
+			ques_paper=question_paper()
+			ques_paper.subject=subject
+			ques_paper.semester=request.POST.get('semester')
+			ques_paper.session=request.POST.get('session')
+			total_sum=0
+			for ques in "1234567":
+				if 'marksques'+ques in request.POST:
+					ques_marks_sum=int(request.POST.get('marksques'+ques))
+				else:
+					ques_marks_sum=0
+				for part in 'ABCDEFGHIJ':
+					try:
+						temp=request.POST.get(ques+part.lower()+'.')
+						setattr(ques_paper,"Ques"+ques+"_part"+part,temp)
+						temp=int(request.POST.get(ques+part.lower()+'._marks'))
+						setattr(ques_paper,"Ques"+ques+'_part'+part+"_marks",temp)
+					except Exception as e:
+						break
+				setattr(ques_paper,"MarksQues"+ques,ques_marks_sum)
+				total_sum+=ques_marks_sum
+			setattr(ques_paper,"total_marks",total_sum)
+			ques_paper.save()
+			return HttpResponseRedirect("/teacher/marks")
+			
 		else:
-			return render(request,'add-paper.html')
+			return render(request,'add-paper.html',{"subjects":subject_list})
 	else:
 		return redirect('/teacher/login')
 

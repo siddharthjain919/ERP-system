@@ -7,8 +7,9 @@ from sqlalchemy import create_engine
 from .resources import StudentloginResource
 
 @admin.register(studentlogin)
-class StudentloginAdmin(ImportExportModelAdmin):
-    resource_class = StudentloginResource
+class StudentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+	resource_class = StudentloginResource
+	list_display=("studentid","studentpwd")
 
 '''class Command(BaseCommand):
 	help="For adding data to excel file"
