@@ -8,43 +8,43 @@
         <link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
         <link rel="stylesheet" href={% static 'css/style.css' %}>
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
         <style>
-        .profile-pic {
-            border-radius: 50%;
-            height: 150px;
-            width: 150px;
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: multiply;
-            vertical-align: middle;
-            text-align: center;
-            color: transparent;
-            transition: all .3s ease;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        .profile-pic:hover {
-            background-color: rgba(0,0,0,.5);
-            z-index: 10000;
-            color: #fff;
-            transition: all .3s ease;
-            text-decoration: none;
-        }
-        
-        .profile-pic span {
-            display: inline-block;
-            padding-top: 4.5em;
-            padding-bottom: 4.5em;
-        }
-        
-        form input[type="file"] {
-                  display: none;
-                  cursor: pointer;
-         }
-         </style>
+            .profile-pic {
+                border-radius: 50%;
+                height: 150px;
+                width: 150px;
+                background-size: cover;
+                background-position: center;
+                background-blend-mode: multiply;
+                vertical-align: middle;
+                text-align: center;
+                color: transparent;
+                transition: all .3s ease;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .profile-pic:hover {
+                background-color: rgba(0, 0, 0, .5);
+                z-index: 10000;
+                color: #fff;
+                transition: all .3s ease;
+                text-decoration: none;
+            }
+
+            .profile-pic span {
+                display: inline-block;
+                padding-top: 4.5em;
+                padding-bottom: 4.5em;
+            }
+
+            form input[type="file"] {
+                display: none;
+                cursor: pointer;
+            }
+        </style>
     </head>
 
     <body>
@@ -178,41 +178,42 @@ Sidebar end
             <!--**********************************
 Content body start
 ***********************************-->
-            <div class="container rounded bg-white mt-5 mb-5">
-                <div class="row">
-                    <div class="col-md-3 border-right">
-                        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                            <form action="upload.php" method="post" enctype="multipart/form-data">
-                                <label for="fileToUpload">
-                              <div class="profile-pic" style="background-image: url('https://randomuser.me/api/portraits/med/men/65.jpg')">
-                                  <span><i class="fa fa-edit" ></i></span>
-                              </div>
-                              </label>
-                              <input type="File" name="fileToUpload" id="fileToUpload">
-                            </form>
-                            {{user.Name}}
-                            {{user.email}}
-                        </div>
-                    </div>
-                    <div class="col-md-5 border-right">
-                        <div class="p-3 py-5">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="text-right">Profile :</h3>
-                            </div>
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
 
-                            <div class="row mt-3">
+        <div class="row">
+            <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">About</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4" align="center" style="border-right: 5px solid #ccc; padding: 20px;">
+                                <form action="upload.php" method="post" enctype="multipart/form-data">
+                                    <label for="fileToUpload">
+                                  <div class="profile-pic" style="background-image: url('https://randomuser.me/api/portraits/med/men/65.jpg')">
+                                      <span><i class="fa fa-edit" ></i></span>
+                                  </div>
+                                  </label>
+                                  <input type="File" name="fileToUpload" id="fileToUpload">
+                                </form>
+                                {{user.Name}} <br>
+                                {{user.email}}
+                            </div>
+                            <div class="col-md-4" align="left" style="border-right: 5px solid #ccc; padding: 20px;">
                                 <div class="col-md-12">
                                     <label class="labels">Mobile No :</label>
-                                    {{user.Mobile_No}}
+                                    {{user.mobile}}
                                 </div></br>
                                 <div class="col-md-12">
-                                    <label class="labels">Email ID :</label>
+                                    <label class="labels">Personal Email ID :</label>
                                     {{user.email}}
                                 </div></br>
-                                
                                 <div class="col-md-12">
                                     <label class="labels">Blood_Group :</label>
-                                    {{user.blood_group}}
+                                    {{user.bloodGroup}}
                                 </div></br>
                                 <div class="col-md-12">
                                     <label class="labels">Gender :</label>
@@ -220,34 +221,35 @@ Content body start
                                 </div></br>
                                 <div class="col-md-12">
                                     <label class="labels">Address :</label>
-                                    {{user.address}}
+                                    {{user.permanentAddress}}
                                 </div></br>
                             </div>
-                            
-                            <div class="mt-5 text-center">
-                                <button class="btn btn-primary profile-button" type="button">Save Profile</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3 py-5">
-                            <div class="d-flex justify-content-between align-items-center experience">
-                                <span>Edit Experience</span>
-                                <span class="border px-3 p-1 add-experience"><i
-                                        class="fa fa-plus"></i>&nbsp;Experience</span>
-                            </div><br>
-                            <div class="col-md-12">
-                                <label class="labels">Additional Details</label>
-                                <input type="text" class="form-control" placeholder="additional details" value="">
-                            </div> <br>
-                            <div class="col-md-12">
-                                <label class="labels">Additional Details</label>
-                                <input type="text" class="form-control" placeholder="additional details" value="">
+                            <div class="col-md-4" style="padding: 30px;">
+                                
+                                    <div class="d-flex justify-content-between align-items-center experience">
+                                        <span>Edit Experience</span>
+                                        <span class="border px-3 p-1 add-experience"><i
+                                                class="fa fa-plus"></i>&nbsp;Experience</span>
+                                    </div><br>
+                                    <div class="col-md-12">
+                                        <label class="labels">Additional Details</label>
+                                        <input type="text" class="form-control" placeholder="additional details" value="">
+                                    </div> <br>
+                                    <div class="col-md-12">
+                                        <label class="labels">Additional Details</label>
+                                        <input type="text" class="form-control" placeholder="additional details" value="">
+                                    </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+    </div>
+</div>
+
         </div>
 
 

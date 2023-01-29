@@ -41,7 +41,7 @@ class teacherlogin(models.Model):
 	Name=models.CharField(max_length=40)
 	teacherpwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
 	blood_group=models.CharField(max_length=5)
-	gender=models.CharField(max_length=10)
+	gender=models.CharField(choices=(('MALE','MALE'),("FEMALE","FEMALE"),("OTHERS","OTHERS")),max_length=50)
 	address=models.CharField(max_length=50, blank=True, null=True)
 	# isactive=models.IntegerField(null=True,blank=True)
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE,null=True,blank=True)
