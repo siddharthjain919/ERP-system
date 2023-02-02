@@ -11,6 +11,7 @@ def create_branch_group(**kwargs):
 def update_teacher_timetable(**kwargs):
 	if isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
+		print(14)
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
 				lecture_name=i+'_lec'+str(j)
@@ -18,10 +19,12 @@ def update_teacher_timetable(**kwargs):
 				lecture_details=getattr(branch,lecture_name)
 				#holds the value stored in the database
 				try:
-					previous=getattr(branch_detail.branch_obj.get(name=branch.name),lecture_name)
-				except:
+					previous=getattr(branch_detail.branch_obj.get(name=branch.name,section=branch.section,batch=branch.batch),lecture_name)
+				except Exception as e:
 					previous=None
+					
 				if lecture_details:
+					
 					teacher_slot=getattr(lecture_details.subject_teacher,"teach_"+lecture_name)
 					if teacher_slot and teacher_slot!=branch:
 						raise Exception(lecture_details.subject_teacher.Name,"already occupied at",lecture_name)
@@ -32,6 +35,7 @@ def update_teacher_timetable(**kwargs):
 					setattr(lecture_details.subject_teacher,"teach_"+lecture_name,branch)
 					lecture_details.subject_teacher.save()
 				elif previous:
+					print("cleared",branch,"from",previous.subject_teacher,"at slot",lecture_name)
 					setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 					previous.subject_teacher.save()
 
