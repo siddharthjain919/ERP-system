@@ -25,7 +25,7 @@ class StudentloginResource(resources.ModelResource):
     branch = fields.Field(column_name='branch', attribute='branch', widget=CustomForeignKeyWidget(branch_detail))
     class Meta:
         model = studentlogin
-        fields = ('studentid', 'student_name', 'gender', 'DOB', 'DOA', 'course', 'branch','personalEmail')
+        fields = ('studentid', 'student_name', 'gender', 'DOB', 'DOA', 'course', 'branch','personalEmail','section')
         import_id_fields = ('studentid',)
         skip_unchanged = True
         report_skipped = False
@@ -37,6 +37,7 @@ class StudentloginResource(resources.ModelResource):
         
         course_name = row.get('course')
         branch_name = row.get('branch')
+        section=row.get('section')
         # print(branch_name)
         
         dob_string = row["DOB"]
@@ -49,7 +50,7 @@ class StudentloginResource(resources.ModelResource):
 
         try:
             row['course'] = course.course_obj.get(name=course_name)
-            row['branch'] = branch_detail.branch_obj.get(name=branch_name,section='A').pk
+            row['branch'] = branch_detail.branch_obj.get(name=branch_name,section=section).pk
         except :
             kwargs["result"].append_row_error('Invalid details', row, course_name)
 

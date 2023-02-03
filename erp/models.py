@@ -27,7 +27,7 @@ def topics(**kwargs):
         kwargs["instance"].topics4={"topic_list":subject.to4.split(',')}
         kwargs["instance"].topics5={"topic_list":subject.to5.split(',')}
 class subjects(models.Model):
-    code=models.CharField(max_length=7,unique=True)
+    code=models.CharField(max_length=12,unique=True)
     subject_name=models.CharField(max_length=50,unique=True)
     course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
     CO_1=models.CharField(max_length=50)

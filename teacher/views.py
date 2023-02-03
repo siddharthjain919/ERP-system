@@ -12,6 +12,7 @@ from .models import teacherlogin
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from erp.settings import password,sender
+import datetime
 
 
 branch=None
@@ -19,13 +20,42 @@ branch=None
 
 def index(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-		return render(request, 'dash1.html', {})
+
+		teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+		subject_list=list(branch_subjects.branch_sub_obj.filter(subject_teacher=teacher))
+
+		lectures=[]
+		today = datetime.date.today()
+		today=today.strftime("%A").lower()[:-3]
+		current_time = datetime.datetime.now().time()
+		current_time=int(current_time.hour)*60+int(current_time.minute)
+		# current_time=550
+		if current_time>940:
+			lectures.append("Free for the day")
+		else:
+			if current_time>=840:
+				current_time-=60
+			elif current_time>=640:
+				current_time-=10
+			current_time-=530
+			n=current_time//50+1
+			current_lecture=getattr(teacher,"teach_"+today+"_lec"+str(n))
+			print(type(current_lecture))
+			if current_lecture:
+				lectures.append("In "+str(current_lecture)+" now.")
+			for i in range(n+1,9):
+				temp=getattr(teacher,"teach_"+today+"_lec"+str(i))
+				if temp:
+					lectures.append("In "+str(temp)+" in lecture "+str(i)+'.')
+		print(lectures)
+
+		return render(request, 'dash1.html', {"subject_list":subject_list,"lectures":lectures})
 	else:
 		return render(request,'login.html')
 
 def login(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		return render(request, 'dash1.html', {})
+		return index(request)
 	elif request.method == 'POST':
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
@@ -35,7 +65,7 @@ def login(request):
 			user2 = authenticate(request, username=username, password=password)
 			if user is not None:
 				auth_login(request,user2)
-				return render(request, 'dash1.html', {})
+				return index(request)
 			else:
 				messages.error(request, 'Invalid Credentials')
 				print("Someone tried to login and failed.")
@@ -51,7 +81,7 @@ def login(request):
 
 def coordinatorlogin(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		return render(request, 'dash1.html', {})
+		return index(request)
 	elif request.method == 'POST':
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
@@ -65,7 +95,7 @@ def coordinatorlogin(request):
 				branch=branch[0].cc_of_branch
 				if not branch:
 					return redirect('/teacher')
-				return render(request, 'dash1.html', {})
+				return index(request)
 			else:
 				print("Someone tried to login and failed.")
 				messages.error(request, 'Invalid Credentials')

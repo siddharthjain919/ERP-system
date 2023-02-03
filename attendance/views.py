@@ -24,7 +24,11 @@ def load_branch_details(request):
         curr_course=course.course_obj.get(name=request.GET.get('course'))
         curr_batch=request.GET.get('batch')
         branches=list(branch_detail.branch_obj.filter(course=curr_course,batch=curr_batch))
-        return render(request,'load_branch_dropdown_list.html',{'branches':branches})
+        unique_branch=[]
+        for i in branches:
+            if i.name not in unique_branch:
+                unique_branch.append(i.name)
+        return render(request,'load_branch_dropdown_list.html',{'branches':unique_branch})
     else:
         return redirect('/teacher/login')
 
