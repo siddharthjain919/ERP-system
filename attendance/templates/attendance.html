@@ -39,6 +39,7 @@
 	</head>
 
 	<body>
+
 		<div id="main-wrapper">
 			<div class="nav-header">
 				<div class="brand-logo">
@@ -155,6 +156,7 @@
 				</div>
 			</div>
 			<div class="content-body">
+				
 				<!-- row -->
 				<div class="container-fluid">
 					<div class="row">
@@ -191,6 +193,14 @@
 		<!--**********************************
 	Main wrapper end
 	***********************************-->
+		{% if messages %}
+			<script>
+				{% for message in messages %}
+					alert("{{ message }}");
+				{% endfor %}
+			</script>
+		{% endif %}
+
 		<script>
 			$(document).ready(function(){
 			$("#id_batch").change(function () {

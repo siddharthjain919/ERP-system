@@ -23,16 +23,15 @@ def index(request):
 
 		teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
 		subject_list=list(branch_subjects.branch_sub_obj.filter(subject_teacher=teacher))
-
+		
 		lectures=[]
 		today = datetime.date.today()
 		today=today.strftime("%A").lower()[:-3]
 		current_time = datetime.datetime.now().time()
 		current_time=int(current_time.hour)*60+int(current_time.minute)
 		# current_time=550
-		if current_time>940:
-			lectures.append("Free for the day")
-		else:
+		emoji = "\U0001F610"
+		if current_time<940 and today!='sun':
 			if current_time>=840:
 				current_time-=60
 			elif current_time>=640:
@@ -47,9 +46,12 @@ def index(request):
 				temp=getattr(teacher,"teach_"+today+"_lec"+str(i))
 				if temp:
 					lectures.append("In "+str(temp)+" in lecture "+str(i)+'.')
+		if not len(lectures):
+			emoji = "\U0001F63B"
+			lectures.append("Free for the day")
 		print(lectures)
 
-		return render(request, 'dash1.html', {"subject_list":subject_list,"lectures":lectures})
+		return render(request, 'dash1.html', {"subject_list":subject_list,"lectures":lectures,"emoji":emoji})
 	else:
 		return render(request,'login.html')
 
