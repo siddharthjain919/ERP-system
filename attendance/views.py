@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,HttpResponseRedirect
 from .models import mark_attendance
 from .forms import mark_attendance_form
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime,timedelta
 # from django.urls import reverse
 from django.contrib import messages
 from erp.models import *
@@ -65,7 +65,7 @@ def mark(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         if request.method=='POST':
             subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
-            lecture_number=request.POST.get("lecture_no")
+            lecture_list=request.POST.getlist("lecture_no")
             date=request.POST.get('date')
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
@@ -80,14 +80,29 @@ def mark(request):
             setattr(branchSubject,"NOLT"+str(objective),getattr(branchSubject,"NOLT"+str(objective))+1)
             branchSubject.save()
             # print(branchSubject.NOLT2)
-            for i in branch:
-                student=studentlogin.stud_obj.get(studentid=i)
-                if str(i)+'_exempt' in request.POST:
-                    continue
-                elif str(i) in request.POST:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
+            error=0
+            for lecture_number in lecture_list:
+                
+                for i in branch:
+                    student=studentlogin.stud_obj.get(studentid=i)
+                    previous_check=mark_attendance.attend_obj.filter(date=date,lecture_number=lecture_number,semester=student.branch.semester)
+                    if len(previous_check):
+                        messages.info(request,"Attendance already exists for lecture "+lecture_number)
+                        
+                        error+=1
+                        break 
                 else:
-                    mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
+                    lecture_number=int(lecture_number)
+                    messages.success(request,"Attendance marked for lecture "+str(lecture_number)+" successfully.")
+                    for i in branch:
+                        student=studentlogin.stud_obj.get(studentid=i)
+                        previous_check=mark_attendance.attend_obj.filter(date=date,lecture_number=lecture_number,semester=student.branch.semester)
+                        if str(i)+'_exempt' in request.POST:
+                            continue
+                        elif str(i) in request.POST:
+                            mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
+                        else:
+                            mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
             return HttpResponseRedirect("/teacher/attendance/")
         else:
             return attendance_form(request)
@@ -96,15 +111,20 @@ def mark(request):
 
 def pastattendance(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+
         branch=request.GET.get('branch')
-        print(branch,type(branch))
         semester=request.GET.get('semester')
-        date=request.GET.get('date')
+        date_from=request.GET.get('date_from')
+        date_to=request.GET.get('date_to')
         session=request.GET.get('session')
         studentid=request.GET.get('studentid')
+
         teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
         print(teacher,type(teacher))
+
         branches=branch_detail.branch_obj.all()
+
+        
         query=Q()
         if studentid:
             try:
@@ -118,8 +138,17 @@ def pastattendance(request):
                 return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
         if semester:
             query&=Q(semester=semester)
-        if date:
-            query&=Q(date=date)
+        if date_from and date_to and date_from<=date_to:
+            date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+            date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+            step=timedelta(days=1)
+            dateQ=Q()
+            while date_from<=date_to:
+                dateQ|=Q(date=date_from)
+                date_from+=step
+            if dateQ:
+                query&=dateQ
+
         if session:
             query&=Q(session=session)
         if branch and branch!='None':
@@ -140,7 +169,7 @@ def pastattendance(request):
 
         elif query:
             print(query)
-            query&=Q(tecaher=teacher)
+            query&=Q(teacher=teacher)
             attendancelist=list(mark_attendance.attend_obj.filter(query))
             return render(request,"load_studentlist.html",{"branches":branches,"attendancelist":attendancelist})
         else:

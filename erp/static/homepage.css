@@ -174,8 +174,8 @@ html {
 }
 
 .logo-img {
-    margin-top: 10px;
-    margin-bottom: 150px;
+    margin-top: 20px;
+    /* margin-bottom: 25px; */
     max-width: 100%;
     align-items: center;
 }
