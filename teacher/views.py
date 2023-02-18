@@ -14,9 +14,7 @@ from email.mime.text import MIMEText
 from erp.settings import password,sender
 import datetime
 
-
 branch=None
-
 
 def index(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
@@ -27,6 +25,8 @@ def index(request):
 		lectures=[]
 		today = datetime.date.today()
 		today=today.strftime("%A").lower()[:-3]
+		if today=="wednes" or today=="satur":
+			today=today[:3]
 		current_time = datetime.datetime.now().time()
 		current_time=int(current_time.hour)*60+int(current_time.minute)
 		# current_time=550
@@ -38,10 +38,12 @@ def index(request):
 				current_time-=10
 			current_time-=530
 			n=current_time//50+1
-			current_lecture=getattr(teacher,"teach_"+today+"_lec"+str(n))
-			print(type(current_lecture))
-			if current_lecture:
-				lectures.append("In "+str(current_lecture)+" now.")
+			if n>0 and n<9:
+				current_lecture=getattr(teacher,"teach_"+today+"_lec"+str(n))
+				print(type(current_lecture))
+				if current_lecture:
+					lectures.append("In "+str(current_lecture)+" now.")
+			n=max(0,n)
 			for i in range(n+1,9):
 				temp=getattr(teacher,"teach_"+today+"_lec"+str(i))
 				if temp:
@@ -190,7 +192,6 @@ def subject(request):
 	else:
 		return redirect('/teacher/login')
 
-
 def about(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		user = teacherlogin.teach_obj.get(teacherid=request.user.username)
@@ -204,10 +205,8 @@ def teachertimetable(request):
 	else:
 		return redirect('/teacher/login')
 
-
 def forget(request):
 	return render(request,'forget-password.html')
-
 
 def forgot_mail(request):
 	try:
@@ -346,6 +345,80 @@ def addPaper(request):
 	else:
 		return redirect('/teacher/login')
 
+def lds(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+		subject_list=list(branch_subjects.branch_sub_obj.filter(subject_teacher=teacher))
+		try:
+			subject=request.GET.get('subject')
+			branch=request.GET.get('branch')
+			
+			if subject and branch:
+				return render(request,"ldsform.html",{'subject':subject,'branch':branch,"n":list(range(1,76))})
+				subject=subjects.sub_obj.get(subject_name=subject)
+				topics1=subject.topics1["topic_list"]
+				topics2=subject.topics2["topic_list"]
+				topics3=subject.topics3["topic_list"]
+				topics4=subject.topics4["topic_list"]
+				topics5=subject.topics5["topic_list"]
+				
+				name=branch[0].split('(')
+				section=name[1][0]
+				name=name[0]
+				batch=int(branch[1])
+				branch=branch_detail.branch_obj.get(name=name,section=section,batch=batch)
+
+				subject=branch_subjects.branch_sub_obj.get(subject=subject,teacher=teacher,branch=branch)
+		except Exception as e:
+			pass
+		return render(request,'lds.html',{"subject_list":subject_list})
+	else:
+		return redirect('/teacher/login')
+	
+def ldsform(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		if request.method=='POST':
+			subject=request.POST.get('subject')
+			subject=subjects.sub_obj.get(subject_name=subject)
+			teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+			subject=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
+			for i in range(75):
+				i=str(i)
+				dateplan=request.POST.get('dateplan'+i)
+				if not dateplan:
+					continue
+				dateplan=datetime.datetime.strptime(dateplan,"%Y-%m-%d").date()
+				
+				unit=int(request.POST.get('unit'+i))
+				topics=request.POST.getlist('topics'+i)
+				data={
+					"date":dateplan,
+					"unit":unit,
+					"topics":topics,
+				}
+				setattr(subject,"lecture_"+i,data)
+				print(getattr(subject,"lecture_"+i))
+		return HttpResponseRedirect('/teacher/lds')
+	else:
+		return redirect('/teacher/login')
 
 
+# def topics(request):
+# 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+# 		subject=request.GET.get('subject')
+# 		unit=request.GET.get('unit')
 
+# 	else:
+# 		return redirect('/teacher/login')
+
+def load_topics(request):
+    if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+        so=request.GET.get('unit')
+        subject=request.GET.get('subject')
+        print(subject,so)
+        subject=subjects.sub_obj.get(subject_name=subject)
+        topics_list=getattr(subject,"topics"+so)["topic_list"]
+        
+        return render(request,'load_topics.html',{"topics_list":topics_list})
+    else:
+        return redirect('/teacher/login')

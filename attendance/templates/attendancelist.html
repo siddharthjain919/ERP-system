@@ -8,12 +8,13 @@
 		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
 		<link rel="stylesheet" href={% static 'css/style.css' %}>
 		<link rel="stylesheet" href={% static "css/skin-3.css" %}>
-		
+
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
 		<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 	</head>
 
 	<body>
@@ -159,7 +160,7 @@
 									<br>
 									<div class="card-body" align="center">
 										<label>Objective:</label>
-										<input list="so" placeholder="Objective" name="so" required>
+										<input list="so" placeholder="Objective" name="so" class="so" required>
 										<datalist id="so">
 											{%for so in sos%}
 											<option value="{{so|slice:1}}">{{so|slice:"1:"}}</option>
@@ -167,25 +168,31 @@
 										</datalist>
 										&emsp;
 										&ensp;
+										<label>Topics:</label>
+										<select id="topic_list" name="topics" placeholder="Select Topics" style="width: 5%;"required multiple>
+
+										</select>
 										<label>Date:</label>
 										<input type="date" name="date"
 											onfocus="this.max=new Date().toISOString().split('T')[0]" required />
 
 										&emsp;
 										&ensp;
-<div class="col-lg-2 col-md-2 col-sm-2">
-										<label>Lecture Number:</label>
-										<!-- <input type="number" max="8" min="1" value="1" name="lecture_no" required> -->
-										
-										<select id="choices-multiple-remove-button" name="lecture_no" placeholder="Select upto 3 lectures" multiple required>
-											{%for i in "12345678"%}
-											<option value="{{i}}">{{i}}</option>
-											{%endfor%}
-										</select></div>
+										<div class="col-lg-2 col-md-2 col-sm-2">
+											<label>Lecture Number:</label>
+											<!-- <input type="number" max="8" min="1" value="1" name="lecture_no" required> -->
+
+											<select id="choices-multiple-remove-button" name="lecture_no"
+												placeholder="Select upto 3 lectures" multiple required>
+												{%for i in "12345678"%}
+												<option value="{{i}}">{{i}}</option>
+												{%endfor%}
+											</select>
+										</div>
 
 
 										<br>
-										 <label <!--style="margin-top:15px;"-->Mark All as Present:</label> 
+										<label <!--style="margin-top:15px;" -->Mark All as Present:</label>
 										<input id="present" type="checkbox" value="1" name="present" onclick="check()">
 										&emsp;
 										<div class="table-responsive recentOrderTable">
@@ -255,7 +262,7 @@
 					document.getElementsByName("{{studentob.username}}")[0].checked = false;
 				}
 				{% endfor %}
-			}
+			};
 
 			$(document).ready(function () {
 
@@ -264,6 +271,22 @@
 					maxItemCount: 3,
 					searchResultLimit: 3,
 					renderChoiceLimit: 8
+				});
+				$(".so").change(function(){
+					const input = document.querySelector("input[list='so']").value;
+					$.ajax({
+						url:"so",
+						data:{
+							'so':input,
+							'subject':"{{curr_subject}}",
+						},
+						success:function(data){
+							alert(data);
+							$("#topic_list").html(data);
+						}
+
+					});
+
 				});
 
 

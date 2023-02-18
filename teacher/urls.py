@@ -20,4 +20,7 @@ urlpatterns = [
     path('marks-studentlist',views.studentlist),
     path('mark-marks',views.mark_marks),
     path('add-paper',views.addPaper),
+    path('lds',views.lds),
+    path('lds-form',views.ldsform),
+    path('topics',views.load_topics), ##ajax from ldsform ##
 ]

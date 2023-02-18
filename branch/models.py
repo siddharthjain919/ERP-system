@@ -64,6 +64,10 @@ class branch_subjects(models.Model):
 
 	NOLR5=models.IntegerField(default=8)
 	NOLT5=models.IntegerField(default=0,editable=False)
+	
+	for i in range(1,76):
+		exec(f"lecture_{i}=models.JSONField(blank=True,null=True,editable=False)")
+	
 	def __str__(self):
 		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name	
 	branch_sub_obj=models.Manager()

@@ -64,12 +64,17 @@ def studentlist(request):
 def mark(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         if request.method=='POST':
+            #form input
             subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
             lecture_list=request.POST.getlist("lecture_no")
+            topic_list=request.POST.getlist("topics")
+            topic_list={"topics":topic_list}
             date=request.POST.get('date')
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
             group=request.POST.get("group")
+
+            #marking attendance
             if group=="Both":
                 branch=User.objects.filter(groups__name=branch)
             else:
@@ -87,8 +92,7 @@ def mark(request):
                     student=studentlogin.stud_obj.get(studentid=i)
                     previous_check=mark_attendance.attend_obj.filter(date=date,lecture_number=lecture_number,semester=student.branch.semester)
                     if len(previous_check):
-                        messages.info(request,"Attendance already exists for lecture "+lecture_number)
-                        
+                        messages.info(request,"Attendance already exists for lecture "+lecture_number+" by "+previous_check[0].teacher.Name+'('+previous_check[0].teacher.teacherid+')')
                         error+=1
                         break 
                 else:
@@ -100,9 +104,14 @@ def mark(request):
                         if str(i)+'_exempt' in request.POST:
                             continue
                         elif str(i) in request.POST:
-                            mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
+                            mark_attendance.attend_obj.create(student=student,subject=subject,present=True,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher,topics=topic_list)
                         else:
-                            mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher)
+                            mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher,topics=topic_list)
+            
+            #marking lds
+            lecturenumber=branchSubject.NOLT1+branchSubject.NOLT2+branchSubject.NOLT3+branchSubject.NOLT4+branchSubject.NOLT5
+            
+
             return HttpResponseRedirect("/teacher/attendance/")
         else:
             return attendance_form(request)
@@ -177,3 +186,18 @@ def pastattendance(request):
             return render(request,"pastattendance.html",{"branches":branches,"attendancelist":attendancelist})
     else:
         return redirect('/teacher/login')
+    
+
+def load_topics(request):
+    if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+        so=request.GET.get('so')
+        subject=request.GET.get('subject')
+        print(subject)
+        subject=subjects.sub_obj.get(subject_name=subject)
+        topics_list=getattr(subject,"topics"+so)["topic_list"]
+        
+        return render(request,'load_topics.html',{"topics_list":topics_list})
+    else:
+        return redirect('/teacher/login')
+
+

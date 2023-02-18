@@ -9,4 +9,6 @@ urlpatterns=[
     path('studentlist',views.studentlist,name='studentlist'),
     path('mark',views.mark),
     path('pastattendance',views.pastattendance),
+    path('so',views.load_topics),
+
 ]
