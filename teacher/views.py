@@ -352,23 +352,23 @@ def lds(request):
 		try:
 			subject=request.GET.get('subject')
 			branch=request.GET.get('branch')
-			
-			if subject and branch:
-				return render(request,"ldsform.html",{'subject':subject,'branch':branch,"n":list(range(1,76))})
-				subject=subjects.sub_obj.get(subject_name=subject)
-				topics1=subject.topics1["topic_list"]
-				topics2=subject.topics2["topic_list"]
-				topics3=subject.topics3["topic_list"]
-				topics4=subject.topics4["topic_list"]
-				topics5=subject.topics5["topic_list"]
+			subject=subjects.sub_obj.get(subject_name=subject)
+			teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+			subject_obj=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
+			executionData={}
+			for i in range(1,76):
+				try:
+					lecture_detail=getattr(subject_obj,"lecture_"+str(i))
+					# dateExec=dateExec["dateExecute"]
+					if lecture_detail:
+						print(lecture_detail,363)
+						executionData[i]=lecture_detail
+						print(executionData)
+				except Exception as e:
+					print(e)
 				
-				name=branch[0].split('(')
-				section=name[1][0]
-				name=name[0]
-				batch=int(branch[1])
-				branch=branch_detail.branch_obj.get(name=name,section=section,batch=batch)
-
-				subject=branch_subjects.branch_sub_obj.get(subject=subject,teacher=teacher,branch=branch)
+			if subject and branch:
+				return render(request,"ldsform.html",{'subject':subject,'branch':branch,"n":list(range(1,76)),"executionData":executionData})
 		except Exception as e:
 			pass
 		return render(request,'lds.html',{"subject_list":subject_list})
@@ -387,16 +387,18 @@ def ldsform(request):
 				dateplan=request.POST.get('dateplan'+i)
 				if not dateplan:
 					continue
-				dateplan=datetime.datetime.strptime(dateplan,"%Y-%m-%d").date()
+				dateplan=datetime.datetime.strptime(dateplan,"%Y-%m-%d").date().isoformat()
 				
 				unit=int(request.POST.get('unit'+i))
 				topics=request.POST.getlist('topics'+i)
 				data={
-					"date":dateplan,
+					"datePlan":dateplan,
+					"dateExecute":dateplan,
 					"unit":unit,
-					"topics":topics,
+					"topics_planned":topics,
 				}
 				setattr(subject,"lecture_"+i,data)
+				subject.save()
 				print(getattr(subject,"lecture_"+i))
 		return HttpResponseRedirect('/teacher/lds')
 	else:
