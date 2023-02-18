@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save,pre_save
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,User
 def create_group(**kwargs):
     if kwargs["created"]  and (isinstance(kwargs["instance"],course)):
         Group.objects.create(name=kwargs["instance"].name)
@@ -26,6 +26,8 @@ def topics(**kwargs):
         kwargs["instance"].topics3={"topic_list":subject.to3.split(',')}
         kwargs["instance"].topics4={"topic_list":subject.to4.split(',')}
         kwargs["instance"].topics5={"topic_list":subject.to5.split(',')}
+
+
 class subjects(models.Model):
     code=models.CharField(max_length=12,unique=True)
     subject_name=models.CharField(max_length=50,unique=True)
@@ -138,3 +140,14 @@ class question_paper(models.Model):
     question_paper_obj=models.Manager()
     def __str__(self):
         return str(self.subject)+str(self.session)
+
+class achievements(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    issuingOrganization=models.CharField(max_length=150,verbose_name="Issuing Organization")
+    issuingYear=models.CharField(max_length=4,verbose_name="Issuing Year")
+    link=models.CharField(max_length=250,verbose_name="Achievement Link")
+    description=models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return str(self.user)+self.description 
+    achieve_obj=models.Manager()
