@@ -15,12 +15,12 @@
 
         <style>
             .date {
-                width: 19%;
+                width: 10%;
 
             }
 
             .topics {
-                width: 48%;
+                width: 35%;
                 text-align: center;
             }
         </style>
@@ -187,36 +187,46 @@
                                                             <th scope="col" class="date">Date Planned</th>
                                                             <th scope="col" class="date">Date Executed</th>
                                                             <th class="units">Unit</th>
-                                                            <th class="topics" scope="col">Name of Topics</th>
+                                                            <th class="topics" scope="col">Topic Plan</th>
+                                                            <th class="topics" scope="col">Topics Executed</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {% for i in n%}
-
+                                                        
                                                         <tr>
                                                             <td>{{i}}</td>
-                                                            <td><input type="date" name="dateplan{{i}}"></td>
-                                                            <td>In Process</td>
-                                                            <td>
-                                                                <select id="unit{{i}}" name="unit{{i}}"
-                                                                    onchange="showtopics({{i}})">
-                                                                    <option value="{{None}}" selected disabled>-----
-                                                                    </option>
-                                                                    <option value="1">Unit 1</option>
-                                                                    <option value="2">Unit 2</option>
-                                                                    <option value="3">Unit 3</option>
-                                                                    <option value="4">Unit 4</option>
-                                                                    <option value="5">Unit 5</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <select id="topics{{i}}" name="topics{{i}}"
-                                                                    placeholder="Select topics" multiple
-                                                                    style="width: 100%;">
+                                                            {% if i in executionData %}
+                                                                
+                                                                <td>{{executionData|get_item:i|get_item:"datePlan"}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"dateExec"}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"unit"}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"topics_planned"}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"topics_delivered"}}</td>
+                                                            {%else%}
+                                                                <td><input type="date" name="dateplan{{i}}"></td>
+                                                                <td>In Process</td>
+                                                                <td>
+                                                                    <select id="unit{{i}}" name="unit{{i}}"
+                                                                        onchange="showtopics({{i}})">
+                                                                        <option value="{{None}}" selected disabled>-----
+                                                                        </option>
+                                                                        <option value="1">Unit 1</option>
+                                                                        <option value="2">Unit 2</option>
+                                                                        <option value="3">Unit 3</option>
+                                                                        <option value="4">Unit 4</option>
+                                                                        <option value="5">Unit 5</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select id="topics{{i}}" name="topics{{i}}"
+                                                                        placeholder="Topic" multiple
+                                                                        style="width: 100%;">
 
-                                                                </select>
+                                                                    </select>
 
-                                                            </td>
+                                                                </td>
+                                                            {%endif%}
                                                         </tr>
                                                         {%endfor%}
                                                     </tbody>

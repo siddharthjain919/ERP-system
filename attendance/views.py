@@ -68,7 +68,7 @@ def mark(request):
             subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
             lecture_list=request.POST.getlist("lecture_no")
             topic_list=request.POST.getlist("topics")
-            topic_list={"topics":topic_list}
+            unit=request.POST.get('so')
             date=request.POST.get('date')
             date=datetime.strptime(date,"%Y-%m-%d").date()
             branch=request.POST.get("branch")
@@ -109,7 +109,16 @@ def mark(request):
                             mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher,topics=topic_list)
             
             #marking lds
-            lecturenumber=branchSubject.NOLT1+branchSubject.NOLT2+branchSubject.NOLT3+branchSubject.NOLT4+branchSubject.NOLT5
+            # lecturenumber=str(branchSubject.NOLT1+branchSubject.NOLT2+branchSubject.NOLT3+branchSubject.NOLT4+branchSubject.NOLT5)
+            lecturenumber="1"
+            date=date.isoformat()
+            data=getattr(branchSubject,"lecture_"+lecturenumber)
+            data["dateExec"]=date
+            data["topics_planned"]=data["topics"]
+            data["topics_delivered"]=topic_list
+            data["unit"]=unit
+            setattr(branchSubject,"lecture_"+lecturenumber,data)
+            branchSubject.save()
             
 
             return HttpResponseRedirect("/teacher/attendance/")
