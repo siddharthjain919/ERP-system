@@ -1,20 +1,20 @@
+import datetime
+
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import redirect, render,HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-import smtplib,secrets,string
+
+from .extras import *
+
 from branch.models import branch_detail, branch_subjects
+from branch.forms import branch_subject_form
 from erp.models import subjects,question_paper
 from student.models import studentlogin,student_marks
 from .models import teacherlogin
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from erp.settings import password,sender
-import datetime
 
-branch=None
 
 def index(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
@@ -69,7 +69,7 @@ def login(request):
 			user2 = authenticate(request, username=username, password=password)
 			if user is not None:
 				auth_login(request,user2)
-				return HttpResponseRedirect('/teacher/homepage')
+				return HttpResponseRedirect('/teacher')
 			else:
 				messages.error(request, 'Invalid Credentials')
 				print("Someone tried to login and failed.")
@@ -83,41 +83,12 @@ def login(request):
 	else:
 		return render(request,'login.html')
 
-def coordinatorlogin(request):
-	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
-		return index(request)
-	elif request.method == 'POST':
-		username = request.POST.get('teacherid')
-		password = request.POST.get('teacherpwd')
-		try:
-			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
-			user2 = authenticate(request, username=username, password=password)
-			if user is not None:
-				global branch
-				auth_login(request,user2)
-				branch=teacherlogin.teach_obj.filter(teacherid=user)
-				branch=branch[0].cc_of_branch
-				if not branch:
-					return redirect('/teacher')
-				return index(request)
-			else:
-				print("Someone tried to login and failed.")
-				messages.error(request, 'Invalid Credentials')
-				print("They used username: {} and password: {}".format(username,password))
-				return redirect('/')
-		except Exception as identifier:
-			messages.error(request, 'Invalid Credentials')
-			return redirect('/teacher')
-	else:
-		return render(request,'login.html')
-
 def logout(request):
 	request.session.flush()
 	auth_logout(request)
 	return redirect('/teacher/login')
 
 def timetable(request):
-	print(request.user,88)
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		if request.method=='POST':
 			branch=request.POST.get("cc_branch").split('-')
@@ -175,7 +146,6 @@ def timetable(request):
 	else:
 		return redirect('/teacher/login')
 
-from branch.forms import branch_subject_form
 def subject(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		if request.method=="POST":
@@ -198,6 +168,7 @@ def about(request):
 		return render(request,"about.html",{"user":user})
 	else:
 		return redirect('/teacher/login')
+
 def teachertimetable(request):
 	if request.user.is_authenticated and request.user.groups.filter(name="teacher").exists():
 		user = teacherlogin.teach_obj.get(teacherid=request.user.username)
@@ -212,36 +183,6 @@ def forgot_mail(request):
 	try:
 		if request.method=='POST':
 			user=teacherlogin.teach_obj.get(email=request.POST.get('email'))
-
-			letters = string.ascii_letters
-			digits = string.digits
-			special_chars = string.punctuation
-			alphabet = letters + digits + special_chars
-			pwd=''
-			for _ in range(8):
-				pwd += ''.join(secrets.choice(alphabet))
-			setattr(user,'teacherpwd',pwd)
-			#for adding user to group
-			user.save()
-			#sending mails
-			receiver=user.email
-			user=user.Name
-			user=user.title()
-			email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
-			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-			message['Subject']="Regarding ERP password"
-			message['From']=sender
-			message['To']=receiver
-			try:
-				server=smtplib.SMTP('smtp.gmail.com:587')
-				server.ehlo()
-				server.starttls()
-				server.login(sender,password)
-				server.sendmail(sender,receiver,message.as_string())
-				server.quit()
-
-			except:
-				pass
 		return index(request)
 	except:
 		messages.error(request, 'No user with this email found.')
@@ -309,6 +250,7 @@ def mark_marks(request):
 			return marks(request)
 	else:
 		return redirect('/teacher/login')
+
 def addPaper(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		subject_list=list(subjects.sub_obj.all())
@@ -403,15 +345,6 @@ def ldsform(request):
 		return HttpResponseRedirect('/teacher/lds')
 	else:
 		return redirect('/teacher/login')
-
-
-# def topics(request):
-# 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-# 		subject=request.GET.get('subject')
-# 		unit=request.GET.get('unit')
-
-# 	else:
-# 		return redirect('/teacher/login')
 
 def load_topics(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():

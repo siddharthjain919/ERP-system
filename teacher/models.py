@@ -38,8 +38,8 @@ def deleteuser(**kwargs):
 class teacherlogin(models.Model):
 
 	teacherid=models.CharField(max_length=20,primary_key=True)
-	Name=models.CharField(max_length=40)
-	teacherpwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
+	name=models.CharField(max_length=40)
+	pwd=models.CharField(max_length=15,validators=[MinLengthValidator(8, 'the field must contain at least 8 characters')])
 	blood_group=models.CharField(max_length=5)
 	gender=models.CharField(choices=(('MALE','MALE'),("FEMALE","FEMALE"),("OTHERS","OTHERS")),max_length=50)
 	address=models.CharField(max_length=50, blank=True, null=True)

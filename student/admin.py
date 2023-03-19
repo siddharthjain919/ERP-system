@@ -9,7 +9,7 @@ from .resources import StudentloginResource
 @admin.register(studentlogin)
 class StudentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 	resource_class = StudentloginResource
-	list_display=("studentid","studentpwd")
+	list_display=("studentid","pwd")
 
 '''class Command(BaseCommand):
 	help="For adding data to excel file"
