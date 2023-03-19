@@ -69,7 +69,7 @@ def login(request):
 			user2 = authenticate(request, username=username, password=password)
 			if user is not None:
 				auth_login(request,user2)
-				return index(request)
+				return HttpResponseRedirect('/teacher/homepage')
 			else:
 				messages.error(request, 'Invalid Credentials')
 				print("Someone tried to login and failed.")

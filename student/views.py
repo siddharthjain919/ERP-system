@@ -1,12 +1,12 @@
-from django.shortcuts import render,redirect
+import json
+from random import choices
+from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 import os
-import matplotlib
-matplotlib.use('Agg')
-from matplotlib import pyplot as plt
+
 from .models import studentlogin
 from attendance.models import mark_attendance
 import smtplib,secrets,string
@@ -41,7 +41,7 @@ def login(request):
             
             if model_user is not None:
                 auth_login(request,admin_user)
-                return render(request, 'dashboard.html', {})
+                return HttpResponseRedirect('/student')
             else:
                 messages.error(request, 'Invalid Credentials')
                 print("Someone tried to login and failed.")
@@ -80,31 +80,22 @@ def attendance(request):
                     label[obj.subject]=[0,1]
             total+=1
         label['Absent']=[total-total_present,total]
-        fig1,ax1=plt.subplots()
-        # ,explode=(0.025,)*len(label)
-        ax1.pie([i[0] for i in label.values()],labels=tuple(label.keys()),explode=(0.0125,)*len(label),autopct='%1.1f%%',startangle=90,pctdistance=0.65)
-        centre_circle=plt.Circle((0,0),0.82,fc='white')
-        fig=plt.gcf()
-        try:
-            plt.text(-.125, 0,str(round(total_present/total*100,2))+'%')
-        except:
-            plt.text(-.125, 0,'No Record Found')
-        plt.xlim([-4, 4])
-        plt.ylim([-4, 4])
-        fig.gca().add_artist(centre_circle)
-        ax1.axis('equal')
-        # WHEN DEPLOYMENT
-        # try:
-        #     os.remove('ERP/media/'+str(student)+'.png')
-        # except:
-        #     pass
-        # plt.savefig('ERP/media/'+str(student)+'.png',format="png",dpi=500)
-        try:
-            os.remove('media//'+str(student)+'.png')
-        except:
-            pass
-        plt.savefig('media//'+str(student)+'.png',dpi=500)
-        return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total]})
+        
+        colors=['red']
+        
+        for i in range(len(label)-1):
+            temp='#'
+            temp+=''.join(choices('0123456789ABCDEF',k=6))
+            colors.append(temp)
+        data={}
+        data["labels"]=list(str(i) for i in label.keys())
+        data['datasets']=dict([
+            ('data',[i[0] for i in label.values()]),
+            ('backgroundColor',colors)
+            ])
+
+        return render(request, 'stud_attendance.html',{"label":label,"total":[total_present,total],'data':json.dumps(data),'sem':student.branch.semester})
+
     else:
         return render(request,'studentlogin.html')
 
@@ -143,7 +134,7 @@ def forgot_mail(request):
             pwd=''
             for _ in range(8):
                 pwd += ''.join(secrets.choice(alphabet))
-            setattr(user,'teacherpwd',pwd)
+            setattr(user,'studentpwd',pwd)
             user.save()
             receiver=user.email
             user=user.Name
