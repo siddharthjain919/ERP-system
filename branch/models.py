@@ -27,7 +27,7 @@ def update_teacher_timetable(**kwargs):
 					
 					teacher_slot=getattr(lecture_details.subject_teacher,"teach_"+lecture_name)
 					if teacher_slot and teacher_slot!=branch:
-						raise Exception(lecture_details.subject_teacher.Name,"already occupied at",lecture_name)
+						raise Exception(lecture_details.subject_teacher.name,"already occupied at",lecture_name)
 					if previous and previous!=lecture_details:
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 						previous.subject_teacher.save()
@@ -69,7 +69,7 @@ class branch_subjects(models.Model):
 		exec(f"lecture_{i}=models.JSONField(blank=True,null=True,editable=False)")
 	
 	def __str__(self):
-		return self.branch_subject.subject_name+"-"+self.subject_teacher.Name	
+		return self.branch_subject.subject_name+"-"+self.subject_teacher.name	
 	branch_sub_obj=models.Manager()
 	class Meta:
 		unique_together=[['branch_subject','subject_teacher','branch']]

@@ -1,15 +1,17 @@
-from django.shortcuts import render,redirect,HttpResponseRedirect
-from .models import mark_attendance
-from .forms import mark_attendance_form
-from django.contrib.auth.models import User
 from datetime import datetime,timedelta
-# from django.urls import reverse
+
+from django.shortcuts import render,redirect,HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.contrib import messages
-from erp.models import *
-from branch.models import *
+
+from erp.models import course,subjects
+from branch.models import branch_detail,branch_subjects
 from student.models import studentlogin
 from teacher.models import teacherlogin
-from django.db.models import Q
+from .models import mark_attendance
+from .forms import mark_attendance_form
+
 # Create your views here.
 
 def attendance_form(request):
@@ -92,7 +94,7 @@ def mark(request):
                     student=studentlogin.stud_obj.get(studentid=i)
                     previous_check=mark_attendance.attend_obj.filter(date=date,lecture_number=lecture_number,semester=student.branch.semester)
                     if len(previous_check):
-                        messages.info(request,"Attendance already exists for lecture "+lecture_number+" by "+previous_check[0].teacher.Name+'('+previous_check[0].teacher.teacherid+')')
+                        messages.info(request,"Attendance already exists for lecture "+lecture_number+" by "+previous_check[0].teacher.name+'('+previous_check[0].teacher.teacherid+')')
                         error+=1
                         break 
                 else:

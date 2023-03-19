@@ -25,7 +25,7 @@ class StudentloginResource(resources.ModelResource):
     branch = fields.Field(column_name='branch', attribute='branch', widget=CustomForeignKeyWidget(branch_detail))
     class Meta:
         model = studentlogin
-        fields = ('studentid', 'student_name', 'gender', 'DOB', 'DOA', 'course', 'branch','personalEmail','section')
+        fields = ('studentid', 'name', 'gender', 'DOB', 'DOA', 'course', 'branch','personalEmail','section')
         import_id_fields = ('studentid',)
         skip_unchanged = True
         report_skipped = False

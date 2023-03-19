@@ -26,7 +26,6 @@ def index(request):
         return render(request,'dashboard.html')
     else:
         return render(request, 'studentlogin.html')
-    #return render_to_response('home.html')
 
 def login(request):
     if request.user.is_authenticated and request.user.groups.filter(name="student"). exists() :
@@ -34,9 +33,8 @@ def login(request):
     elif request.method == 'POST':
         username = request.POST.get('studentid')
         password = request.POST.get('studentpwd')
-        print(username,password)
         try:
-            model_user = studentlogin.stud_obj.get(studentid=username,studentpwd=password)
+            model_user = studentlogin.stud_obj.get(studentid=username,pwd=password)
             admin_user=authenticate(request, username=username, password=password)
             
             if model_user is not None:
@@ -134,7 +132,7 @@ def forgot_mail(request):
             pwd=''
             for _ in range(8):
                 pwd += ''.join(secrets.choice(alphabet))
-            setattr(user,'studentpwd',pwd)
+            setattr(user,'pwd',pwd)
             user.save()
             receiver=user.email
             user=user.Name

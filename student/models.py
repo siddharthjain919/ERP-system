@@ -17,18 +17,18 @@ from branch.models import branch_detail
 def formatting(**kwargs):
 	if isinstance(kwargs["instance"],studentlogin):
 		student=kwargs["instance"]
-		student.student_name=student.student_name.title()
+		student.name=student.name.title()
 		student.studentid=student.studentid.upper()
 
 def createuser(**kwargs):
-		fname=kwargs["instance"].student_name
+		fname=kwargs["instance"].name
 		fname=fname.split()
 		try:
 			lname=fname[1]
 		except:
 			lname=''
 		fname=fname[0]
-		user = User.objects.create_user(username=kwargs["instance"].studentid,email=kwargs["instance"].personalEmail,password=kwargs["instance"].studentpwd,first_name=fname,last_name=lname)
+		user = User.objects.create_user(username=kwargs["instance"].studentid,email=kwargs["instance"].personalEmail,password=kwargs["instance"].pwd,first_name=fname,last_name=lname)
 		try:
 			user_group = Group.objects.get(name='student')
 		except:
@@ -62,12 +62,12 @@ def deleteuser(**kwargs):
 			print("******\n",e,"******\n")
 class studentlogin(models.Model):
 	studentid=models.CharField(max_length=20,primary_key=True)
-	student_name=models.CharField(max_length=40)
+	name=models.CharField(max_length=40)
 	gender=models.CharField(choices=(('MALE','MALE'),("FEMALE","FEMALE"),("OTHERS","OTHERS")),max_length=50)
 	mobile=models.IntegerField(blank=True,null=True)
 	DOB=models.DateField()
 	DOA=models.DateField(default=timezone.now)
-	studentpwd=models.CharField(max_length=15,editable=False,validators=[
+	pwd=models.CharField(max_length=15,editable=False,validators=[
 	MinLengthValidator(8, 'the field must contain at least 50 characters')
 	])
 	course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
@@ -141,30 +141,13 @@ class studentlogin(models.Model):
 			pwd=''
 			for _ in range(8):
 				pwd += ''.join(secrets.choice(alphabet))
-			setattr(kwargs["instance"],'studentpwd',pwd)
+			setattr(kwargs["instance"],'pwd',pwd)
 			createuser(**kwargs)
 			kwargs["instance"].save()
 
-			# receiver=kwargs["instance"].personalEmail
-			# user=kwargs["instance"].student_name
-			# user=user.title()
-			# email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
-			# message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-			# message['Subject']="Regarding ERP password"
-			# message['From']=sender
-			# message['To']=receiver
-			# try:
-			# 	server=smtplib.SMTP('smtp.gmail.com:587')
-			# 	server.ehlo()
-			# 	server.starttls()
-			# 	server.login(sender,password)
-			# 	server.sendmail(sender,receiver,message.as_string())
-			# 	server.quit()
-			# except:
-			# 	print("error")
 		elif isinstance(kwargs["instance"],studentlogin):
 			u = User.objects.get(username=kwargs["instance"].studentid)
-			u.set_password(kwargs["instance"].studentpwd)
+			u.set_password(kwargs["instance"].pwd)
 			group=u.groups.all()
 			for i in group:
 				if str(i)=='student':

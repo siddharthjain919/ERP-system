@@ -11,14 +11,14 @@ from erp.settings import password,sender
 
 # Create your models here.
 def createuser(**kwargs):
-		fname=kwargs["instance"].Name
+		fname=kwargs["instance"].name
 		fname=fname.split()
 		try:
 			lname=fname[1]
 		except:
 			lname=''
 		fname=fname[0]
-		user = User.objects.create_user(username=kwargs["instance"].teacherid,email=kwargs["instance"].email,password=kwargs["instance"].teacherpwd,first_name=fname,last_name=lname)
+		user = User.objects.create_user(username=kwargs["instance"].teacherid,email=kwargs["instance"].email,password=kwargs["instance"].pwd,first_name=fname,last_name=lname)
 		try:
 			user_group = Group.objects.get(name='teacher')
 		except:
@@ -115,7 +115,7 @@ class teacherlogin(models.Model):
 			pwd=''
 			for _ in range(8):
 				pwd += ''.join(secrets.choice(alphabet))
-			setattr(kwargs["instance"],'teacherpwd',pwd)
+			setattr(kwargs["instance"],'pwd',pwd)
 			
 
 			#for adding user to group
@@ -123,7 +123,7 @@ class teacherlogin(models.Model):
 			kwargs["instance"].save()
 			#sending mails
 			receiver=kwargs["instance"].email
-			user=kwargs["instance"].Name
+			user=kwargs["instance"].name
 			user=user.title()
 			email_body="Hello "+user+"\nYour details for MyGurukul portal at mygurukul.pythonanywhere.com are:\nID:"+kwargs["instance"].teacherid+"\nPassword:"+pwd+"\nThank you!"
 			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
@@ -142,7 +142,7 @@ class teacherlogin(models.Model):
 				print("******\n",e,"\n******")
 		elif isinstance(kwargs["instance"],teacherlogin):
 			u = User.objects.get(username=kwargs["instance"].teacherid)
-			u.set_password(kwargs["instance"].teacherpwd)
+			u.set_password(kwargs["instance"].pwd)
 			u.save()
 
 	post_save.connect(mail)

@@ -1,4 +1,4 @@
-from django.urls import path,re_path,include
+from django.urls import path,include
 from . import views
 
 app_name='teacher'
@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/',views.login,name='login'),
     path('timetable/',views.timetable,name="timetable"),
 	path('attendance/',include('attendance.urls')),
-    re_path(r'^$',views.index,name="index"),
+    path('',views.index,name="index"),
     path("subject/",views.subject,name="subject"),
     path('about/',views.about,name="about"),
     path('your-timetable/',views.teachertimetable,name="teacher_timetable"),

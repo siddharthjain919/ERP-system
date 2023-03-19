@@ -64,7 +64,7 @@ def login(request):
 		username = request.POST.get('teacherid')
 		password = request.POST.get('teacherpwd')
 		try:
-			user = teacherlogin.teach_obj.get(teacherid=username,teacherpwd=password)
+			user = teacherlogin.teach_obj.get(teacherid=username,pwd=password)
 			# print(user)
 			user2 = authenticate(request, username=username, password=password)
 			if user is not None:
@@ -113,14 +113,14 @@ def timetable(request):
 						subject_name=lecture_input[0]
 						subject_name=subjects.sub_obj.get(subject_name=subject_name)
 						subject_teacher=lecture_input[1]
-						subject_teacher=teacherlogin.teach_obj.get(Name=subject_teacher)
+						subject_teacher=teacherlogin.teach_obj.get(name=subject_teacher)
 						teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
 						if teacher_slot and teacher_slot!=branch:
-							raise Exception(subject_teacher.Name,"already occupied at",lecture_name)
+							raise Exception(subject_teacher.name,"already occupied at",lecture_name)
 						if previous and lecture_input!=previous:
 							setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 							previous.subject_teacher.save()
-							messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.Name,lecture_name))
+							messages.info(request,"cleared {0} from {1} at slot {2}".format(branch,previous.subject_teacher.name,lecture_name))
 						setattr(subject_teacher,"teach_"+lecture_name,branch)
 						subject_teacher.save()
 						# print(getattr(subject_teacher,"teach_"+lecture_name,55555555555555555555))
