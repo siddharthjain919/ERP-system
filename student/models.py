@@ -367,12 +367,6 @@ class student_marks(models.Model):
 
 	REPUE_total_marks=models.IntegerField(null=True,blank=True)
 
-
-
-
-
-
-
 	marks_obj=models.Manager()
 	def __str__(self) -> str:
 		return str(self.student)+"||"+str(self.branch)+"||"+str(self.subject)
