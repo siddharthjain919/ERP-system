@@ -1,16 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import Group
 from django.core.validators import MinLengthValidator
-from django.core.mail import send_mail
 from django.db.models.signals import post_save,post_delete
-import smtplib,secrets,string
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+
 from django.contrib.auth.models import User
-from erp.settings import password,sender
+
+from erp.services import create_new_password
 
 # Create your models here.
 def createuser(**kwargs):
+	if kwargs["created"] and isinstance(kwargs["instance"],teacherlogin):
+		
+		pwd=create_new_password(kwargs['instance'])
+
 		fname=kwargs["instance"].name
 		fname=fname.split()
 		try:
@@ -18,6 +20,7 @@ def createuser(**kwargs):
 		except:
 			lname=''
 		fname=fname[0]
+
 		user = User.objects.create_user(username=kwargs["instance"].teacherid,email=kwargs["instance"].email,password=kwargs["instance"].pwd,first_name=fname,last_name=lname)
 		try:
 			user_group = Group.objects.get(name='teacher')
@@ -26,6 +29,11 @@ def createuser(**kwargs):
 		user.groups.add(user_group)
 		user.is_staff=True
 		user.save()
+
+	elif isinstance(kwargs["instance"],teacherlogin):
+			u = User.objects.get(username=kwargs["instance"].teacherid)
+			u.set_password(kwargs["instance"].pwd)
+			u.save()
 
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],teacherlogin):
@@ -106,45 +114,6 @@ class teacherlogin(models.Model):
 	def __str__(self):
 		return self.teacherid
 	
-	def mail(**kwargs):
-		if kwargs["created"] and isinstance(kwargs["instance"],teacherlogin):
-			letters = string.ascii_letters
-			digits = string.digits
-			special_chars = string.punctuation
-			alphabet = letters + digits + special_chars
-			pwd=''
-			for _ in range(8):
-				pwd += ''.join(secrets.choice(alphabet))
-			setattr(kwargs["instance"],'pwd',pwd)
-			
-
-			#for adding user to group
-			createuser(**kwargs)
-			kwargs["instance"].save()
-			#sending mails
-			receiver=kwargs["instance"].email
-			user=kwargs["instance"].name
-			user=user.title()
-			email_body="Hello "+user+"\nYour details for MyGurukul portal at mygurukul.pythonanywhere.com are:\nID:"+kwargs["instance"].teacherid+"\nPassword:"+pwd+"\nThank you!"
-			message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-			message['Subject']="Regarding ERP password"
-			message['From']=sender
-			message['To']=receiver
-			try:
-				server=smtplib.SMTP('smtp.gmail.com:587')
-				server.ehlo()
-				server.starttls()
-				server.login(sender,password)
-				server.sendmail(sender,receiver,message.as_string())
-				server.quit()
-			except Exception as e:
-				print("from line 132 in teacher models")
-				print("******\n",e,"\n******")
-		elif isinstance(kwargs["instance"],teacherlogin):
-			u = User.objects.get(username=kwargs["instance"].teacherid)
-			u.set_password(kwargs["instance"].pwd)
-			u.save()
-
-	post_save.connect(mail)
+	post_save.connect(createuser)
 	post_delete.connect(deleteuser)
 

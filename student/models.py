@@ -4,10 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import post_save,post_delete,pre_save
 from django.utils import timezone
 # from django.db import transaction
-import smtplib,secrets,string
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from erp.settings import password,sender
+from erp.services import create_new_password
 from django.contrib.auth.models import User,Group
 # Create your models here.
 from datetime import date
@@ -21,6 +18,10 @@ def formatting(**kwargs):
 		student.studentid=student.studentid.upper()
 
 def createuser(**kwargs):
+	if  kwargs["created"] and isinstance(kwargs["instance"],studentlogin):
+
+		pwd=create_new_password(kwargs['instance'])
+
 		fname=kwargs["instance"].name
 		fname=fname.split()
 		try:
@@ -28,17 +29,21 @@ def createuser(**kwargs):
 		except:
 			lname=''
 		fname=fname[0]
+
 		user = User.objects.create_user(username=kwargs["instance"].studentid,email=kwargs["instance"].personalEmail,password=kwargs["instance"].pwd,first_name=fname,last_name=lname)
 		try:
 			user_group = Group.objects.get(name='student')
 		except:
 			user_group=Group.objects.create(name="student")
+
 		user.groups.add(user_group)
 		branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
 		course_group=Group.objects.get(name=str(kwargs["instance"].branch.course))
 		user.groups.add(course_group,branch_group)
+
 		all_users=list(User.objects.filter(groups__name=branch_group))
 		n=len(all_users)
+
 		if n>=kwargs["instance"].branch.total_strength:
 			batch1=Group.objects.get_or_create(name=str(kwargs["instance"].branch)+"_Batch1")[0]
 			batch2=Group.objects.get_or_create(name=str(kwargs["instance"].branch)+"_Batch2")[0]
@@ -48,7 +53,7 @@ def createuser(**kwargs):
 			for i in range(-(-n//2),n):
 				all_users[i].groups.add(batch2)
 			
-			branch=kwargs["instance"].branch
+			# branch=kwargs["instance"].branch
 			# batch1=branch_detail.branch_obj.get_or_create(name=str(branch)+"_Batch1",batch=branch.batch,course=branch.course,semester=branch.semester,)[0]
 
 
@@ -60,6 +65,7 @@ def deleteuser(**kwargs):
 			u.delete()
 		except Exception as e:
 			print("******\n",e,"******\n")
+
 class studentlogin(models.Model):
 	studentid=models.CharField(max_length=20,primary_key=True)
 	name=models.CharField(max_length=40)
@@ -134,33 +140,10 @@ class studentlogin(models.Model):
 
 	def __str__(self):
 		return self.studentid
-	def mail(**kwargs):
-		if  kwargs["created"] and isinstance(kwargs["instance"],studentlogin):
-			
-			alphabet = string.ascii_letters + string.digits + string.punctuation
-			pwd=''
-			for _ in range(8):
-				pwd += ''.join(secrets.choice(alphabet))
-			setattr(kwargs["instance"],'pwd',pwd)
-			createuser(**kwargs)
-			kwargs["instance"].save()
-
-		elif isinstance(kwargs["instance"],studentlogin):
-			u = User.objects.get(username=kwargs["instance"].studentid)
-			u.set_password(kwargs["instance"].pwd)
-			group=u.groups.all()
-			for i in group:
-				if str(i)=='student':
-					continue 
-				else:
-					u.groups.remove(i)	
-			branch_group=Group.objects.get(name=str(kwargs["instance"].branch))
-			u.groups.add(branch_group)
-			u.save()
 
 	stud_obj = models.Manager()
 	pre_save.connect(formatting)
-	post_save.connect(mail)
+	post_save.connect(createuser)
 	post_delete.connect(deleteuser)
 
 	#transaction.on_commit(mail)

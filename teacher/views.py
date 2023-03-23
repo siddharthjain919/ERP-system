@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render,HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .extras import *
+from erp.services import create_new_password
 
 from branch.models import branch_detail, branch_subjects
 from branch.forms import branch_subject_form
@@ -183,6 +183,7 @@ def forgot_mail(request):
 	try:
 		if request.method=='POST':
 			user=teacherlogin.teach_obj.get(email=request.POST.get('email'))
+			create_new_password(user)
 		return index(request)
 	except:
 		messages.error(request, 'No user with this email found.')

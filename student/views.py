@@ -5,20 +5,15 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
-import os
+from import_export.formats import base_formats
+
+from erp.services import create_new_password
 
 from .models import studentlogin
 from attendance.models import mark_attendance
-import smtplib,secrets,string
-
-from erp.models import subjects
-from student.models import studentlogin
 from .resources import StudentloginResource
 
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from erp.settings import password,sender
-from import_export.formats import base_formats
+
 
 
 def index(request):
@@ -124,33 +119,7 @@ def forgot_mail(request):
     try:
         if request.method=='POST':
             user=studentlogin.stud_obj.get(email=request.POST.get('email'))
-
-            letters = string.ascii_letters
-            digits = string.digits
-            special_chars = string.punctuation
-            alphabet = letters + digits + special_chars
-            pwd=''
-            for _ in range(8):
-                pwd += ''.join(secrets.choice(alphabet))
-            setattr(user,'pwd',pwd)
-            user.save()
-            receiver=user.email
-            user=user.Name
-            user=user.title()
-            email_body="Hello "+user+"\nYour password for erp portal is "+pwd+"\nThank you!"
-            message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
-            message['Subject']="Regarding ERP password"
-            message['From']=sender
-            message['To']=receiver
-            try:
-                server=smtplib.SMTP('smtp.gmail.com:587')
-                server.ehlo()
-                server.starttls()
-                server.login(sender,password)
-                server.sendmail(sender,receiver,message.as_string())
-                server.quit()
-            except:
-                pass
+            create_new_password(user)
         return login(request)
     except:
         messages.error(request, 'No user with this email found.')

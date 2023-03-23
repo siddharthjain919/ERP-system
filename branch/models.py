@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save,post_save
+from django.db.models.signals import pre_save,post_save,post_delete
 from django.contrib.auth.models import Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 # from teacher.models import teacherlogin
@@ -45,6 +45,9 @@ def subject_check(**kwargs):
         lecture_sum=subject.NOLR1+subject.NOLR2+subject.NOLR3+subject.NOLR4+subject.NOLR5
         if lecture_sum<40:
             raise Exception("Total lectures cannot be less than 40.")			
+def delete_branch_group(**kwargs):
+	if isinstance(kwargs['instance'],branch_detail):
+		Group.objects.get(name=str(kwargs['instance'])).delete()
 class branch_subjects(models.Model):
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
@@ -152,3 +155,4 @@ class branch_detail(models.Model):
 
 	pre_save.connect(update_teacher_timetable)
 	post_save.connect(create_branch_group)
+	post_delete.connect(delete_branch_group)
