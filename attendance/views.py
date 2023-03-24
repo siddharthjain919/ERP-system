@@ -8,7 +8,7 @@ from django.contrib import messages
 from erp.models import course,subjects
 from branch.models import branch_detail,branch_subjects
 from student.models import studentlogin
-from teacher.models import teacherlogin
+from teacher.services import get_teacher_by_user
 from .models import mark_attendance
 from .forms import mark_attendance_form
 
@@ -37,7 +37,9 @@ def load_branch_details(request):
 def load_subject_details(request):
     if request.user.is_active and request.user.groups.filter(name="teacher").exists():
         curr_branch=branch_detail.branch_obj.get(name=request.GET.get('branch'),batch=request.GET.get('batch'),section=request.GET.get('section'))
-        subjects=list(branch_subjects.branch_sub_obj.filter(branch=curr_branch))
+        teacher=get_teacher_by_user(request.user.username)
+        subjects=list(branch_subjects.branch_sub_obj.filter(branch=curr_branch,subject_teacher=teacher))
+            
         students=list(studentlogin.stud_obj.filter(branch=curr_branch))
         return render(request,'load_subject_dropdown_list.html',{'subjects':subjects,'students':students})
     else:
@@ -81,7 +83,7 @@ def mark(request):
                 branch=User.objects.filter(groups__name=branch)
             else:
                 branch=User.objects.filter(groups__name=str(branch)+"_"+group)
-            teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+            teacher=get_teacher_by_user(request.user.username)
             branchSubject=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
             objective=request.POST.get("so")
             setattr(branchSubject,"NOLT"+str(objective),getattr(branchSubject,"NOLT"+str(objective))+1)
@@ -111,12 +113,14 @@ def mark(request):
                             mark_attendance.attend_obj.create(student=student,subject=subject,present=False,date=date,lecture_number=lecture_number,semester=student.branch.semester,session=student.branch.batch,teacher=teacher,topics=topic_list)
             
             #marking lds
-            # lecturenumber=str(branchSubject.NOLT1+branchSubject.NOLT2+branchSubject.NOLT3+branchSubject.NOLT4+branchSubject.NOLT5)
-            lecturenumber="1"
+            lecturenumber=str(branchSubject.NOLT1+branchSubject.NOLT2+branchSubject.NOLT3+branchSubject.NOLT4+branchSubject.NOLT5)
+            # lecture/number="1"
             date=date.isoformat()
             data=getattr(branchSubject,"lecture_"+lecturenumber)
+            if not data:
+                data={}
             data["dateExec"]=date
-            data["topics_planned"]=data["topics"]
+            # data["topics_planned"]=data["topics"]
             data["topics_delivered"]=topic_list
             data["unit"]=unit
             setattr(branchSubject,"lecture_"+lecturenumber,data)
@@ -139,7 +143,7 @@ def pastattendance(request):
         session=request.GET.get('session')
         studentid=request.GET.get('studentid')
 
-        teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
+        teacher=get_teacher_by_user(request.user.username)
         print(teacher,type(teacher))
 
         branches=branch_detail.branch_obj.all()

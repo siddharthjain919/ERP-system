@@ -8,8 +8,10 @@ from django.contrib import messages
 from import_export.formats import base_formats
 
 from erp.services import create_new_password
+from branch.services import get_subjects_by_branch
 
 from .models import studentlogin
+from .services import get_student_by_user
 from attendance.models import mark_attendance
 from .resources import StudentloginResource
 
@@ -52,8 +54,8 @@ def logout(request):
     return redirect('/student')
 
 def attendance(request):
-    if request.user.is_active and request.user.groups.filter(name="student").exists():
-        student= studentlogin.stud_obj.get(studentid=request.user.username)
+    if request.user.is_authenticated and request.user.groups.filter(name="student").exists():
+        student= get_student_by_user(request.user.username)
         attendance_list=mark_attendance.attend_obj.filter(student=student,semester=student.branch.semester)
         total=0
         total_present=0
@@ -75,11 +77,17 @@ def attendance(request):
         label['Absent']=[total-total_present,total]
         
         colors=['red']
-        
+        allcolors = ['#3D9970', '#39CCCC', '#2ECC40', '#0074D9', '#7FDBFF', '#B10DC9', '#85144b', '#F012BE', '#DDDDDD', '#111111', '#AAAAAA', '#001f3f', '#0074D9', '#FF851B', '#FFDC00', '#3D9970', '#2ECC40']
+        colors=colors+choices(allcolors,k=len(label)-1)
         for i in range(len(label)-1):
-            temp='#'
-            temp+=''.join(choices('0123456789ABCDEF',k=6))
+            temp=choices(allcolors,k=1)[0]
+            allcolors.remove(temp)
             colors.append(temp)
+        
+        # for i in range(len(label)-1):
+        #     temp='#'
+        #     temp+=''.join(choices('0123456789ABCDEF',k=6))
+        #     colors.append(temp)
         data={}
         data["labels"]=list(str(i) for i in label.keys())
         data['datasets']=dict([
@@ -93,21 +101,23 @@ def attendance(request):
         return render(request,'studentlogin.html')
 
 def timetable(request):
-    if  request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
-        user = studentlogin.stud_obj.get(studentid=request.user.username)
+    if request.user.is_authenticated and request.user.groups.filter(name="student").exists():
+        user = get_student_by_user(request.user.username)
         return render(request,"stud_timetable.html",{"user":user})
     else:
         return render(request,'studentlogin.html')
 
 def subject(request):
-    if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
-        return render(request, 'dashboard.html')
+    if  request.user.is_authenticated and request.user.groups.filter(name="student").exists():
+        student=get_student_by_user(request.user.username)
+        subjects=get_subjects_by_branch(student.branch)
+        return render(request, 'stud_subjects.html',{'subjects':subjects,"sem":student.branch.semester})
     else:
         return render(request,'studentlogin.html')
 
 def about(request):
-    if request.user.is_active and studentlogin.stud_obj.filter(studentid=request.user.username):
-        user = studentlogin.stud_obj.get(studentid=request.user.username)
+    if request.user.is_authenticated and request.user.groups.filter(name="student").exists():
+        user = get_student_by_user(request.user.username)
         return render(request,"stud_about.html",{"user":user})
     else:
         return render(request,'studentlogin.html')

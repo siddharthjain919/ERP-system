@@ -67,8 +67,8 @@
                                                                 <td>{{executionData|get_item:i|get_item:"datePlan"}}</td>
                                                                 <td>{{executionData|get_item:i|get_item:"dateExec"}}</td>
                                                                 <td>{{executionData|get_item:i|get_item:"unit"}}</td>
-                                                                <td>{{executionData|get_item:i|get_item:"topics_planned"}}</td>
-                                                                <td>{{executionData|get_item:i|get_item:"topics_delivered"}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"topics_planned"|join:", "}}</td>
+                                                                <td>{{executionData|get_item:i|get_item:"topics_delivered"|join:", "}}</td>
                                                             {%else%}
                                                                 <td><input type="date" name="dateplan{{i}}"></td>
                                                                 <td>In Process</td>
