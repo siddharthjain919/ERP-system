@@ -21,4 +21,5 @@ urlpatterns = [
     path('lds',views.lds),
     path('lds-form',views.ldsform),
     path('topics',views.load_topics), ##ajax from ldsform ##
+    path('ajax/load-CO',views.load_objectives)
 ]

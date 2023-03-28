@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib import messages
 
+from erp.services import load_ajax
+
 from erp.models import course,subjects
 from branch.models import branch_detail,branch_subjects
 from student.models import studentlogin
@@ -30,7 +32,7 @@ def load_branch_details(request):
         for i in branches:
             if i.name not in unique_branch:
                 unique_branch.append(i.name)
-        return render(request,'load_branch_dropdown_list.html',{'branches':unique_branch})
+        return load_ajax(unique_branch)
     else:
         return redirect('/teacher/login')
 

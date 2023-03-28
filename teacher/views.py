@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render,HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from erp.services import create_new_password
+from erp.services import create_new_password,load_ajax,get_subject, get_all_subjects, create_question
 
 from branch.models import branch_detail, branch_subjects
 from branch.forms import branch_subject_form
@@ -111,7 +111,7 @@ def timetable(request):
 					if lecture_input:
 						lecture_input=lecture_input.split('-')
 						subject_name=lecture_input[0]
-						subject_name=subjects.sub_obj.get(subject_name=subject_name)
+						subject_name=get_subject(subject_name)
 						subject_teacher=lecture_input[1]
 						subject_teacher=teacherlogin.teach_obj.get(name=subject_teacher)
 						teacher_slot=getattr(subject_teacher,"teach_"+lecture_name)
@@ -197,7 +197,7 @@ def studentlist(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		if request.method=='POST':
 			curr_branch=branch_detail.branch_obj.get(name=request.POST.get('branch'),batch=request.POST.get('batch'),section=request.POST.get('section'))
-			curr_subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			curr_subject=get_subject(request.POST.get('subject'))
 			student_list=list(studentlogin.stud_obj.filter(branch=curr_branch))
 			curr_exam_type=request.POST.get('exam-type')
 			for i in range(len(student_list)):
@@ -214,7 +214,7 @@ def studentlist(request):
 def mark_marks(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		if request.method=='POST':
-			subject=subjects.sub_obj.get(subject_name=request.POST.get('subject'))
+			subject=get_subject(request.POST.get('subject'))
 			branch=request.POST.get("branch")
 			branch=User.objects.filter(groups__name=branch)
 			exam_type=request.POST.get('exam-type')
@@ -254,31 +254,41 @@ def mark_marks(request):
 
 def addPaper(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-		subject_list=list(subjects.sub_obj.all())
+		subject_list=get_all_subjects()
 		if request.method=="POST":
+			print(dict(request.POST.items()))
 			subject=request.POST.get('subject')
-			subject=subjects.sub_obj.get(subject_name=subject)
+			subject=get_subject(subject)
 
 			ques_paper=question_paper()
+			
 			ques_paper.subject=subject
 			ques_paper.semester=request.POST.get('semester')
 			ques_paper.session=request.POST.get('session')
+			ques_paper.save()
 			total_sum=0
-			for ques in "1234567":
-				if 'marksques'+ques in request.POST:
+			for ques in range(1,16):
+				ques=str(ques)
+				try:
 					ques_marks_sum=int(request.POST.get('marksques'+ques))
-				else:
+				except:
 					ques_marks_sum=0
-				for part in 'ABCDEFGHIJ':
+					continue
+				for part in 'abcdefghij':
 					try:
-						temp=request.POST.get(ques+part.lower()+'.')
-						setattr(ques_paper,"Ques"+ques+"_part"+part,temp)
-						temp=int(request.POST.get(ques+part.lower()+'._marks'))
-						setattr(ques_paper,"Ques"+ques+'_part'+part+"_marks",temp)
+						text=request.POST.get(ques+part)
+						co=request.POST.get(ques+part+'_co')
+						mark=request.POST.get(ques+part+'_marks')
+						question=create_question(co=co,no=int(ques),part=part,text=text,marks=mark,paper=ques_paper)
+						# temp=request.POST.get(ques+part.lower()+'.')
+						# setattr(ques_paper,"Ques"+ques+"_part"+part,temp)
+						# temp=int(request.POST.get(ques+part.lower()+'._marks'))
+						# setattr(ques_paper,"Ques"+ques+'_part'+part+"_marks",temp)
+
 					except Exception as e:
 						break
-				setattr(ques_paper,"MarksQues"+ques,ques_marks_sum)
 				total_sum+=ques_marks_sum
+				setattr(ques_paper,"marks_"+ques,ques_marks_sum)
 			setattr(ques_paper,"total_marks",total_sum)
 			ques_paper.save()
 			return HttpResponseRedirect("/teacher/marks")
@@ -295,7 +305,7 @@ def lds(request):
 		try:
 			subject=request.GET.get('subject')
 			branch=request.GET.get('branch')
-			subject=subjects.sub_obj.get(subject_name=subject)
+			subject=get_subject(subject)
 			teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
 			subject_obj=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
 			executionData={}
@@ -322,7 +332,7 @@ def ldsform(request):
 	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
 		if request.method=='POST':
 			subject=request.POST.get('subject')
-			subject=subjects.sub_obj.get(subject_name=subject)
+			subject=get_subject(subject)
 			teacher=teacherlogin.teach_obj.get(teacherid=request.user.username)
 			subject=branch_subjects.branch_sub_obj.get(subject_teacher=teacher,branch_subject=subject)
 			for i in range(75):
@@ -348,13 +358,26 @@ def ldsform(request):
 		return redirect('/teacher/login')
 
 def load_topics(request):
-    if request.user.is_active and request.user.groups.filter(name="teacher").exists():
-        so=request.GET.get('unit')
-        subject=request.GET.get('subject')
-        print(subject,so)
-        subject=subjects.sub_obj.get(subject_name=subject)
-        topics_list=getattr(subject,"topics"+so)["topic_list"]
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		so=request.GET.get('unit')
+		subject=request.GET.get('subject')
+		subject=get_subject(subject)
+		topics_list=getattr(subject,"topics"+so)["topic_list"]
+		return load_ajax(topics_list,[])
         
-        return render(request,'load_topics.html',{"topics_list":topics_list})
-    else:
-        return redirect('/teacher/login')
+        # return render(request,'load_topics.html',{"topics_list":topics_list})
+	else:
+		return redirect('/teacher/login')
+
+def load_objectives(request):
+	if request.user.is_active and request.user.groups.filter(name="teacher").exists():
+		subject=request.GET.get('subject')
+		subject=get_subject(subject)
+		objectives=[]
+		for i in range(1,6):
+			objectives.append(getattr(subject,'CO_'+str(i)))
+		return load_ajax(objectives,[])
+        
+        # return render(request,'load_topics.html',{"topics_list":topics_list})
+	else:
+		return redirect('/teacher/login')

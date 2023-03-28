@@ -1,6 +1,6 @@
 from .models import studentlogin, student_marks
 
-def get_first_student()->studentlogin| None:
+def get_first_student()->studentlogin:
     try:
         return studentlogin.stud_obj.first()
     except:

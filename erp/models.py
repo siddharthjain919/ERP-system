@@ -58,88 +58,42 @@ class subjects(models.Model):
     sub_obj=models.Manager()
     pre_save.connect(topics)
 
+
+
+def default_json():
+        return {
+            'marks':None,
+            'part':[]
+            }
+
 class question_paper(models.Model):
     subject=models.ForeignKey(subjects,on_delete=models.CASCADE)
     session=models.IntegerField()
     semester=models.IntegerField()
 
-    Ques1_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partB=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partC=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partD=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partE=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partF=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partG=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partH=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partI=models.CharField(null=True,blank=True,max_length=120)
-    Ques1_partJ=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques1_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partB_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partC_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partD_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partE_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partF_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partG_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partH_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partI_marks=models.IntegerField(null=True,blank=True)
-    Ques1_partJ_marks=models.IntegerField(null=True,blank=True)
-    MarksQues1=models.IntegerField()
-
-
-    Ques2_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques2_partB=models.CharField(null=True,blank=True,max_length=120)
-    Ques2_partC=models.CharField(null=True,blank=True,max_length=120)
-    Ques2_partD=models.CharField(null=True,blank=True,max_length=120)
-    Ques2_partE=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques2_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques2_partB_marks=models.IntegerField(null=True,blank=True)
-    Ques2_partC_marks=models.IntegerField(null=True,blank=True)
-    Ques2_partD_marks=models.IntegerField(null=True,blank=True)
-    Ques2_partE_marks=models.IntegerField(null=True,blank=True)
-    MarksQues2=models.IntegerField()
-
-    Ques3_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques3_partB=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques3_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques3_partB_marks=models.IntegerField(null=True,blank=True)
-    MarksQues3=models.IntegerField()
-
-    Ques4_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques4_partB=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques4_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques4_partB_marks=models.IntegerField(null=True,blank=True)
-    MarksQues4=models.IntegerField()
-
-    Ques5_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques5_partB=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques5_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques5_partB_marks=models.IntegerField(null=True,blank=True)
-    MarksQues5=models.IntegerField()
-
-    Ques6_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques6_partB=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques6_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques6_partB_marks=models.IntegerField(null=True,blank=True)
-    MarksQues6=models.IntegerField()
-
-    Ques7_partA=models.CharField(null=True,blank=True,max_length=120)
-    Ques7_partB=models.CharField(null=True,blank=True,max_length=120)
-
-    Ques7_partA_marks=models.IntegerField(null=True,blank=True)
-    Ques7_partB_marks=models.IntegerField(null=True,blank=True)
-    MarksQues7=models.IntegerField()
+    marks_1=models.IntegerField(null=True,blank=True)
+    marks_2=models.IntegerField(null=True,blank=True)
+    marks_3=models.IntegerField(null=True,blank=True)
+    marks_4=models.IntegerField(null=True,blank=True)
+    marks_5=models.IntegerField(null=True,blank=True)
+    marks_6=models.IntegerField(null=True,blank=True)
+    marks_7=models.IntegerField(null=True,blank=True)
+    marks_8=models.IntegerField(null=True,blank=True)
+    marks_9=models.IntegerField(null=True,blank=True)
+    marks_10=models.IntegerField(null=True,blank=True)
 
     total_marks=models.IntegerField(null=True,blank=True)
 
-    question_paper_obj=models.Manager()
     def __str__(self):
         return str(self.subject)+str(self.session)
+    
+class question(models.Model):
+    co=models.CharField(max_length=1)
+    ques=models.IntegerField()
+    part=models.CharField(max_length=1)
+    text=models.CharField(max_length=120)
+    marks=models.IntegerField()
+    paper=models.ForeignKey(question_paper,on_delete=models.CASCADE)
 
 class achievements(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

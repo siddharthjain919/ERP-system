@@ -52,6 +52,7 @@ class branch_subjects(models.Model):
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
 	subject_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.CASCADE,default=None)
+	optional_teacher=models.ForeignKey("teacher.teacherlogin",on_delete=models.SET_NULL,null=True,blank=True,verbose_name="Teacher 2", related_name="optional_teacher")
 
 	NOLR1=models.IntegerField(default=8)
 	NOLT1=models.IntegerField(default=0,editable=False)
@@ -72,6 +73,8 @@ class branch_subjects(models.Model):
 		exec(f"lecture_{i}=models.JSONField(blank=True,null=True,editable=False)")
 	
 	def __str__(self):
+		if self.optional_teacher:
+			return self.branch_subject.subject_name+"-"+self.subject_teacher.name+'-'+self.optional_teacher.name
 		return self.branch_subject.subject_name+"-"+self.subject_teacher.name	
 	branch_sub_obj=models.Manager()
 	class Meta:

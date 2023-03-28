@@ -1,491 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}
+{% load static %}
 
-    <head>
-        <title>Question Paper </title>
-        <!-- Favicon icon -->
-        <link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
-        <link rel="stylesheet" href={% static 'css/style.css' %}>
-        <link rel="stylesheet" href={% static "css/skin-3.css" %}>
-        <link rel="stylesheet" href={% static "css/button.css" %}>
-        <style>
-            .ques {
-                padding: 0px;
-                width: 700px;
-                font-size: large;
-                overflow: hidden;
-            }
-        </style>
-    </head>
+<head>
+    <title>Question Paper </title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static "css/skin-3.css" %}>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href={% static "css/button.css" %}>
+    <style>
+        td {
+  border: 3px solid black;
+}
 
-    <body>
-        <div id="main-wrapper">
-            {%include "navbar.html" %}
-            <div class="content-body">
-                <!-- row -->
-                <div class="container-fluid">
+    </style>
+</head>
 
-                    <div class="row">
-                        <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">New Question Paper</h4>
-                                </div>
-                                <div class="card-body">
-                                    <form action="/teacher/add-paper" method="POST">
-                                        {%csrf_token%}
-                                        <div align="center">
-                                            <label>Subject:</label>
-                                            <select name="subject" required>
-                                                <option value="" disabled selected>-----</option>
-                                                {%for subject in subjects%}
-                                                <option value="{{subject}}">{{subject}}</option>
-                                                {%endfor%}
-                                            </select>
-                                            <label>Semester:</label>
-                                            <input type="number" min="1" max="8" required name="semester">
-                                            <label>Session:</label>
-                                            <input type="number" min="2019" max="2050" name="session" required>
+<body>
+    <div id="main-wrapper">
+        {%include "navbar.html" %}
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">
 
-                                        </div>
+                <div class="row">
+                    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">New Question Paper</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="/teacher/add-paper" method="POST">
+                                    {%csrf_token%}
+                                    <div align="center">
+                                        <label>Subject:</label>
+                                        <select name="subject" id="subject" required>
+                                            <option value="" disabled selected>-----</option>
+                                            {%for subject in subjects%}
+                                            <option value="{{subject}}">{{subject}}</option>
+                                            {%endfor%}
+                                        </select>
+                                        <label>Semester:</label>
+                                        <input type="number" min="1" max="8" required name="semester">
+                                        <label>Session:</label>
+                                        <input type="number" min="2019" max="2050" name="session" required>
 
-                                        <div class="table-responsive recentOrderTable">
+                                    </div>
 
-                                            <table class="table verticle-middle table-responsive-md">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">No.</th>
-                                                        <th>Details</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th>1.</th>
-                                                        <th>
-                                                            <table id="table1" style="display:none">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques1"></th>
-                                                                </thead>
-                                                                <!-- your existing rows and cells here -->
-                                                            </table>
-                                                            <button type="button" id="add-button1" class="buttondesign"
-                                                                onclick="add1()">
-                                                                Add
-                                                            </button>
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2.</th>
-                                                        <th>
-                                                            <table id="table2" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques2"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button2" class="buttondesign"
-                                                                onclick="add2()">Add</button>
-                                                        </th>
+                                    <div class="table-responsive recentOrderTable">
 
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3.</th>
-                                                        <th>
-                                                            <table id="table3" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques3"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button3" class="buttondesign"
-                                                                onclick="add3()">Add</button>
-                                                        </th>
+                                        <table class="table verticle-middle table-responsive-md" id="question">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">No.</th>
+                                                    <th>Details</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="questionBody">
+                                                <tr>
+                                                    <th>1.</th>
+                                                    <th>
+                                                        <table id="table1" style="display:none; column-rule-style:5px solid rebeccapurple">
+                                                            <thead style="text-align: center;">
+                                                                <th class="part">Part</th>
+                                                                <th class="co">CO</th>
+                                                                <th class="ques">Question</th>
+                                                                <th class="marks"><input type="number"
+                                                                        placeholder="Marks" name="marksques1"></th>
+                                                            </thead>
+                                                            <!-- your existing rows and cells here -->
+                                                        </table>
+                                                        <button type="button" id="add-button1" class="buttondesign"
+                                                            onclick="addPart(1)">
+                                                            Add Part
+                                                        </button>
+                                                    </th>
+                                                </tr>
 
-                                                    </tr>
-                                                    <tr>
-                                                        <th>4.</th>
-                                                        <th>
-                                                            <table id="table4" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques4"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button4" class="buttondesign"
-                                                                onclick="add4()">Add</button>
-                                                        </th>
+                                            </tbody>
+                                        </table>
+                                        <button type="button" id="add-ques" class="buttondesign" onclick="addQues()">
+                                            Add Ques
+                                        </button>
 
-                                                    </tr>
-                                                    <tr>
-                                                        <th>5.</th>
-                                                        <th>
-                                                            <table id="table5" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques5"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button5" class="buttondesign"
-                                                                onclick="add5()">Add</button>
-                                                        </th>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <th>6.</th>
-                                                        <th>
-                                                            <table id="table6" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques6"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button6" class="buttondesign"
-                                                                onclick="add6()">Add</button>
-                                                        </th>
-
-                                                    </tr>
-                                                    <tr>
-                                                        <th>7.</th>
-                                                        <th>
-                                                            <table id="table7" style="display: none;">
-                                                                <thead style="text-align: center;">
-                                                                    <th>Part</th>
-                                                                    <th>Question</th>
-                                                                    <th><input style="width: 67px;" type="number" placeholder="Marks" name="marksques7"></th>
-                                                                </thead>
-                                                            </table>
-                                                            <button type="button" id="add-button7" class="buttondesign"
-                                                                onclick="add7()">Add</button>
-                                                        </th>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <br>
-                                        <button type="submit" class="buttondesign">Upload</button>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="buttondesign" style="float:right">Upload</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
-            <!--**********************************
-Content body end
-***********************************-->
         </div>
         <!--**********************************
+Content body end
+***********************************-->
+    </div>
+    <!--**********************************
 Main wrapper end
 ***********************************-->
 
-        <!--**********************************
+    <!--**********************************
 Scripts
 ***********************************-->
-        <!-- Required vendors -->
-        <script>
-            var clickCount1 = 0;
-            var clickCount2 = 0;
-            var clickCount3 = 0;
-            var clickCount4 = 0;
-            var clickCount5 = 0;          // variable to keep track of clicks
-            var clickCount6 = 0;
-            var clickCount7 = 0;
+    <!-- Required vendors -->
+    <script>
+        var objective_data;
+        $(document).ready(function () {
+            $("#subject").change(function () {
+                var subject = $(this).val();
+                // alert(subject);
+                $.ajax({                                          // initialize an AJAX request
+                    url: "/teacher/ajax/load-CO",                                    // set the url of the request (= ajax/load-department-details/ )
+                    data: {
+                        'subject': subject,
 
-            var labels = ["a.", "b.", "c.", "d.", "e.", "f.", "g.", "h.", "i.", "j."]; // array of labels
+                    },        // add the course  to the GET parameters
+                    success: function (data) {
+                        // alert(data); 
+                        objective_data=data;
+                        $(".co-option").html(data);
+                    }
+                });
+            });
 
-            function add1() {
-                if (clickCount1 < 10) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table1");
-                    table.style.display = "block";
+        });
+        let clickCount = {
+            ques: 1,
+            1: 0
+        }
 
-                    var newRow = table.insertRow();
+        var labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]; // array of labels
 
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount1]);
-                    newCell.appendChild(label);
-
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "1" + labels[clickCount1]);
-                    input.required = true;
-                    newCell2.appendChild(input);
-
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","1"+labels[clickCount1]+"_marks")
-                    newCell3.appendChild(input);
-
-                    clickCount1++;
-                }
-                if (clickCount1 == 10) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button1");
-                    button.style.display = "none";
-                }
+        function addPart(ques) {
+            if (clickCount[ques] < 10) { // only add a new row if clicks are less than 10
+                var table = document.getElementById("table" + ques);
+                table.style.display = "block";
+                let rowHtml = `<tr>
+                                <td>${labels[clickCount[ques]]}.</td>
+                                <td>
+                                    <select class='co-option' name="${ques + labels[clickCount[ques]]}_co">`
+                                +objective_data+`</select>
+                                </td>
+                                <td><input type="text" class="ques" name="${ques + labels[clickCount[ques]]}" required></td>
+                                <td><input type="number" max="10" min="0" name="${ques + labels[clickCount[ques]]}_marks" required></td>
+                            </tr>`
+                table.innerHTML += rowHtml;
+                clickCount[ques]++;
             }
-            function add2() {
-                if (clickCount2 < 5) {
-                    // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table2");
-                    table.style.display = "block";
-
-                    var newRow = table.insertRow();
-
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount2]);
-                    newCell.appendChild(label);
-
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "2" + labels[clickCount2]);
-                    input.required = true;
-                    newCell2.appendChild(input);
-
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","2"+labels[clickCount2]+"_marks")
-                    newCell3.appendChild(input);
-
-                    clickCount2++;
-                }
-                if (clickCount2 == 5) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button2");
-                    button.style.display = "none";
-                }
+            if (clickCount[ques] == 10) {
+                // disable the button after 10 clicks
+                var button = document.getElementById("add-button" + ques);
+                button.style.display = "none";
             }
-            function add3() {
-                if (clickCount3 < 2) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table3");
-                    table.style.display = "block";
-                    var newRow = table.insertRow();
+        }
 
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount3]);
-                    newCell.appendChild(label);
+        function addQues() {
+            if (clickCount.ques<15){
+            var table = document.querySelector("#questionBody");
+            // alert(table);
+            clickCount.ques += 1;
+            clickCount[clickCount.ques] = 0;
+            // alert(1);
 
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "3" + labels[clickCount3]); 
-                    input.required = true;
-                    newCell2.appendChild(input);
+            let rowHtml = `<tr>
+                        <th>${clickCount.ques}.</th>
+                        <th>
+                            <table id="table${clickCount.ques}" style="display:none">
+                                <thead style="text-align: center;">
+                                    <th class="part">Part</th>
+                                    <th class="co">CO</th>
+                                    <th class="ques">Question</th>
+                                    <th class="marks"><input  type="number"
+                                        placeholder="Marks" name="marksques${clickCount.ques}"></th>
+                                </thead>
+                                <!-- your existing rows and cells here -->
+                            </table>
+                            <button type="button" id="add-button${clickCount.ques}" class="buttondesign"
+                                onclick="addPart(${clickCount.ques})">
+                                Add Part
+                            </button>
+                        </th>
+                    </tr>`
+            // alert(2);
+            table.innerHTML += rowHtml;
+            // alert(3);
+        }
+        if (clickCount.ques==15){
+            var button = document.getElementById("add-ques");
+            button.style.display = "none";
+        }
+    }
+    </script>
 
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","3"+labels[clickCount3]+"_marks")
-                    newCell3.appendChild(input);
+    <script src={% static "vendor/global/global.min.js" %}></script>
+    <!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js" %}></script> -->
+    <script src={% static "js/custom.min.js" %}></script>
+    <script src={% static "js/dlabnav-init.js" %}></script>
 
+    <!-- Chart sparkline plugin files -->
+    <script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js" %}></script>
+    <script src={% static "js/plugins-init/sparkline-init.js" %}></script>
 
-                    clickCount3++;
-                }
-                if (clickCount3 == 2) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button3");
-                    button.style.display = "none";
-                }
-            }
-            function add4() {
-                if (clickCount4 < 2) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table4");
-                    table.style.display = "block";
-                    var newRow = table.insertRow();
+    <!-- Chart Morris plugin files -->
+    <script src={% static "vendor/raphael/raphael.min.js" %}></script>
+    <script src={% static "vendor/morris/morris.min.js" %}></script>
 
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount4]);
-                    newCell.appendChild(label);
+    <!-- Init file -->
+    <script src={% static "js/plugins-init/widgets-script-init.js" %}></script>
 
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "4" + labels[clickCount4]); 
-                    input.required = true;
-                    newCell2.appendChild(input);
+    <!-- Demo scripts -->
+    <script src={% static "js/dashboard/dashboard.js" %}></script>
 
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","4"+labels[clickCount4]+"_marks")
-                    newCell3.appendChild(input);
+    <!-- Summernote -->
+    <script src={% static "vendor/summernote/js/summernote.min.js" %}></script>
+    <!-- Summernote init -->
+    <script src={% static "js/plugins-init/summernote-init.js" %}></script>
 
-
-                    clickCount4++;
-                }
-                if (clickCount4 == 2) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button4");
-                    button.style.display = "none";
-                }
-            }
-            function add5() {
-                if (clickCount5 < 2) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table5");
-                    table.style.display = "block";
-                    var newRow = table.insertRow();
-
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount5]);
-                    newCell.appendChild(label);
-
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "5" + labels[clickCount5]); 
-                    input.required = true;
-                    newCell2.appendChild(input);
-
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","5"+labels[clickCount5]+"_marks")
-                    newCell3.appendChild(input);
-
-                    clickCount5++;
-                }
-                if (clickCount5 == 2) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button5");
-                    button.style.display = "none";
-                }
-            }
-            function add6() {
-                if (clickCount6 < 2) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table6");
-                    table.style.display = "block";
-                    var newRow = table.insertRow();
-
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount6]);
-                    newCell.appendChild(label);
-
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "6" + labels[clickCount6]); 
-                    input.required = true;
-                    newCell2.appendChild(input);
-
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","6"+labels[clickCount6]+"_marks")
-                    newCell3.appendChild(input);
-
-                    clickCount6++;
-                }
-                if (clickCount6 == 2) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button6");
-                    button.style.display = "none";
-                }
-            }
-            function add7() {
-                if (clickCount7 < 2) { // only add a new row if clicks are less than 10
-                    var table = document.getElementById("table7");
-                    table.style.display = "block";
-                    var newRow = table.insertRow();
-
-                    var newCell = newRow.insertCell();
-                    var label = document.createTextNode(labels[clickCount7]);
-                    newCell.appendChild(label);
-
-                    var newCell2 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("class", "ques");
-                    input.setAttribute("name", "7" + labels[clickCount7]); 
-                    input.required = true;
-                    newCell2.appendChild(input);
-
-                    var newCell3 = newRow.insertCell();
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    input.setAttribute("max", "10");
-                    input.setAttribute("min", "0");
-                    input.required = true;
-                    input.setAttribute("name","7"+labels[clickCount7]+"_marks")
-                    newCell3.appendChild(input);
-
-                    clickCount7++;
-                }
-                if (clickCount7 == 2) {
-                    // disable the button after 10 clicks
-                    var button = document.getElementById("add-button7");
-                    button.style.display = "none";
-                }
-            }
-        </script>
-
-        <script src={% static "vendor/global/global.min.js" %}></script>
-        <!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js" %}></script> -->
-        <script src={% static "js/custom.min.js" %}></script>
-        <script src={% static "js/dlabnav-init.js" %}></script>
-
-        <!-- Chart sparkline plugin files -->
-        <script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js" %}></script>
-        <script src={% static "js/plugins-init/sparkline-init.js" %}></script>
-
-        <!-- Chart Morris plugin files -->
-        <script src={% static "vendor/raphael/raphael.min.js" %}></script>
-        <script src={% static "vendor/morris/morris.min.js" %}></script>
-
-        <!-- Init file -->
-        <script src={% static "js/plugins-init/widgets-script-init.js" %}></script>
-
-        <!-- Demo scripts -->
-        <script src={% static "js/dashboard/dashboard.js" %}></script>
-
-        <!-- Summernote -->
-        <script src={% static "vendor/summernote/js/summernote.min.js" %}></script>
-        <!-- Summernote init -->
-        <script src={% static "js/plugins-init/summernote-init.js" %}></script>
-
-        <!-- Svganimation scripts -->
-        <script src={% static "vendor/svganimation/vivus.min.js" %}></script>
-        <script src={% static "vendor/svganimation/svg.animation.js" %}></script>
-        <!--script src={% static "js/styleSwitcher.js"></script-->
-        <!--
+    <!-- Svganimation scripts -->
+    <script src={% static "vendor/svganimation/vivus.min.js" %}></script>
+    <script src={% static "vendor/svganimation/svg.animation.js" %}></script>
+    <!--script src={% static "js/styleSwitcher.js"></script-->
+    <!--
 to import settings change name of settings.js to sytleSwitcher.js
 -->
-    </body>
+</body>
 
 </html>

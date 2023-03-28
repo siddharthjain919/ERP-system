@@ -3,9 +3,12 @@ from secrets import choice
 from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from django.shortcuts import HttpResponse
+from django.utils.safestring import mark_safe
+from typing import List
 
 from .settings import password,sender
-from .models import subjects, course
+from .models import subjects, course,question,question_paper
 
 def get_first_subject()->subjects:
     try:
@@ -19,6 +22,17 @@ def get_first_course()->course:
     except:
         return None
     
+def get_subject(name:str)->subjects:
+    return subjects.sub_obj.get(subject_name=name)
+
+def get_all_subjects()->List[subjects]:
+    return list(subjects.sub_obj.all())
+
+def create_question(co:str,no:int,part:str,text:str,marks:int,paper:question_paper)->question:
+    ques= question.objects.create(co=co,ques=no,part=part,text=text,marks=marks,paper=paper)
+    ques.save()
+    return ques
+
 def generate_password()->str:
     letters = string.ascii_letters
     digits = string.digits
@@ -28,7 +42,6 @@ def generate_password()->str:
     for _ in range(8):
         pwd += ''.join(choice(alphabet))
     return pwd
-
 
 def send_mail(receiver_email:str,email_body:str)->bool:
 
@@ -77,3 +90,12 @@ def create_new_password(user)->str:
     except Exception as e:
         print(e)
         return False
+
+def load_ajax(value_list:list,options_html=['<option value="">---------</option>']):
+    print(value_list)
+    for value in value_list:
+        options_html.append(f'<option value="{value}">{value}</option>')
+    response_html = mark_safe('\n'.join(options_html))
+    options_html=['<option value="">---------</option>']
+    return HttpResponse(response_html)
+
