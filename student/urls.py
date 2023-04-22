@@ -13,4 +13,5 @@ urlpatterns = [
     path('about/',views.about),
     path('forget/',views.forget,name='forget'),
     path('mail/',views.forgot_mail),
+    path('lab-compiler',views.lab_simulator,name='compiler')
 ]

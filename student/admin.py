@@ -1,8 +1,6 @@
 from django.contrib import admin
-from .models import studentlogin,student_marks
+from .models import studentlogin,student_marks,practical
 from import_export.admin import ImportExportModelAdmin,ImportExportMixin
-import pandas as pd
-from sqlalchemy import create_engine
 
 from .resources import StudentloginResource
 
@@ -28,3 +26,4 @@ class StudentloginAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 
 # admin.site.register(studentlogin)
 admin.site.register(student_marks)
+admin.site.register(practical)

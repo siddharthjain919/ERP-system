@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+    <head>
+        <title>Lab</title>
+        <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
+        <link rel="stylesheet" href={% static 'css/style.css' %}>
+        <link rel="stylesheet" href={% static "css/skin-3.css" %}>
+        <link rel="stylesheet" href={% static "css/button.css" %}>
+    </head>
+
+    <body>
+        <div id="main-wrapper">
+            {%include "studentnavbar.html" %}
+            <!--**********************************
+	Sidebar end
+	***********************************-->
+
+            <!--**********************************
+	Content body start
+	***********************************-->
+            <div class="content-body">
+                <!-- row -->
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Lab</h4>
+                                </div>
+                                <div class="card-body" >
+                                    <div class="row">
+                                        {%for subject in subjects%}
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <a href="/student/lab-compiler?subject={{subject.branch_subject.subject_name}}&branch={{subject.branch}}">
+                                                <div class="card" style=" box-shadow: 0px 0px 20px rgb(153, 153, 153);">
+                                                    <div class="card-body">
+                                                        {{subject.branch}}-{{subject.branch_subject.subject_name}}
+                                                    </div>
+
+                                                </div>
+                                            </a>
+                                        </div>
+                                        {%endfor%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!--**********************************
+	Content body end
+	***********************************-->
+            </div>
+        </div>
+        <!--**********************************
+	Main wrapper end
+	***********************************-->
+
+        <!--**********************************
+	Scripts
+	***********************************-->
+        <!-- Required vendors -->
+        <script src={% static "vendor/global/global.min.js" %}></script>
+        <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js" %}></script>
+        <script src={% static "js/custom.min.js" %}></script>
+        <script src={% static "js/dlabnav-init.js" %}></script>
+
+        <!-- Chart sparkline plugin files -->
+        <script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js" %}></script>
+        <script src={% static "js/plugins-init/sparkline-init.js" %}></script>
+
+
+        <!-- Chart Morris plugin files -->
+        <script src={% static "vendor/raphael/raphael.min.js" %}></script>
+        <script src={% static "vendor/morris/morris.min.js" %}></script>
+
+        <!-- Init file -->
+        <script src={% static "js/plugins-init/widgets-script-init.js" %}></script>
+
+        <!-- Demo scripts -->
+        <script src={% static "js/dashboard/dashboard.js" %}></script>
+
+        <!-- Summernote -->
+        <script src={% static "vendor/summernote/js/summernote.min.js" %}></script>
+        <!-- Summernote init -->
+        <script src={% static "js/plugins-init/summernote-init.js" %}></script>
+
+        <!-- Svganimation scripts -->
+        <script src={% static "vendor/svganimation/vivus.min.js" %}></script>
+        <script src={% static "vendor/svganimation/svg.animation.js" %}></script>
+        <!--script src={% static "js/styleSwitcher.js"></script-->
+        <!--
+	to import settings change name of settings.js to sytleSwitcher.js
+	-->
+    </body>
+
+</html>

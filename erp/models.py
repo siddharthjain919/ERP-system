@@ -32,6 +32,7 @@ class subjects(models.Model):
     code=models.CharField(max_length=12,unique=True)
     subject_name=models.CharField(max_length=50,unique=True)
     course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
+    is_lab=models.BooleanField('Is Lab',default=False)
     CO_1=models.CharField(max_length=50)
     to1=models.CharField(verbose_name="Topics in Unit 1",max_length=500,help_text="Enter topics seperated by ,")
     topics1=models.JSONField(default=None,editable=False,blank=True,null=True)

@@ -89,10 +89,12 @@ def create_new_password(user)->str:
         print(e)
         return False
 
-def load_ajax(value_list:list,options_html=['<option value="">---------</option>']):
+def load_ajax(value_list:list,options_html=[]):
+    if not options_html:
+        options_html=['<option value="">---------</option>']
     for value in value_list:
         options_html.append(f'<option value="{value}">{value}</option>')
     response_html = mark_safe('\n'.join(options_html))
-    del options_html
+    # del options_html
     return HttpResponse(response_html)
 

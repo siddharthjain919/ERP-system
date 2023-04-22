@@ -56,7 +56,6 @@ def createuser(**kwargs):
 			# batch1=branch_detail.branch_obj.get_or_create(name=str(branch)+"_Batch1",batch=branch.batch,course=branch.course,semester=branch.semester,)[0]
 
 
-
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],studentlogin):
 		try:
@@ -352,4 +351,14 @@ class student_marks(models.Model):
 	marks_obj=models.Manager()
 	def __str__(self) -> str:
 		return str(self.student)+"||"+str(self.branch)+"||"+str(self.subject)
+
+class practical(models.Model):
+
+	student=models.ForeignKey(studentlogin,on_delete=models.CASCADE)
+	subject=models.ForeignKey('branch.branch_subjects',on_delete=models.CASCADE)
+	upload_date=models.DateTimeField(verbose_name='Created On',auto_now_add=True)
+	is_evaulated=models.BooleanField(default=False)
+	obtained_marks=models.IntegerField(validators=[MinValueValidator(0)])
+	max_marks=models.IntegerField(validators=[MinValueValidator(0)])
+	file=models.FileField()
 

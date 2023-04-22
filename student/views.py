@@ -14,7 +14,8 @@ from .models import studentlogin
 from .services import get_student_by_user
 from attendance.models import mark_attendance
 from .resources import StudentloginResource
-
+from branch.services import get_subjects_by_branch,get_labs
+from erp.services import get_subject
 
 
 
@@ -144,3 +145,25 @@ def import_data(request):
         if not result.has_errors():
             resource.import_data(imported_data,dry_run= False)  # Actually import now
     return render(request, 'import_data.html')
+
+def lab_simulator(request):
+    if request.user.is_authenticated and request.user.groups.filter(name="student").exists():
+        user = get_student_by_user(request.user.username)
+        if request.method=='POST':
+            # return render(request,"lab_compiler.html",{"user":user,'subject':subject})
+            pass
+        else:
+            try:
+                subject=request.GET.get('subject')
+                branch=user.branch
+                subject=get_subject(subject)
+                return render(request,"lab_compiler.html",{"user":user,'subject':subject})
+            except:
+                subjects=get_subjects_by_branch(user.branch)
+                # print(subjects)
+                subjects=get_labs(subjects)
+                # print(subjects)
+                return render(request,'lab_subjects.html',{'subjects':subjects})
+
+    else:
+        return render(request,'studentlogin.html')
