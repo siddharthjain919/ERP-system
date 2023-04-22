@@ -45,7 +45,6 @@ def generate_password()->str:
 
 def send_mail(receiver_email:str,email_body:str)->bool:
 
-    print("in send mail")
     message=MIMEMultipart('alternative',None,[MIMEText(email_body,'text')])
     message['Subject']="Regarding ERP password"
     message['From']=sender
@@ -59,8 +58,7 @@ def send_mail(receiver_email:str,email_body:str)->bool:
         server.quit()
         print("mail sent")
     except Exception as e:
-        print("Mail could not be sent.")
-        print(e)
+        print("Mail could not be sent due to",e)
         return False
     return True
 
@@ -92,10 +90,9 @@ def create_new_password(user)->str:
         return False
 
 def load_ajax(value_list:list,options_html=['<option value="">---------</option>']):
-    print(value_list)
     for value in value_list:
         options_html.append(f'<option value="{value}">{value}</option>')
     response_html = mark_safe('\n'.join(options_html))
-    options_html=['<option value="">---------</option>']
+    del options_html
     return HttpResponse(response_html)
 

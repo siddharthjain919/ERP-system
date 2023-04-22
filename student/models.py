@@ -7,13 +7,12 @@ from django.utils import timezone
 from erp.services import create_new_password
 from django.contrib.auth.models import User,Group
 # Create your models here.
-from datetime import date
-
-from branch.models import branch_detail
 
 def formatting(**kwargs):
+	
 	if isinstance(kwargs["instance"],studentlogin):
 		student=kwargs["instance"]
+
 		student.name=student.name.title()
 		student.studentid=student.studentid.upper()
 
