@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 from erp.services import create_new_password,load_ajax,get_subject, get_all_subjects, create_question
+from .services import get_teacher_by_user
+from branch.services import get_subjects_by_teacher,get_labs,get_subjects_by_branch
 
 from branch.models import branch_detail, branch_subjects
 from branch.forms import branch_subject_form
@@ -177,9 +179,8 @@ def teachertimetable(request):
 		return redirect('/teacher/login')
 
 def forget(request):
-	return render(request,'forget-password.html')
-
-def forgot_mail(request):
+	if request.method=='GET':
+		return render(request,'forget-password.html')
 	try:
 		if request.method=='POST':
 			user=teacherlogin.teach_obj.get(email=request.POST.get('email'))
@@ -381,3 +382,14 @@ def load_objectives(request):
         # return render(request,'load_topics.html',{"topics_list":topics_list})
 	else:
 		return redirect('/teacher/login')
+	
+def lab(request):
+	if request.method=='POST':
+		#logic for saving the code
+		pass
+	else:
+		teacher=get_teacher_by_user(request.user.username)
+		practicals=get_labs(get_subjects_by_teacher(teacher))
+		## to be changed
+		return render(request,'lds.html')
+	return True
