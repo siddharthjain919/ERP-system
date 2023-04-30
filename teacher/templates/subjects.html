@@ -121,6 +121,30 @@
     var dialog = document.getElementById('my-dialog');
     dialog.open = false;
   }
+  document.getElementById("myForm").addEventListener("submit", function(event) {
+  // Prevent the form from submitting by default
+  event.preventDefault();
+
+  // Get the values of the number input fields
+  var number1 = parseInt(document.getElementsByName("NOLR1")[0].value);
+  var number2 = parseInt(document.getElementsByName("NOLR2")[0].value);
+  var number3 = parseInt(document.getElementsByName("NOLR3")[0].value);
+  var number4 = parseInt(document.getElementsByName("NOLR4")[0].value);
+  var number5 = parseInt(document.getElementsByName("NOLR5")[0].value);
+
+  // Calculate the sum
+  var sum = number1 + number2 + number3 + number4 + number5;
+
+  // Check if the sum is greater than 40
+  if (sum > 40) {
+    // If the sum is greater than 40, submit the form
+    this.submit();
+  } else {
+    // If the sum is not greater than 40, display an error message or take any other appropriate action
+    alert("The sum of the numbers must be greater than 40.");
+  }
+});
+
 </script>
 
 			</div>

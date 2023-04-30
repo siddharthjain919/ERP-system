@@ -6,6 +6,9 @@ from django.db.models.signals import post_save,post_delete
 from django.contrib.auth.models import User
 
 from erp.services import create_new_password
+from erp.extra import MyLogger
+
+logger=MyLogger(__name__).get_logger()
 
 # Create your models here.
 def createuser(**kwargs):
@@ -31,9 +34,12 @@ def createuser(**kwargs):
 		user.save()
 
 	elif isinstance(kwargs["instance"],teacherlogin):
+			logger.debug(f'Updating {kwargs["instance"].teacherid}')
 			u = User.objects.get(username=kwargs["instance"].teacherid)
-			u.set_password(kwargs["instance"].pwd)
-			u.save()
+			if not u.check_password(kwargs["instance"].pwd):
+				print(111111111111111111111111)
+				u.set_password(kwargs["instance"].pwd)
+				u.save()
 
 def deleteuser(**kwargs):
 	if isinstance(kwargs["instance"],teacherlogin):
@@ -43,6 +49,7 @@ def deleteuser(**kwargs):
 		except Exception as e:
 			print("from line 30 in teacher models")
 			print("******\n",e,"\n******")
+
 class teacherlogin(models.Model):
 
 	teacherid=models.CharField(max_length=20,primary_key=True)

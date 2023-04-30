@@ -2,8 +2,10 @@ from django.db import models
 from django.db.models.signals import pre_save,post_save,post_delete
 from django.contrib.auth.models import Group
 from django.core.validators import MaxValueValidator, MinValueValidator
-# from teacher.models import teacherlogin
-# Create your models here.
+
+from erp.extra import MyLogger
+
+logger=MyLogger(__name__).get_logger()
 def create_branch_group(**kwargs):
 	if kwargs["created"]  and isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
@@ -11,7 +13,7 @@ def create_branch_group(**kwargs):
 def update_teacher_timetable(**kwargs):
 	if isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
-		print(14)
+		print("Updating teacher timetable")
 		for i in ['mon','tues','wed','thurs','fri','sat']:
 			for j in range(1,9):
 				lecture_name=i+'_lec'+str(j)
@@ -27,11 +29,12 @@ def update_teacher_timetable(**kwargs):
 					
 					teacher_slot=getattr(lecture_details.subject_teacher,"teach_"+lecture_name)
 					if teacher_slot and teacher_slot!=branch:
-						raise Exception(lecture_details.subject_teacher.name,"already occupied at",lecture_name)
+						raise Exception(f'{lecture_details.subject_teacher.name} already occupied at {lecture_name}!')
 					if previous and previous!=lecture_details:
+						logger.debug(f'Previous was {previous}, new input is {lecture_details}')
 						setattr(previous.subject_teacher,"teach_"+lecture_name,None)
 						previous.subject_teacher.save()
-						print("cleared",branch,"from",previous.subject_teacher,"at slot",lecture_name)
+						print("Cleared",branch,"from",previous.subject_teacher,"at slot",lecture_name)
 					setattr(lecture_details.subject_teacher,"teach_"+lecture_name,branch)
 					lecture_details.subject_teacher.save()
 				elif previous:
@@ -43,7 +46,7 @@ def subject_check(**kwargs):
     if  isinstance(kwargs["instance"],branch_subjects):
         subject=kwargs["instance"]
         lecture_sum=subject.NOLR1+subject.NOLR2+subject.NOLR3+subject.NOLR4+subject.NOLR5
-        if lecture_sum<40:
+        if lecture_sum<40 and not subject.branch_subject.is_lab:
             raise Exception("Total lectures cannot be less than 40.")			
 def delete_branch_group(**kwargs):
 	if isinstance(kwargs['instance'],branch_detail):

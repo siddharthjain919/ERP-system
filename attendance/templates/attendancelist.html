@@ -1,203 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% load static %}
+{% load static %}
 
-	<head>
-		<title>Attendance</title>
-		<!-- Favicon icon -->
-		<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
-		<link rel="stylesheet" href={% static 'css/style.css' %}>
-		<link rel="stylesheet" href={% static "css/skin-3.css" %}>
+<head>
+	<title>Attendance</title>
+	<!-- Favicon icon -->
+	<link rel="icon" type="image/png" sizes="16x16" href={% static "images/favicon.png" %}>
+	<link rel="stylesheet" href={% static 'css/style.css' %}>
+	<link rel="stylesheet" href={% static "css/skin-3.css" %}>
 
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
-		<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-	</head>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+	<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
 
-	<body>
-		<div id="main-wrapper">
-			{% include "navbar.html"}
-			<div class="content-body">
-				<!-- row -->
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
-							<div class="card">
+<body>
+	<div id="main-wrapper">
+		{% include "navbar.html" %}
+		<div class="content-body">
+			<!-- row -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+						<div class="card">
+							<div class="card-title">
+								<b>{{curr_branch}}</b>
+							</div>
+							{%csrf_token%}
+							<!-- <hr> -->
+							<div class="card-body" align="center">
 								<form method="post" action="/teacher/attendance/mark">
-									{%csrf_token%}
-									<h3 class="card-title"><b>{{curr_branch}}</b></h3>
-									<br>
-									<div class="card-body" align="center">
-										<label>Objective:</label>
-										<input list="so" placeholder="Objective" name="so" class="so" required>
-										<datalist id="so">
-											{%for so in sos%}
-											<option value="{{so|slice:1}}">{{so|slice:"1:"}}</option>
+									<label>Objective:</label>
+									<input list="so" placeholder="Objective" name="so" class="so" required>
+									<datalist id="so">
+										{%for so in sos%}
+										<option value="{{so|slice:1}}">{{so|slice:"1:"}}</option>
+										{%endfor%}
+									</datalist>
+									&emsp;
+									&ensp;
+									<label>Topics:</label>
+									<select id="topic_list" name="topics" placeholder="Select Topics" style="width: 5%;"
+										required multiple>
+
+									</select>
+									<label>Date:</label>
+									<input type="date" name="date"
+										onfocus="this.max=new Date().toISOString().split('T')[0]" required />
+
+									&emsp;
+									&ensp;
+									<div class="col-lg-2 col-md-2 col-sm-2">
+										<label>Lecture Number:</label>
+										<!-- <input type="number" max="8" min="1" value="1" name="lecture_no" required> -->
+
+										<select id="choices-multiple-remove-button" name="lecture_no"
+											placeholder="Select upto 3 lectures" multiple required>
+											{%for i in "12345678"%}
+											<option value="{{i}}">{{i}}</option>
 											{%endfor%}
-										</datalist>
-										&emsp;
-										&ensp;
-										<label>Topics:</label>
-										<select id="topic_list" name="topics" placeholder="Select Topics" style="width: 5%;"required multiple>
-
 										</select>
-										<label>Date:</label>
-										<input type="date" name="date"
-											onfocus="this.max=new Date().toISOString().split('T')[0]" required />
-
-										&emsp;
-										&ensp;
-										<div class="col-lg-2 col-md-2 col-sm-2">
-											<label>Lecture Number:</label>
-											<!-- <input type="number" max="8" min="1" value="1" name="lecture_no" required> -->
-
-											<select id="choices-multiple-remove-button" name="lecture_no"
-												placeholder="Select upto 3 lectures" multiple required>
-												{%for i in "12345678"%}
-												<option value="{{i}}">{{i}}</option>
-												{%endfor%}
-											</select>
-										</div>
-
-
-										<br>
-										<label <!--style="margin-top:15px;" -->Mark All as Present:</label>
-										<input id="present" type="checkbox" value="1" name="present" onclick="check()">
-										&emsp;
-										<div class="table-responsive recentOrderTable">
-											<table class="table verticle-middle table-responsive-md">
-												<thead>
-													<tr>
-														<th scope="col">No.</th>
-														<th scope="col">Id</th>
-														<th scope="col">Name</th>
-														<th scope="col">Present</th>
-														<th scope="col">Exempt</th>
-													</tr>
-												</thead>
-												<tbody>
-													{%for studentob in student_list%}
-													<tr>
-														<th>{{forloop.counter}}</th>
-														<th>{{studentob.username}}</th>
-														<th>{{studentob.get_full_name|capfirst}}</th>
-														<th>
-															<label class="switch">
-																<input type="checkbox" id="span_input"
-																	name="{{studentob.username}}" default="None">
-																<span class="slider round"></span>
-															</label>
-														</th>
-														<th>
-															<input type="checkbox" name="{{studentob.username}}_exempt">
-														</th>
-													</tr>
-													{%endfor%}
-												</tbody>
-
-											</table>
-										</div>
-										<input type="hidden" name="branch" value="{{curr_branch}}" />
-										<input type="hidden" name="subject" value="{{curr_subject}}" />
-										<input type="hidden" name="group" value="{{group}}" />
-										<button type="submit" class="btn btn-primary profile-button">Submit</button>
-
 									</div>
+
+
+									<br>
+									<label <!--style="margin-top:15px;" -->Mark All as Present:</label>
+									<input id="present" type="checkbox" value="1" name="present" onclick="check()">
+									&emsp;
+									<div class="table-responsive recentOrderTable">
+										<table class="table verticle-middle table-responsive-md">
+											<thead>
+												<tr>
+													<th scope="col">No.</th>
+													<th scope="col">Id</th>
+													<th scope="col">Name</th>
+													<th scope="col">Present</th>
+													<th scope="col">Exempt</th>
+												</tr>
+											</thead>
+											<tbody>
+												{%for studentob in student_list%}
+												<tr>
+													<th>{{forloop.counter}}</th>
+													<th>{{studentob.username}}</th>
+													<th>{{studentob.get_full_name|capfirst}}</th>
+													<th>
+														<label class="switch">
+															<input type="checkbox" id="span_input"
+																name="{{studentob.username}}" default="None">
+															<span class="slider round"></span>
+														</label>
+													</th>
+													<th>
+														<input type="checkbox" name="{{studentob.username}}_exempt">
+													</th>
+												</tr>
+												{%endfor%}
+											</tbody>
+
+										</table>
+									</div>
+									<input type="hidden" name="branch" value="{{curr_branch}}" />
+									<input type="hidden" name="subject" value="{{curr_subject}}" />
+									<input type="hidden" name="group" value="{{group}}" />
+									<button type="submit" class="btn btn-primary profile-button">Submit</button>
+
 								</form>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!--**********************************
+		</div>
+		<!--**********************************
 	Content body end
 	***********************************-->
 
 
 
 
-		</div>
-		<!--**********************************
+	</div>
+	<!--**********************************
 	Main wrapper end
 	***********************************-->
-		<script>
-			function check() {
-				var p = document.getElementById("present");
-				{%for studentob in student_list %}
-				if (p.checked) {
-					document.getElementsByName("{{studentob.username}}")[0].checked = true;
-				}
-				else {
-					document.getElementsByName("{{studentob.username}}")[0].checked = false;
-				}
-				{% endfor %}
-			};
+	<script>
+		function check() {
+			var p = document.getElementById("present");
+			{%for studentob in student_list %}
+			if (p.checked) {
+				document.getElementsByName("{{studentob.username}}")[0].checked = true;
+			}
+			else {
+				document.getElementsByName("{{studentob.username}}")[0].checked = false;
+			}
+			{% endfor %}
+		};
 
-			$(document).ready(function () {
+		$(document).ready(function () {
 
-				var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
-					removeItemButton: true,
-					maxItemCount: 3,
-					searchResultLimit: 3,
-					renderChoiceLimit: 8
-				});
-				$(".so").change(function(){
-					const input = document.querySelector("input[list='so']").value;
-					$.ajax({
-						url:"so",
-						data:{
-							'so':input,
-							'subject':"{{curr_subject}}",
-						},
-						success:function(data){
-							$("#topic_list").html(data);
-						}
-
-					});
+			var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+				removeItemButton: true,
+				maxItemCount: 3,
+				searchResultLimit: 3,
+				renderChoiceLimit: 8
+			});
+			$(".so").change(function () {
+				const input = document.querySelector("input[list='so']").value;
+				$.ajax({
+					url: "so",
+					data: {
+						'so': input,
+						'subject': "{{curr_subject}}",
+					},
+					success: function (data) {
+						$("#topic_list").html(data);
+					}
 
 				});
-
 
 			});
-		</script>
-		<!--**********************************
+
+
+		});
+	</script>
+	<!--**********************************
 	Scripts
 	***********************************-->
-		<!-- Required vendors -->
-		<script src={% static "vendor/global/global.min.js" %}></script>
-		<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
-		<script src={% static "js/custom.min.js" %}></script>
-		<script src={% static "js/dlabnav-init.js" %}></script>
+	<!-- Required vendors -->
+	<script src={% static "vendor/global/global.min.js" %}></script>
+	<!-- <script src={% static "vendor/bootstrap-select/dist/js/bootstrap-select.min.js"%}></script> -->
+	<script src={% static "js/custom.min.js" %}></script>
+	<script src={% static "js/dlabnav-init.js" %}></script>
 
-		<!-- Chart sparkline plugin files -->
-		<script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js" %}></script>
-		<script src={% static "js/plugins-init/sparkline-init.js" %}></script>
+	<!-- Chart sparkline plugin files -->
+	<script src={% static "vendor/jquery-sparkline/jquery.sparkline.min.js" %}></script>
+	<script src={% static "js/plugins-init/sparkline-init.js" %}></script>
 
-		<!-- Chart Morris plugin files -->
-		<script src={% static "vendor/raphael/raphael.min.js" %}></script>
-		<script src={% static "vendor/morris/morris.min.js" %}></script>
+	<!-- Chart Morris plugin files -->
+	<script src={% static "vendor/raphael/raphael.min.js" %}></script>
+	<script src={% static "vendor/morris/morris.min.js" %}></script>
 
-		<!-- Init file -->
-		<script src={% static "js/plugins-init/widgets-script-init.js" %}></script>
+	<!-- Init file -->
+	<script src={% static "js/plugins-init/widgets-script-init.js" %}></script>
 
-		<!-- Demo scripts -->
-		<script src={% static "js/dashboard/dashboard.js" %}></script>
+	<!-- Demo scripts -->
+	<script src={% static "js/dashboard/dashboard.js" %}></script>
 
-		<!-- Summernote -->
-		<script src={% static "vendor/summernote/js/summernote.min.js" %}></script>
-		<!-- Summernote init -->
-		<script src={% static "js/plugins-init/summernote-init.js" %}></script>
+	<!-- Summernote -->
+	<script src={% static "vendor/summernote/js/summernote.min.js" %}></script>
+	<!-- Summernote init -->
+	<script src={% static "js/plugins-init/summernote-init.js" %}></script>
 
-		<!-- Svganimation scripts -->
-		<script src={% static "vendor/svganimation/vivus.min.js" %}></script>
-		<script src={% static "vendor/svganimation/svg.animation.js" %}></script>
-		<!--script src={% static "js/styleSwitcher.js"></script-->
-		<!--
+	<!-- Svganimation scripts -->
+	<script src={% static "vendor/svganimation/vivus.min.js" %}></script>
+	<script src={% static "vendor/svganimation/svg.animation.js" %}></script>
+	<!--script src={% static "js/styleSwitcher.js"></script-->
+	<!--
 	to import settings change name of settings.js to sytleSwitcher.js
 	-->
-	</body>
+</body>
 
 </html>

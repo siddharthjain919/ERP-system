@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from django import forms
 from .models import branch_subjects,branch_detail
+
 class branch_subject_form(ModelForm):
     class Meta:
         model=branch_subjects
@@ -16,6 +16,7 @@ class branch_subject_form(ModelForm):
             "NOLR4":"No of Lecture For Objective 4",
             "NOLR5":"No of Lecture For Objective 5",
         }
+        
 class branch_timetable_form(ModelForm):
     class Meta:
         model=branch_detail
