@@ -47,8 +47,7 @@ def deleteuser(**kwargs):
 			u=User.objects.get(username=kwargs["instance"].teacherid)
 			u.delete()
 		except Exception as e:
-			print("from line 30 in teacher models")
-			print("******\n",e,"\n******")
+			logger.error(str(e))
 
 class teacherlogin(models.Model):
 

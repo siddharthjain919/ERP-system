@@ -31,8 +31,8 @@ def index(request):
 		today=today.strftime("%A").lower()[:-3]
 		if today=="wednes" or today=="satur":
 			today=today[:3]
-		current_time = datetime.datetime.now().time()
-		current_time=int(current_time.hour)*60+int(current_time.minute)
+		current_time = datetime.datetime.utcnow().time()
+		current_time=int(current_time.hour)*60+int(current_time.minute)+330
 		# current_time=550
 		emoji = "\U0001F610"
 		if current_time<940 and today!='sun':

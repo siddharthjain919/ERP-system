@@ -10,6 +10,7 @@ def create_branch_group(**kwargs):
 	if kwargs["created"]  and isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
 		g1 = Group.objects.create(name=str(branch))
+
 def update_teacher_timetable(**kwargs):
 	if isinstance(kwargs["instance"],branch_detail):
 		branch=kwargs["instance"]
@@ -48,9 +49,11 @@ def subject_check(**kwargs):
         lecture_sum=subject.NOLR1+subject.NOLR2+subject.NOLR3+subject.NOLR4+subject.NOLR5
         if lecture_sum<40 and not subject.branch_subject.is_lab:
             raise Exception("Total lectures cannot be less than 40.")			
+
 def delete_branch_group(**kwargs):
 	if isinstance(kwargs['instance'],branch_detail):
 		Group.objects.get(name=str(kwargs['instance'])).delete()
+
 class branch_subjects(models.Model):
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE)
 	branch_subject=models.ForeignKey("erp.subjects",on_delete=models.CASCADE,default=None)
@@ -83,6 +86,7 @@ class branch_subjects(models.Model):
 	class Meta:
 		unique_together=[['branch_subject','subject_teacher','branch']]
 	pre_save.connect(subject_check)
+
 class branch_detail(models.Model):
 	name=models.CharField(max_length=25)
 	batch=models.IntegerField()
