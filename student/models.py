@@ -77,64 +77,64 @@ class studentlogin(models.Model):
 	course=models.ForeignKey("erp.course",on_delete=models.CASCADE)
 	branch=models.ForeignKey("branch.branch_detail",on_delete=models.CASCADE,related_name="branch",default=None)
 	# semester=models.IntegerField(default=1,validators=[MaxValueValidator(8),MinValueValidator(1)])
-	category=models.CharField(max_length=50,choices=(
-		("GEN","GEN"),
-		("OBC","OBC"),
-		("SC","SC"),
-		("ST","ST"),
-		("OTHERS","OTHERS")
-	))
-	religion=models.CharField(max_length=50)
-	admissionThrough=models.CharField(max_length=50,choices=(
-		("DIRECT","DIRECT"),
-		("COUNSELLING","COUNSELLING")
-	))
-	admissionUnder=models.CharField(max_length=30) #change
-	status=models.CharField(max_length=30) #change
-	sub_status=models.CharField(max_length=30) #change
-	bloodGroup=models.CharField(max_length=3,help_text="In Format A+")obile_Marks=models.IntegerField(null=True,blank=True)
+	# category=models.CharField(max_length=50,choices=(
+	# 	("GEN","GEN"),
+	# 	("OBC","OBC"),
+	# 	("SC","SC"),
+	# 	("ST","ST"),
+	# 	("OTHERS","OTHERS")
+	# ))
+	# religion=models.CharField(max_length=50)
+	# admissionThrough=models.CharField(max_length=50,choices=(
+	# 	("DIRECT","DIRECT"),
+	# 	("COUNSELLING","COUNSELLING")
+	# ))
+	# admissionUnder=models.CharField(max_length=30) #change
+	# status=models.CharField(max_length=30) #change
+	# sub_status=models.CharField(max_length=30) #change
+	# bloodGroup=models.CharField(max_length=3,help_text="In Format A+")obile_Marks=models.IntegerField(null=True,blank=True)
 	personalEmail=models.EmailField(max_length=50)
-	email=models.EmailField(max_length=60,editable=False,default=None)
-	maritalStatus=models.CharField(max_length=10,choices=(
-		("YES","YES"),
-		("NO","NO")
-	))
+	# email=models.EmailField(max_length=60,editable=False,default=None)
+	# maritalStatus=models.CharField(max_length=10,choices=(
+	# 	("YES","YES"),
+	# 	("NO","NO")
+	# ))
 
-	fatherName=models.CharField(max_length=50)
-	father_mobile=models.IntegerField(null=True,blank=True)
-	fatherEmail=models.EmailField(max_length=30,null=True,blank=True)
-	fatherProfession=models.CharField(max_length=30)
-	father_income=models.IntegerField(null=True,blank=True)
+	# fatherName=models.CharField(max_length=50)
+	# father_mobile=models.IntegerField(null=True,blank=True)
+	# fatherEmail=models.EmailField(max_length=30,null=True,blank=True)
+	# fatherProfession=models.CharField(max_length=30)
+	# father_income=models.IntegerField(null=True,blank=True)
 
-	motherName=models.CharField(max_length=50)
-	mother_mobile=models.IntegerField(null=True,blank=True)
-	motherEmail=models.EmailField(max_length=30,null=True,blank=True)
-	motherProfession=models.CharField(max_length=30)
-	mother_income=models.IntegerField(null=True,blank=True)
+	# motherName=models.CharField(max_length=50)
+	# mother_mobile=models.IntegerField(null=True,blank=True)
+	# motherEmail=models.EmailField(max_length=30,null=True,blank=True)
+	# motherProfession=models.CharField(max_length=30)
+	# mother_income=models.IntegerField(null=True,blank=True)
 
-	permanentAddress=models.CharField(max_length=100)
-	currAddress=models.CharField(max_length=100)
-	session=models.IntegerField(validators=[MaxValueValidator(int(date.today().year))],default=int(date.today().year))
+	# permanentAddress=models.CharField(max_length=100)
+	# currAddress=models.CharField(max_length=100)
+	# session=models.IntegerField(validators=[MaxValueValidator(int(date.today().year))],default=int(date.today().year))
 
-	adhar=models.IntegerField(validators=[MinValueValidator(100000000000),MaxValueValidator(999999999999)],verbose_name="Adhar")
+	# adhar=models.IntegerField(validators=[MinValueValidator(100000000000),MaxValueValidator(999999999999)],verbose_name="Adhar")
 	
-	highSchoolRollNo=models.IntegerField(verbose_name="10th Roll Number")
-	highSchoolName=models.CharField(max_length=30,verbose_name="10th School Name")
-	highSchoolBoard=models.CharField(max_length=30,verbose_name="10th Board",help_text="In Format CBSE/UP")
-	highSchoolPassingYear=models.IntegerField(verbose_name="10th Passing Year",validators=[MaxValueValidator(int(date.today().year)-2)],default=int(date.today().year)-2)
-	highSchoolMarks=models.IntegerField(verbose_name="10th Total Marks")
-	highSchoolPercentage=models.FloatField(verbose_name="10th percentage")
+	# highSchoolRollNo=models.IntegerField(verbose_name="10th Roll Number")
+	# highSchoolName=models.CharField(max_length=30,verbose_name="10th School Name")
+	# highSchoolBoard=models.CharField(max_length=30,verbose_name="10th Board",help_text="In Format CBSE/UP")
+	# highSchoolPassingYear=models.IntegerField(verbose_name="10th Passing Year",validators=[MaxValueValidator(int(date.today().year)-2)],default=int(date.today().year)-2)
+	# highSchoolMarks=models.IntegerField(verbose_name="10th Total Marks")
+	# highSchoolPercentage=models.FloatField(verbose_name="10th percentage")
 
-	IntermediateRollNo=models.IntegerField(verbose_name="12th Roll Number")
-	IntermediateName=models.CharField(max_length=30,verbose_name="12th School Name")
-	IntermediateBoard=models.CharField(max_length=30,verbose_name="12th Board",help_text="In Format CBSE/UP")
-	IntermediatePassingYear=models.IntegerField(verbose_name="12th Passing Year",validators=[MaxValueValidator(int(date.today().year)-2)],default=int(date.today().year)-2)
-	IntermediateMarks=models.IntegerField(verbose_name="12th Total Marks")
-	IntermediatePercentage=models.FloatField(verbose_name="12th percentage")
-	PCMpercentage=models.FloatField(verbose_name="PCM Percentage")
+	# IntermediateRollNo=models.IntegerField(verbose_name="12th Roll Number")
+	# IntermediateName=models.CharField(max_length=30,verbose_name="12th School Name")
+	# IntermediateBoard=models.CharField(max_length=30,verbose_name="12th Board",help_text="In Format CBSE/UP")
+	# IntermediatePassingYear=models.IntegerField(verbose_name="12th Passing Year",validators=[MaxValueValidator(int(date.today().year)-2)],default=int(date.today().year)-2)
+	# IntermediateMarks=models.IntegerField(verbose_name="12th Total Marks")
+	# IntermediatePercentage=models.FloatField(verbose_name="12th percentage")
+	# PCMpercentage=models.FloatField(verbose_name="PCM Percentage")
 
-	hosteller=models.BooleanField()
-	hostelName=models.CharField(verbose_name="Hostel Name",max_length=20,blank=True,null=True)
+	# hosteller=models.BooleanField()
+	# hostelName=models.CharField(verbose_name="Hostel Name",max_length=20,blank=True,null=True)
 
 	def __str__(self):
 		return self.studentid
